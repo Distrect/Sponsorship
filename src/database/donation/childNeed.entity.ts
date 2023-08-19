@@ -1,6 +1,6 @@
 import { Table, Column, Model, PrimaryKey } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
-import { Status } from './donatio.global';
+import { Status } from './donation.global';
 
 @Table({ timestamps: true })
 export class ChildNeed extends Model {

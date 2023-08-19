@@ -1,3 +1,10 @@
+export { FixNeed } from './sponsor/fixNeed.entity';
+export { Message } from './sponsor/message.entity';
+export { SponsorShip } from './sponsor/sponsorShip.entity';
+export { SponsorShipRequest } from './sponsor/sponsorShipRequest';
+export { SponsorShipPayment } from './sponsor/sponsorshipPayment.entity';
+export { Identification } from './user/identification.entity';
+export { UserCredentialDocuments } from './user/userCredentialDocs.entity';
 export { Admin } from './user/admin.entity';
 export { Authority } from './user/authority.entity';
 export { User } from './user/user.entity';
