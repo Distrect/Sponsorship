@@ -1,6 +1,9 @@
-export { Child } from './user/child.entity';
-export { ChildNeed } from './donation/childNeed';
-export { Donation } from './donation/donation.entity';
 export { Admin } from './user/admin.entity';
 export { Authority } from './user/authority.entity';
 export { User } from './user/user.entity';
+export { Child } from './user/child.entity';
+export { Safe } from './donation/safe.entity';
+export { NeedSafe } from './donation/needSafe.entity';
+export { ChildNeedGroup } from './donation/childNeedGroup.entity';
+export { ChildNeed } from './donation/childNeed.entity';
+export { Donation } from './donation/donation.entity';

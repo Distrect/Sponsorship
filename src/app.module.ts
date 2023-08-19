@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GlobalConfigModule } from './services/config.module';
+import { GlobalConfigModule } from './services/config/config.module';
 import { DatabaseModule } from './database/main/database.module';
 
 @Module({
