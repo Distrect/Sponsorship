@@ -1,11 +1,14 @@
-import { DataTypes } from 'sequelize';
 import {
+  DataType,
   BelongsTo,
   Column,
   Default,
+  ForeignKey,
   Index,
   PrimaryKey,
   Table,
+  Model,
+  AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 
@@ -13,31 +16,37 @@ enum Type {
   SIGNIN = 'Sign In',
 }
 
-enum Status {
+export enum Status {
   APPROVED = 'Approved',
   DENIED = 'Denied',
   WAITING = 'Waiting',
+  BANNED = 'Banned',
 }
 
 @Table({ timestamps: true })
-export class UserRequest {
+export class UserRequest extends Model {
   @Index
-  @PrimaryKey
-  @Column(DataTypes.INTEGER)
+  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   requestId: number;
 
-  @Column(DataTypes.ENUM(...Object.values(Type)))
+  @Column(DataType.ENUM(...Object.values(Type)))
   type: Type;
 
   @Default(Status.WAITING)
-  @Column(DataTypes.ENUM(...Object.values(Status)))
+  @Column(DataType.ENUM(...Object.values(Status)))
   status: Status;
 
-  @Column(DataTypes.TEXT)
+  @AllowNull
+  @Column(DataType.TEXT)
   adminMessage: string;
 
-  @Column(DataTypes.TEXT)
+  @AllowNull
+  @Column(DataType.TEXT)
   authorityMessage: string;
+
+  @ForeignKey(() => User)
+  @Column
+  userId: number;
 
   @BelongsTo(() => User)
   user: User[];

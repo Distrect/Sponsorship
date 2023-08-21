@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize';
 import { Column, Table, PrimaryKey, Default } from 'sequelize-typescript';
-
+/*
 enum NeedGroupStatus {
   OPEN = true,
   CLOSE = false,
-}
+}*/
 
 @Table({ timestamps: true })
 export class ChildNeedGroup {

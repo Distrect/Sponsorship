@@ -1,64 +1,68 @@
-import { DataTypes } from 'sequelize';
 import {
+  DataType,
   Table,
   Column,
   Model,
   BeforeCreate,
   IsEmail,
   HasMany,
-  PrimaryKey,
   Index,
   Default,
+  AfterCreate,
 } from 'sequelize-typescript';
 import { CityEnum } from './user.global';
 import { UserRequest } from './userRequest.entity';
+import { Identification } from './identification.entity';
 
 @Table({ timestamps: true })
 export class User extends Model {
   @Index
-  @PrimaryKey
-  @Column(DataTypes.INTEGER)
+  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   userId: number;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   name: string;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   lastname: string;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   fullName: string;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   password: string;
 
   @IsEmail
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   email: string;
 
-  @Column(DataTypes.DATE)
+  @Column(DataType.DATE)
   dateOfBirth: Date;
 
   @Default(false)
-  @Column(DataTypes.INTEGER)
+  @Column(DataType.INTEGER)
   canLogin: boolean;
 
-  @Column(
-    DataTypes.ENUM(
-      CityEnum.GÜZELYURT,
-      CityEnum.GİRNE,
-      CityEnum.LEFKOŞA,
-      CityEnum.MAĞUSA,
-      CityEnum.İSKELE,
-    ),
-  )
+  @Column(DataType.ENUM(...Object.values(CityEnum)))
   city: CityEnum;
 
   @HasMany(() => UserRequest)
   requests: UserRequest[];
 
+  @HasMany(() => )
+  identification:Identification[]
+
   @BeforeCreate
   static addFullName(userInstance: User) {
+    const { name, lastname } = userInstance;
+    userInstance.name = name[0].toUpperCase() + name.substring(1).toLowerCase();
+    userInstance.lastname =
+      lastname[0].toUpperCase() + lastname.substring(1).toLowerCase();
     userInstance.fullName = userInstance.name + ' ' + userInstance.lastname;
+  }
+
+  @AfterCreate
+  static async generateRequest(userInstance: User) {
+    console.log('dsadsasadas', userInstance.toJSON());
   }
 }

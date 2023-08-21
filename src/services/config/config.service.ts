@@ -1,4 +1,3 @@
-import { DatabaseOption } from './../database/main/database.provider';
 import { Injectable, Get } from '@nestjs/common';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 
@@ -6,8 +5,8 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 export class GlobalConfigService {
   constructor(private configService: ConfigService) {}
 
-  public getDatabaseConfig(): DatabaseOption {
-    const options: DatabaseOption = {
+  public getDatabaseConfig() {
+    const options = {
       database: this.configService.get<string>('DATABASE'),
       dialect: this.configService.get<string>('DIALECT'),
       host: this.configService.get<string>('HOST'),

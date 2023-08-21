@@ -1,3 +1,4 @@
+export { UserRequest } from './user/userRequest.entity';
 export { FixNeed } from './sponsor/fixNeed.entity';
 export { Message } from './sponsor/message.entity';
 export { SponsorShip } from './sponsor/sponsorShip.entity';
