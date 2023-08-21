@@ -1,14 +1,30 @@
 import { existsSync } from 'fs';
 import { DataTypes } from 'sequelize';
-import { BeforeCreate, Column, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  BeforeCreate,
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { Identification } from './identification.entity';
 
-export class UserCredentialDocuments {
+@Table
+export class UserCredentialDocuments extends Model {
   @PrimaryKey
   @Column(DataTypes.INTEGER)
   credentialId: number;
 
   @Column(DataTypes.STRING)
   path: string;
+
+  @ForeignKey(() => Identification)
+  identificationId: number;
+
+  @BelongsTo(() => Identification)
+  identification: Identification;
 
   @BeforeCreate
   static checkifPath(userCredentials: UserCredentialDocuments) {

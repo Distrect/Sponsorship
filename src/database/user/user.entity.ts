@@ -47,10 +47,10 @@ export class User extends Model {
   city: CityEnum;
 
   @HasMany(() => UserRequest)
-  requests: UserRequest[];
+  userRequests: UserRequest[];
 
-  @HasMany(() => )
-  identification:Identification[]
+  @HasMany(() => Identification)
+  identification: Identification[];
 
   @BeforeCreate
   static addFullName(userInstance: User) {

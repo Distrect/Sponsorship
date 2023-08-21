@@ -1,5 +1,15 @@
-import { DataTypes } from 'sequelize';
-import { Column, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  DataType,
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+  HasMany,
+} from 'sequelize-typescript';
+import { User } from './user.entity';
+import { UserCredentialDocuments } from './userCredentialDocs.entity';
 
 enum NationalityEnum {
   TC = 'TC',
@@ -11,17 +21,28 @@ enum ActorType {
   CHILD = 'Child',
 }
 
-export class Identification {
+@Table
+export class Identification extends Model {
   @PrimaryKey
-  @Column(DataTypes.INTEGER)
+  @Column(DataType.INTEGER)
   identificationId: number;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   idNumber: string;
 
-  @Column(DataTypes.ENUM(...Object.values(NationalityEnum)))
+  @Column(DataType.ENUM(...Object.values(NationalityEnum)))
   nationality: NationalityEnum;
 
-  @Column(DataTypes.ENUM(...Object.values(ActorType)))
+  @Column(DataType.ENUM(...Object.values(ActorType)))
   actorType: ActorType;
+
+  @ForeignKey(() => User)
+  @Column(DataType.INTEGER)
+  userId: number;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @HasMany(() => UserCredentialDocuments)
+  documents: UserCredentialDocuments[];
 }

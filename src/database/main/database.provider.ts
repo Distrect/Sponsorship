@@ -8,6 +8,8 @@ import {
   Donation,
   ChildNeed,
   UserRequest,
+  Identification,
+  UserCredentialDocuments,
 } from '../index';
 import { Status } from '../user/userRequest.entity';
 
@@ -36,6 +38,8 @@ export const databaseProviders = [
         Donation,
         ChildNeed,
         UserRequest,
+        Identification,
+        UserCredentialDocuments,
       ]);
       await sequelize.sync({ force: true, alter: true, hooks: true });
 

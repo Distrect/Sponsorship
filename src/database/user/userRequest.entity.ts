@@ -11,6 +11,8 @@ import {
   AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
+import { Admin } from './admin.entity';
+import { Authority } from './authority.entity';
 
 enum Type {
   SIGNIN = 'Sign In',
@@ -22,6 +24,8 @@ export enum Status {
   WAITING = 'Waiting',
   BANNED = 'Banned',
 }
+
+//Tabloya kimin hangi cevabı verdiğini ve onaymı yok redmi açıklaması konulmalıdır
 
 @Table({ timestamps: true })
 export class UserRequest extends Model {
@@ -49,5 +53,19 @@ export class UserRequest extends Model {
   userId: number;
 
   @BelongsTo(() => User)
-  user: User[];
+  user: User;
+
+  @ForeignKey(() => Admin)
+  @Column
+  adminId: number;
+
+  @BelongsTo(() => Admin)
+  admin: Admin;
+
+  @ForeignKey(() => Authority)
+  @Column
+  authorityId: number;
+
+  @BelongsTo(() => Authority)
+  authority: Authority;
 }
