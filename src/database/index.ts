@@ -1,3 +1,4 @@
+export { ChildStatus } from './user/childStatus.entity';
 export { UserRequest } from './user/userRequest.entity';
 export { FixNeed } from './sponsor/fixNeed.entity';
 export { Message } from './sponsor/message.entity';

@@ -5,8 +5,10 @@ import {
   Model,
   BeforeCreate,
   IsEmail,
+  HasMany,
 } from 'sequelize-typescript';
 import { CityEnum } from './user.global';
+import { ChildStatus } from './childStatus.entity';
 
 @Table({ timestamps: true })
 export class Child extends Model {
@@ -32,19 +34,14 @@ export class Child extends Model {
   @Column(DataTypes.DATE)
   dateOfBirth: Date;
 
-  @Column(
-    DataTypes.ENUM(
-      CityEnum.GÜZELYURT,
-      CityEnum.GİRNE,
-      CityEnum.LEFKOŞA,
-      CityEnum.MAĞUSA,
-      CityEnum.İSKELE,
-    ),
-  )
+  @Column(DataTypes.ENUM(...Object.values(CityEnum)))
   city: CityEnum;
 
   @Column(DataTypes.TEXT)
   story: string;
+
+  @HasMany(() => ChildStatus)
+  status: ChildStatus[];
 
   @BeforeCreate
   static addFullName(userInstance: Child) {

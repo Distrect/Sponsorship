@@ -1,4 +1,4 @@
-import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
+import { Model, Sequelize, SequelizeOptions } from 'sequelize-typescript';
 import { GlobalConfigService } from 'src/services/config/config.service';
 import {
   User,
@@ -10,8 +10,8 @@ import {
   UserRequest,
   Identification,
   UserCredentialDocuments,
+  ChildStatus,
 } from '../index';
-import { Status } from '../user/userRequest.entity';
 
 export interface DatabaseOption {
   dialect: string;
@@ -32,12 +32,13 @@ export const databaseProviders = [
       });
       sequelize.addModels([
         User,
-        Child,
-        Authority,
         Admin,
+        Child,
         Donation,
+        Authority,
         ChildNeed,
         UserRequest,
+        ChildStatus,
         Identification,
         UserCredentialDocuments,
       ]);
@@ -49,7 +50,7 @@ export const databaseProviders = [
       //   email: 'sametsie34@gmail.com',
       //   password: 'dsadsadsadsa',
       // });
-
+      /*
       const u = await sequelize.getRepository(User).create(
         {
           name: 'sAmEt',
@@ -59,7 +60,7 @@ export const databaseProviders = [
         },
         {},
       );
-
+*/
       /* const r = await sequelize
         .getRepository(UserRequest)
         .create({ type: 'Sign In' });
