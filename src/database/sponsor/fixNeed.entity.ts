@@ -1,23 +1,36 @@
-import { DataTypes } from 'sequelize';
-import { Column, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Table,
+  DataType,
+  Model,
+} from 'sequelize-typescript';
+import { Child } from '../user/child.entity';
 
-export class FixNeed {
-  @PrimaryKey
-  @Column(DataTypes.INTEGER)
+@Table({ timestamps: true })
+export class FixNeed extends Model {
+  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   fixNeedId: number;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   title: string;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   explanation: string;
 
-  @Column(DataTypes.DOUBLE)
+  @Column(DataType.DOUBLE)
   amount: number;
 
-  @Column(DataTypes.STRING)
+  @Column(DataType.STRING)
   category: string;
 
-  @Column(DataTypes.BOOLEAN)
+  @Column(DataType.BOOLEAN)
   status: boolean;
+
+  @ForeignKey(() => Child)
+  childId: number;
+
+  @BelongsTo(() => Child)
+  child: Child;
 }

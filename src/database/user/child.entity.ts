@@ -9,6 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { CityEnum } from './user.global';
 import { ChildStatus } from './childStatus.entity';
+import { FixNeed } from '../sponsor/fixNeed.entity';
 
 @Table({ timestamps: true })
 export class Child extends Model {
@@ -42,6 +43,9 @@ export class Child extends Model {
 
   @HasMany(() => ChildStatus)
   status: ChildStatus[];
+
+  @HasMany(() => FixNeed)
+  fixNeed: FixNeed[];
 
   @BeforeCreate
   static addFullName(userInstance: Child) {
