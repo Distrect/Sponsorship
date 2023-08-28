@@ -5,7 +5,6 @@ import {
   Default,
   ForeignKey,
   Index,
-  PrimaryKey,
   Table,
   Model,
   AllowNull,

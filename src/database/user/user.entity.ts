@@ -13,6 +13,7 @@ import {
 import { CityEnum } from './user.global';
 import { UserRequest } from './userRequest.entity';
 import { Identification } from './identification.entity';
+import { SponsorShip } from '../sponsor/sponsorShip.entity';
 
 @Table({ timestamps: true })
 export class User extends Model {
@@ -51,6 +52,9 @@ export class User extends Model {
 
   @HasMany(() => Identification)
   identification: Identification[];
+
+  @HasMany(() => SponsorShip)
+  sponsorShip: SponsorShip[];
 
   @BeforeCreate
   static addFullName(userInstance: User) {

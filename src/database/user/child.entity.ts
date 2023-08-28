@@ -10,6 +10,7 @@ import {
 import { CityEnum } from './user.global';
 import { ChildStatus } from './childStatus.entity';
 import { FixNeed } from '../sponsor/fixNeed.entity';
+import { SponsorShip } from '../sponsor/sponsorShip.entity';
 
 @Table({ timestamps: true })
 export class Child extends Model {
@@ -46,6 +47,9 @@ export class Child extends Model {
 
   @HasMany(() => FixNeed)
   fixNeed: FixNeed[];
+
+  @HasMany(() => SponsorShip)
+  sponsorShip: SponsorShip[];
 
   @BeforeCreate
   static addFullName(userInstance: Child) {

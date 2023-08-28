@@ -1,4 +1,4 @@
-import { Model, Sequelize, SequelizeOptions } from 'sequelize-typescript';
+import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 import { GlobalConfigService } from 'src/services/config/config.service';
 import {
   User,
@@ -11,6 +11,8 @@ import {
   Identification,
   UserCredentialDocuments,
   ChildStatus,
+  SponsorShip,
+  SponsorShipRequest,
 } from '../index';
 
 export interface DatabaseOption {
@@ -35,11 +37,13 @@ export const databaseProviders = [
         Admin,
         Child,
         Donation,
-        Authority,
         ChildNeed,
+        Authority,
+        SponsorShip,
         UserRequest,
         ChildStatus,
         Identification,
+        SponsorShipRequest,
         UserCredentialDocuments,
       ]);
       await sequelize.sync({ force: true, alter: true, hooks: true });

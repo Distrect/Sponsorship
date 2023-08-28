@@ -9,6 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { CityEnum } from './user.global';
 import { UserRequest } from './userRequest.entity';
+import { SponsorShipRequest } from '../sponsor/sponsorShipRequest';
 
 @Table({ timestamps: true })
 export class Admin extends Model {
@@ -39,6 +40,9 @@ export class Admin extends Model {
 
   @HasMany(() => UserRequest)
   userRequests: UserRequest[];
+
+  @HasMany(() => SponsorShipRequest)
+  sponsorShipRequest: SponsorShipRequest[];
 
   @BeforeCreate
   static addFullName(userInstance: Admin) {
