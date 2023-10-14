@@ -7,9 +7,9 @@ import {
   IsEmail,
   HasMany,
 } from 'sequelize-typescript';
-import { CityEnum } from './user.global';
-import { UserRequest } from './userRequest.entity';
-import { SponsorShipRequest } from '../sponsor/sponsorShipRequest';
+import { CityEnum } from '../user.global';
+import { UserRequest } from '../userRequest.entity';
+import { SponsorShipRequest } from '../../sponsor/sponsorShipRequest';
 
 @Table({ timestamps: true })
 export class Authority extends Model {

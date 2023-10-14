@@ -8,7 +8,7 @@ export { SponsorShipPayment } from './sponsor/sponsorshipPayment.entity';
 export { Identification } from './user/identification.entity';
 export { UserCredentialDocuments } from './user/userCredentialDocs.entity';
 export { Admin } from './user/admin.entity';
-export { Authority } from './user/authority.entity';
+export { Authority } from './user/authority/authority.entity';
 export { User } from './user/user.entity';
 export { Child } from './user/child.entity';
 export { Safe } from './donation/safe.entity';

@@ -11,7 +11,7 @@ import {
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { Admin } from './admin.entity';
-import { Authority } from './authority.entity';
+import { Authority } from './authority/authority.entity';
 
 enum Type {
   SIGNIN = 'Sign In',

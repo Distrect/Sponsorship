@@ -1,5 +1,5 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
-import { Authority } from './../user/authority.entity';
+import { Authority } from '../user/authority/authority.entity';
 import { Admin } from '../user/admin.entity';
 import {
   AllowNull,
