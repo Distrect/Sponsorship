@@ -1,3 +1,6 @@
+import { SponsorshipStatus } from '.';
+import { Child } from '../user/child.entity';
+import { User } from '../user/user.entity';
 import {
   Column,
   Default,
@@ -8,15 +11,6 @@ import {
   BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
-import { Child } from '../user/child.entity';
-import { User } from '../user/user.entity';
-
-export enum SponsorshipStatus {
-  APPROVED = 'Approved',
-  DENIED = 'Denied',
-  WAITING_FOR_PAYMENT = 'Waiting for Payment',
-  WAITING_FOR_AUTHORIZATION = 'Waiting for Authorization',
-}
 
 @Table({ timestamps: true })
 export class SponsorShip extends Model {

@@ -13,6 +13,7 @@ import {
   ChildStatus,
   SponsorShip,
   SponsorShipRequest,
+  FixNeed,
 } from '../index';
 
 export interface DatabaseOption {
@@ -36,6 +37,7 @@ export const databaseProviders = [
         User,
         Admin,
         Child,
+        FixNeed,
         Donation,
         ChildNeed,
         Authority,
@@ -46,15 +48,26 @@ export const databaseProviders = [
         SponsorShipRequest,
         UserCredentialDocuments,
       ]);
-      await sequelize.sync({ force: true, alter: true, hooks: true });
+      await sequelize.sync({
+        force: true,
+        alter: true,
+        hooks: true,
+        logging: false,
+      });
 
-      // const User1 = new User({
-      //   name: 'sAmEt',
-      //   lastname: 'Sarıçiçek',
-      //   email: 'sametsie34@gmail.com',
-      //   password: 'dsadsadsadsa',
-      // });
-      /*
+      return sequelize;
+    },
+    inject: [GlobalConfigService],
+  },
+];
+
+// const User1 = new User({
+//   name: 'sAmEt',
+//   lastname: 'Sarıçiçek',
+//   email: 'sametsie34@gmail.com',
+//   password: 'dsadsadsadsa',
+// });
+/*
       const u = await sequelize.getRepository(User).create(
         {
           name: 'sAmEt',
@@ -65,14 +78,8 @@ export const databaseProviders = [
         {},
       );
 */
-      /* const r = await sequelize
+/* const r = await sequelize
         .getRepository(UserRequest)
         .create({ type: 'Sign In' });
 
       await u.$add('requests', [r]);*/
-
-      return sequelize;
-    },
-    inject: [GlobalConfigService],
-  },
-];

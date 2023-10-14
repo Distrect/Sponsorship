@@ -7,7 +7,12 @@ export interface IDatabaseConfig {
   port: number;
 }
 
-export interface IMailConfig {
+export interface IMailUser {
   mail: string;
   password: string;
+}
+
+export interface IMailConfig {
+  port: number;
+  host: string;
 }

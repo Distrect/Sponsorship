@@ -1,8 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-const x = 1;
-console.log(x);
 declare const module: any;
 
 async function bootstrap() {

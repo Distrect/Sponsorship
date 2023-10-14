@@ -1,5 +1,6 @@
-import { Authority } from './../user/authority.entity';
 import { ModelAttributeColumnOptions } from 'sequelize';
+import { Authority } from './../user/authority.entity';
+import { Admin } from '../user/admin.entity';
 import {
   AllowNull,
   Column,
@@ -10,9 +11,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-
-import { SponsorshipStatus } from './sponsorShip.entity';
-import { Admin } from '../user/admin.entity';
+import { SponsorshipStatus } from '.';
 
 @Table({ timestamps: true })
 export class SponsorShipRequest extends Model {

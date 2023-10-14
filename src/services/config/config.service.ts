@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IDatabaseConfig, IMailConfig } from './types';
+import { IDatabaseConfig, IMailConfig, IMailUser } from './types';
 
 @Injectable()
 export class GlobalConfigService {
@@ -18,10 +18,21 @@ export class GlobalConfigService {
     return options;
   }
 
-  public getMailConfig(): IMailConfig {
+  public getMailUser(): IMailUser {
     return {
       mail: this.configService.get<string>('MAIL'),
       password: this.configService.get<string>('PASSWORD'),
     };
+  }
+
+  public getMailConfig(): IMailConfig {
+    return {
+      host: this.configService.get<string>('MAIL_SERVICE_HOST'),
+      port: this.configService.get<number>('MAIL_SERVICE_PORT'),
+    };
+  }
+
+  public getAuthKey(): string {
+    return this.configService.get<string>('JWT_PRIVATE_KEY');
   }
 }
