@@ -6,10 +6,12 @@ import {
   BeforeCreate,
   IsEmail,
   HasMany,
+  Default,
 } from 'sequelize-typescript';
 import { CityEnum } from '../user.global';
 import { UserRequest } from '../userRequest.entity';
 import { SponsorShipRequest } from '../../sponsor/sponsorShipRequest';
+import { Role } from 'src/database/user';
 
 @Table({ timestamps: true })
 export class Authority extends Model {
@@ -31,6 +33,10 @@ export class Authority extends Model {
   @IsEmail
   @Column(DataTypes.STRING)
   email: string;
+
+  @Default(Role.Authority)
+  @Column(DataTypes.ENUM(...Object.values(Role)))
+  role: Role;
 
   @Column(DataTypes.DATE)
   dateOfBirth: Date;

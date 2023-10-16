@@ -14,6 +14,7 @@ import { CityEnum } from './user.global';
 import { UserRequest } from './userRequest.entity';
 import { Identification } from './identification.entity';
 import { SponsorShip } from '../sponsor/sponsorShip.entity';
+import { Role } from 'src/database/user';
 
 @Table({ timestamps: true })
 export class User extends Model {
@@ -36,6 +37,10 @@ export class User extends Model {
   @IsEmail
   @Column(DataType.STRING)
   email: string;
+
+  @Default(Role.Authority)
+  @Column(DataType.ENUM(...Object.values(Role)))
+  role: Role;
 
   @Column(DataType.DATE)
   dateOfBirth: Date;

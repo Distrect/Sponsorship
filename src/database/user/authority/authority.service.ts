@@ -1,3 +1,4 @@
+import { Table, Model } from 'sequelize-typescript';
 import { Injectable, Inject } from '@nestjs/common';
 import { Authority } from './authority.entity';
 
@@ -7,7 +8,11 @@ export class AuthorityEntityService {
     @Inject('AUTHORITY_PROVIDER') private authorityRepository: typeof Authority,
   ) {}
 
-  public async getAuthority(data: Partial<Authority>) {
-    return await this.authorityRepository.findOne({ where: { ...data } });
+  public async getAuthority(data: Partial<Omit<Authority, keyof Model>>) {
+    return await this.authorityRepository.findOne({
+      where: { ...data },
+      raw: true,
+      nest: true,
+    });
   }
 }
