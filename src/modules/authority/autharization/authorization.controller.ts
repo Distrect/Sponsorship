@@ -1,17 +1,15 @@
 import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common';
-import { AuthService } from './../../../services/auth/auth.service';
+// import { AuthService } from './../../../services/auth/auth.service';
 import { AuthorityLoginBody } from 'src/modules/authority/autharization/authorization.dto';
 import { AuthorityAuthorizationService } from 'src/modules/authority/autharization/authorization.service';
 import { Response } from 'express';
 import { RoleGuard } from 'src/guards/userAuthentication.guard';
 import { Role } from 'src/database/user';
+import { AuthService } from 'src/services/auth/auth.service';
 
 @Controller('authority')
 export class AuthorityAuthorizationController {
-  constructor(
-    public authorizationService: AuthorityAuthorizationService,
-    private authService: AuthService,
-  ) {}
+  constructor(public authorizationService: AuthorityAuthorizationService) {}
 
   @Post('/login')
   public async Login(
@@ -21,10 +19,14 @@ export class AuthorityAuthorizationController {
     const authorityUser =
       await this.authorizationService.loginAuthority(requestBody);
 
-    const hashedAuthorityUser =
-      await this.authService.tokenizeData(authorityUser);
+    const hashedAuthorityUserToken = AuthService.tokenizeData(authorityUser);
+    const hashedAuthorityUserRefreshToken = AuthService.tokenizeData(
+      authorityUser,
+      { expiresIn: '2d' },
+    );
 
-    res.cookie('AuthorityAuthorization', hashedAuthorityUser);
+    res.cookie('AuthorityAuthorization', hashedAuthorityUserToken);
+    res.cookie('AuthorityRefresh', hashedAuthorityUserRefreshToken);
 
     return { ok: true, message: 'Authentication Successful' };
   }

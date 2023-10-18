@@ -10,11 +10,10 @@ import {
   Default,
   AfterCreate,
 } from 'sequelize-typescript';
-import { CityEnum } from './user.global';
 import { UserRequest } from './userRequest.entity';
 import { Identification } from './identification.entity';
 import { SponsorShip } from '../sponsor/sponsorShip.entity';
-import { Role } from 'src/database/user';
+import { CityEnum, Role } from 'src/database/user';
 
 @Table({ timestamps: true })
 export class User extends Model {

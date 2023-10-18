@@ -1,14 +1,31 @@
-import { JwtService } from '@nestjs/jwt';
+import jwt, {
+  SignOptions,
+  TokenExpiredError,
+  VerifyCallback,
+  VerifyOptions,
+} from 'jsonwebtoken';
+import { ServerError } from 'src/utils/error';
 
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  private static secretKey: string = process.env.JWT_SECRET_KEY;
 
-  public async tokenizeData(payload: any): Promise<string> {
-    const tokenized = await this.jwtService.signAsync(payload);
-    return tokenized;
+  public static tokenizeData(data: any, options?: SignOptions) {
+    return jwt.sign(data, this.secretKey, options || { expiresIn: '1d' });
   }
 
-  public async unTokenizeData<T>(token: string): Promise<T> {
-    return (await this.jwtService.verifyAsync(token)) as T;
+  public static deTokenizData<>(
+    encryptedString: string,
+    options?: VerifyOptions,
+  ) {
+    try {
+      const verfied = jwt.verify(encryptedString, this.secretKey, options);
+      return verfied;
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        return false;
+      }
+      console.log(error);
+      throw new ServerError();
+    }
   }
 }

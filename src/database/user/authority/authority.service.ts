@@ -1,4 +1,4 @@
-import { Table, Model } from 'sequelize-typescript';
+import { Model } from 'sequelize-typescript';
 import { Injectable, Inject } from '@nestjs/common';
 import { Authority } from './authority.entity';
 

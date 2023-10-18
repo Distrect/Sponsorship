@@ -16,8 +16,6 @@ export class CustomValidationPipe implements PipeTransform<any> {
       return value;
     }
 
-    // const objectClass = plainToClass(metatype, value);
-    // const errors = await validate(objectClass);
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {

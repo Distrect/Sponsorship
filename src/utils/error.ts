@@ -22,3 +22,12 @@ export class AuthorizationError extends HttpException {
     );
   }
 }
+
+export class ServerError extends HttpException {
+  constructor() {
+    super(
+      'A Server Error Has Occured. Please Try Again Later',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+  }
+}
