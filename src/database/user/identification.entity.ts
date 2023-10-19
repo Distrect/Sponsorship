@@ -1,46 +1,36 @@
 import {
-  DataType,
-  BelongsTo,
+  Entity,
   Column,
-  ForeignKey,
-  Model,
-  PrimaryKey,
-  Table,
-  HasMany,
-} from 'sequelize-typescript';
-import { User } from './user.entity';
-import { UserCredentialDocuments } from './userCredentialDocs.entity';
-
-enum NationalityEnum {
-  TC = 'TC',
-  KKTC = 'KKTC',
-}
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import User from './user.entity';
+import UserCredentialDocuments from './userCredentialDocs.entity';
+import { Length } from 'sequelize-typescript';
+import { NationalityEnum } from 'src/database/user';
 
 enum ActorType {
   USER = 'User',
   CHILD = 'Child',
 }
 
-@Table
-export class Identification extends Model {
-  @PrimaryKey
-  @Column(DataType.INTEGER)
+@Entity()
+export default class Identification {
+  @PrimaryGeneratedColumn()
   identificationId: number;
 
-  @Column(DataType.STRING)
+  @Length({ min: 10, max: 11, msg: '' })
+  @Column('string')
   idNumber: string;
 
-  @Column(DataType.ENUM(...Object.values(NationalityEnum)))
+  @Column('enum')
   nationality: NationalityEnum;
 
-  @Column(DataType.ENUM(...Object.values(ActorType)))
+  @Column('enum')
   actorType: ActorType;
 
-  @ForeignKey(() => User)
-  @Column(DataType.INTEGER)
-  userId: number;
-
-  @BelongsTo(() => User)
+  @ManyToOne(() => User, (user) => user.identifications)
   user: User;
 
   @HasMany(() => UserCredentialDocuments)

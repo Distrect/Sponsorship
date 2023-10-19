@@ -1,30 +1,20 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
+import UserRequest from 'src/database/user/userRequest.entity';
+import SponsorShipRequest from 'src/database/sponsor/sponsorShipRequest';
 
 @Entity()
-export class Admin extends BaseUser {
+export default class Admin extends BaseUser {
   @Column('enum')
   city: CityEnum;
-  /*
-  @HasMany(() => UserRequest)
+
+  @OneToMany(() => UserRequest, (userRequest) => userRequest.admin)
   userRequests: UserRequest[];
 
-  @HasMany(() => SponsorShipRequest)
-  sponsorShipRequest: SponsorShipRequest[];
-
- */
+  @OneToMany(
+    () => SponsorShipRequest,
+    (sponsorrshipRequest) => sponsorrshipRequest.admin,
+  )
+  sponsorshipRequests: SponsorShipRequest[];
 }
-
-// import { DataTypes } from 'sequelize';
-// import {
-//   Table,
-//   Column,
-//   Model,
-//   BeforeCreate,
-//   IsEmail,
-//   HasMany,
-//   Default,
-// } from 'sequelize-typescript';
-// import { UserRequest } from './userRequest.entity';
-// import { SponsorShipRequest } from '../sponsor/sponsorShipRequest';

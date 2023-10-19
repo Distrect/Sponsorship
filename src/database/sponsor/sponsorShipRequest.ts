@@ -1,56 +1,31 @@
-import { ModelAttributeColumnOptions } from 'sequelize';
-import { Authority } from '../user/authority/authority.entity';
-import { Admin } from '../user/admin.entity';
-import {
-  AllowNull,
-  Column,
-  Default,
-  Model,
-  Table,
-  DataType,
-  ForeignKey,
-  BelongsTo,
-} from 'sequelize-typescript';
-import { SponsorshipStatus } from '.';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { SponsorshipStatus } from 'src/database/sponsor';
+import Authority from '../user/authority/authority.entity';
+import Admin from '../user/admin.entity';
 
-@Table({ timestamps: true })
-export class SponsorShipRequest extends Model {
-  @Column({
-    primaryKey: true,
-    allowNull: false,
-    autoIncrement: true,
-  } as ModelAttributeColumnOptions)
+@Entity()
+export default class SponsorShipRequest {
+  @PrimaryGeneratedColumn()
   sponsorShipRequestId: number;
 
-  @Default(SponsorshipStatus.WAITING_FOR_AUTHORIZATION)
-  @Column(DataType.ENUM(...Object.values(SponsorshipStatus)))
-  status: string;
+  @Column('enum', { default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION })
+  status: SponsorshipStatus;
 
-  @AllowNull(true)
-  @Column(DataType.TEXT)
+  @Column('text', { nullable: true })
   approveMessage: string;
 
-  @AllowNull(true)
-  @Column(DataType.TEXT)
+  @Column('text', { nullable: true })
   denyMessage: string;
 
-  @ForeignKey(() => Authority)
-  authorityId: number;
-
-  @BelongsTo(() => Authority)
+  @ManyToOne(() => Authority, (authority) => authority.sponsorShipRequests)
   authority: Authority;
 
-  @ForeignKey(() => Admin)
-  adminId: number;
-
-  @BelongsTo(() => Admin)
+  @ManyToOne(() => Admin, (admin) => admin.sponsorshipRequests)
   admin: Admin;
 
-  @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column('boolean', { default: false })
   adminResponse: boolean;
 
-  @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column('boolean', { default: false })
   authorityResponse: boolean;
 }

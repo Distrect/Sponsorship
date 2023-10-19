@@ -24,6 +24,11 @@ export enum Status {
   BANNED = 'Banned',
 }
 
+export enum NationalityEnum {
+  TC = 'TC',
+  KKTC = 'KKTC',
+}
+
 interface IBaseUser {
   name: string;
   lastname: string;

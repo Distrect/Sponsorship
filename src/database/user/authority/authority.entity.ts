@@ -1,21 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
+import UserRequest from 'src/database/user/userRequest.entity';
+import SponsorShipRequest from 'src/database/sponsor/sponsorShipRequest';
 
 @Entity()
-export class Authority extends BaseUser {
+export default class Authority extends BaseUser {
   @Column('date')
   dateOfBirth: Date;
 
   @Column({ type: 'enum' })
   city: CityEnum;
-  /*
-  @HasMany(() => UserRequest)
+
+  @OneToMany(() => UserRequest, (userRequest) => userRequest.authority)
   userRequests: UserRequest[];
 
-  @HasMany(() => SponsorShipRequest)
-  sponsorShipRequest: SponsorShipRequest[];
-*/
+  @OneToMany(
+    () => SponsorShipRequest,
+    (sponsorshipRequest) => sponsorshipRequest.authority,
+  )
+  sponsorShipRequests: SponsorShipRequest[];
 }
 
 //import { DataTypes } from 'sequelize';
