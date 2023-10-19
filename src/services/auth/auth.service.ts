@@ -1,7 +1,6 @@
 import jwt, {
   SignOptions,
   TokenExpiredError,
-  VerifyCallback,
   VerifyOptions,
 } from 'jsonwebtoken';
 import { ServerError } from 'src/utils/error';
@@ -13,13 +12,13 @@ export class AuthService {
     return jwt.sign(data, this.secretKey, options || { expiresIn: '1d' });
   }
 
-  public static deTokenizData<>(
+  public static deTokenizData<T>(
     encryptedString: string,
     options?: VerifyOptions,
   ) {
     try {
       const verfied = jwt.verify(encryptedString, this.secretKey, options);
-      return verfied;
+      return verfied as T;
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         return false;

@@ -1,5 +1,25 @@
-import { DataTypes } from 'sequelize';
-import {
+import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { CityEnum } from 'src/database/user';
+import BaseUser from 'src/database/user/baseUser';
+
+@Entity()
+export class Authority extends BaseUser {
+  @Column('date')
+  dateOfBirth: Date;
+
+  @Column({ type: 'enum' })
+  city: CityEnum;
+  /*
+  @HasMany(() => UserRequest)
+  userRequests: UserRequest[];
+
+  @HasMany(() => SponsorShipRequest)
+  sponsorShipRequest: SponsorShipRequest[];
+*/
+}
+
+//import { DataTypes } from 'sequelize';
+/*import {
   Table,
   Column,
   Model,
@@ -7,12 +27,9 @@ import {
   IsEmail,
   HasMany,
   Default,
-} from 'sequelize-typescript';
-import { CityEnum } from '../user.global';
-import { UserRequest } from '../userRequest.entity';
-import { SponsorShipRequest } from '../../sponsor/sponsorShipRequest';
-import { Role } from 'src/database/user';
+} from 'sequelize-typescript';*/
 
+/*
 @Table({ timestamps: true })
 export class Authority extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
@@ -55,3 +72,4 @@ export class Authority extends Model {
     userInstance.fullName = userInstance.name + ' ' + userInstance.lastname;
   }
 }
+*/

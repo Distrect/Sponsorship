@@ -1,4 +1,49 @@
-import {
+import { Entity, Column, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Status, Type } from 'src/database/user';
+
+//Tabloya kimin hangi cevabı verdiğini ve onaymı yok redmi açıklaması konulmalıdır
+
+@Entity()
+export default class UserRequest {
+  @Index()
+  @PrimaryGeneratedColumn()
+  requestId: number;
+
+  @Column('enum')
+  type: Type;
+
+  @Column({ type: 'enum', default: Status.WAITING })
+  status: Status;
+
+  @Column('text', { nullable: true })
+  adminMessage: string;
+
+  @Column('text', { nullable: true })
+  authorityMessage: string;
+  /*
+  @ForeignKey(() => User)
+  @Column
+  userId: number;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @ForeignKey(() => Admin)
+  @Column
+  adminId: number;
+
+  @BelongsTo(() => Admin)
+  admin: Admin;
+
+  @ForeignKey(() => Authority)
+  @Column
+  authorityId: number;
+
+  @BelongsTo(() => Authority)
+  authority: Authority;*/
+}
+
+/*import {
   DataType,
   BelongsTo,
   Column,
@@ -11,21 +56,8 @@ import {
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { Admin } from './admin.entity';
-import { Authority } from './authority/authority.entity';
-
-enum Type {
-  SIGNIN = 'Sign In',
-}
-
-export enum Status {
-  APPROVED = 'Approved',
-  DENIED = 'Denied',
-  WAITING = 'Waiting',
-  BANNED = 'Banned',
-}
-
-//Tabloya kimin hangi cevabı verdiğini ve onaymı yok redmi açıklaması konulmalıdır
-
+import { Authority } from './authority/authority.entity';*/
+/*
 @Table({ timestamps: true })
 export class UserRequest extends Model {
   @Index
@@ -68,3 +100,4 @@ export class UserRequest extends Model {
   @BelongsTo(() => Authority)
   authority: Authority;
 }
+*/

@@ -8,11 +8,10 @@ import {
   HasMany,
   Default,
 } from 'sequelize-typescript';
-import { CityEnum } from './user.global';
 import { ChildStatus } from './childStatus.entity';
 import { FixNeed } from '../sponsor/fixNeed.entity';
 import { SponsorShip } from '../sponsor/sponsorShip.entity';
-import { Role } from 'src/database/user';
+import { CityEnum, Role } from 'src/database/user';
 
 @Table({ timestamps: true })
 export class Child extends Model {
