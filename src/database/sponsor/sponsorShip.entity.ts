@@ -1,36 +1,26 @@
-import { SponsorshipStatus } from '.';
-import { Child } from '../user/child.entity';
-import { User } from '../user/user.entity';
 import {
+  Entity,
+  PrimaryGeneratedColumn,
   Column,
-  Default,
-  DataType,
-  Table,
   Index,
-  Model,
-  BelongsTo,
-  ForeignKey,
-} from 'sequelize-typescript';
+  ManyToOne,
+} from 'typeorm';
+import { SponsorshipStatus } from '.';
+import Child from '../user/child/child.entity';
+import User from '../user/user.entity';
 
-@Table({ timestamps: true })
-export class SponsorShip extends Model {
-  @Index
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+@Entity()
+export default class SponsorShip {
+  @Index()
+  @PrimaryGeneratedColumn()
   sponsorShipId: number;
 
-  @ForeignKey(() => Child)
-  childId: number;
+  @Column('enum', { default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION })
+  status: SponsorshipStatus;
 
-  @BelongsTo(() => Child)
+  @ManyToOne(() => Child, (child) => child.sponsors)
   child: Child;
 
-  @ForeignKey(() => User)
-  userId: number;
-
-  @BelongsTo(() => User)
+  @ManyToOne(() => User, (user) => user.sponsor)
   user: User[];
-
-  @Default(SponsorshipStatus.WAITING_FOR_AUTHORIZATION)
-  @Column(DataType.ENUM(...Object.values(SponsorshipStatus)))
-  status: string;
 }

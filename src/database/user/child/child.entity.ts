@@ -1,6 +1,10 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
+import SponsorShip from 'src/database/sponsor/sponsorShip.entity';
+import ChildStatus from 'src/database/user/childStatus.entity';
+import FixNeed from 'src/database/sponsor/fixNeed.entity';
+import Identification from 'src/database/user/identification.entity';
 
 @Entity()
 export default class Child extends BaseUser {
@@ -12,9 +16,18 @@ export default class Child extends BaseUser {
 
   @Column('text')
   story: string;
-  /*
-  @HasMany(() => ChildStatus)
-  status: ChildStatus[];*/
+
+  @OneToMany(() => Identification, (identification) => identification.child)
+  identifications: Identification[];
+
+  @OneToMany(() => SponsorShip, (sponsorship) => sponsorship.child)
+  sponsors: SponsorShip[];
+
+  @OneToMany(() => ChildStatus, (childStatus) => childStatus.child)
+  status: ChildStatus[];
+
+  @OneToMany(() => FixNeed, (fixNeed) => fixNeed.child)
+  fixNeeds: FixNeed[];
 }
 
 // import { DataTypes } from 'sequelize';
@@ -63,14 +76,8 @@ export default class Child extends BaseUser {
 //   @Column(DataTypes.TEXT)
 //   story: string;
 
-//   @HasMany(() => ChildStatus)
-//   status: ChildStatus[];
-
 //   @HasMany(() => FixNeed)
 //   fixNeed: FixNeed[];
-
-//   @HasMany(() => SponsorShip)
-//   sponsorShip: SponsorShip[];
 
 //   @BeforeCreate
 //   static addFullName(userInstance: Child) {

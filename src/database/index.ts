@@ -10,7 +10,7 @@ export { UserCredentialDocuments } from './user/userCredentialDocs.entity';
 export { Admin } from './user/admin.entity';
 export { Authority } from './user/authority/authority.entity';
 export { User } from './user/user.entity';
-export { Child } from './user/child.entity';
+export { Child } from './user/child/child.entity';
 export { Safe } from './donation/safe.entity';
 export { NeedSafe } from './donation/needSafe.entity';
 export { ChildNeedGroup } from './donation/childNeedGroup.entity';

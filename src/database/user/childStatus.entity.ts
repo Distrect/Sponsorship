@@ -1,29 +1,14 @@
-import { Child } from './child.entity';
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import Child from './child/child.entity';
 
-@Table
-export class ChildStatus extends Model {
-  @Column({
-    primaryKey: true,
-    type: DataType.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-  })
+@Entity()
+export default class ChildStatus {
+  @PrimaryGeneratedColumn()
   statusId: number;
 
-  @Column(DataType.TEXT)
+  @Column('text')
   text: string;
 
-  @ForeignKey(() => Child)
-  childId: number;
-
-  @BelongsTo(() => Child)
+  @ManyToOne(() => Child, (child) => child.status)
   child: Child;
 }

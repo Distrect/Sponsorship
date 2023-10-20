@@ -29,6 +29,11 @@ export enum NationalityEnum {
   KKTC = 'KKTC',
 }
 
+export enum ActorType {
+  USER = 'User',
+  CHILD = 'Child',
+}
+
 interface IBaseUser {
   name: string;
   lastname: string;

@@ -1,15 +1,13 @@
-import { DataTypes } from 'sequelize';
-import { Column, PrimaryKey, Table } from 'sequelize-typescript';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Table({ timestamps: true })
+@Entity()
 export class SponsorShipPayment {
-  @PrimaryKey
-  @Column(DataTypes.INTEGER)
+  @PrimaryGeneratedColumn()
   paymentId: number;
 
-  @Column(DataTypes.DOUBLE)
+  @Column('double')
   paymentAmount: number;
 
-  @Column(DataTypes.INTEGER)
+  @Column('integer')
   monthCount: number;
 }

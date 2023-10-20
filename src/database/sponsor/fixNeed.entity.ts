@@ -1,36 +1,26 @@
-import {
-  BelongsTo,
-  Column,
-  ForeignKey,
-  Table,
-  DataType,
-  Model,
-} from 'sequelize-typescript';
-import { Child } from '../user/child.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import Child from '../user/child/child.entity';
 
-@Table({ timestamps: true })
-export class FixNeed extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+@Entity()
+export default class FixNeed {
+  @PrimaryGeneratedColumn()
   fixNeedId: number;
 
-  @Column(DataType.STRING)
+  @Column('varchar')
   title: string;
 
-  @Column(DataType.STRING)
+  @Column('varchar')
   explanation: string;
 
-  @Column(DataType.DOUBLE)
+  @Column('varchar')
   amount: number;
 
-  @Column(DataType.STRING)
+  @Column('varchar')
   category: string;
 
-  @Column(DataType.BOOLEAN)
+  @Column('varchar')
   status: boolean;
 
-  @ForeignKey(() => Child)
-  childId: number;
-
-  @BelongsTo(() => Child)
+  @ManyToOne(() => Child, (child) => child.fixNeeds)
   child: Child;
 }

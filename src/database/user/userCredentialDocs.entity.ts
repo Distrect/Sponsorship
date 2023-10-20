@@ -1,38 +1,34 @@
-import { existsSync } from 'fs';
-import { DataTypes } from 'sequelize';
 import {
-  BeforeCreate,
-  BelongsTo,
+  Entity,
+  PrimaryGeneratedColumn,
   Column,
-  ForeignKey,
-  Model,
-  PrimaryKey,
-  Table,
-} from 'sequelize-typescript';
-import { Identification } from './identification.entity';
+  // ManyToOne,
+  BeforeInsert,
+} from 'typeorm';
+import { existsSync } from 'fs';
+// import Identification from './identification.entity';
+import { IsUrl } from 'class-validator';
+import { ServerError } from 'src/utils/error';
 
-@Table
-export class UserCredentialDocuments extends Model {
-  @PrimaryKey
-  @Column(DataTypes.INTEGER)
+@Entity()
+export default class UserCredentialDocuments {
+  @PrimaryGeneratedColumn()
   credentialId: number;
 
-  @Column(DataTypes.STRING)
+  @IsUrl()
+  @Column('string')
   path: string;
 
-  @ForeignKey(() => Identification)
-  identificationId: number;
+  /*@ManyToOne(() => Identification, (identification) => identification.documents)
+  identification: Identification;*/
 
-  @BelongsTo(() => Identification)
-  identification: Identification;
-
-  @BeforeCreate
-  static checkifPath(userCredentials: UserCredentialDocuments) {
-    const isExists = existsSync(userCredentials.path);
+  @BeforeInsert()
+  private checkIfPathExist() {
+    const isExists = existsSync(this.path);
 
     if (!isExists) {
-      throw new Error(
-        `The given '${userCredentials.path}' path is invalid. Please enter correct file path.`,
+      throw new ServerError(
+        `The given '${this.path}' path is invalid. Please enter correct file path.`,
       );
     }
   }

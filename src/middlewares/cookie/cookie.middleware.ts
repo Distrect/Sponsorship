@@ -18,16 +18,21 @@ export default class CookieMiddleware implements NestMiddleware {
 
     if (!token && !refreshToken) throw new AuthorizationError();
 
+    const refreshData = AuthService.deTokenizData(refreshToken);
     let userData = AuthService.deTokenizData(token);
 
-    if (!userData) {
-      const refreshData = AuthService.deTokenizData(refreshToken);
+    if (!refreshData && !userData) throw new AuthorizationError();
 
-      if (!refreshData) throw new AuthorizationError();
+    if (!userData || !refreshData) {
+      const tokenType = !userData ? 'Authorization' : 'Refresh';
+      const data = !userData
+        ? AuthService.deTokenizData(refreshToken)
+        : userData;
 
-      const newToken = AuthService.tokenizeData(refreshData);
-      userData = refreshData;
-      res.cookie(this.role + 'Authorization', newToken);
+      if (!data) throw new AuthorizationError();
+
+      res.cookie(this.role + tokenType, data);
+      userData = data;
     }
 
     req.user = userData;
