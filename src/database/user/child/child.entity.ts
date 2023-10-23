@@ -4,7 +4,7 @@ import BaseUser from 'src/database/user/baseUser';
 import SponsorShip from 'src/database/sponsor/sponsorShip.entity';
 import ChildStatus from 'src/database/user/childStatus.entity';
 import FixNeed from 'src/database/sponsor/fixNeed.entity';
-import Identification from 'src/database/user/identification.entity';
+import Identification from 'src/database/user/identification/identification.entity';
 
 @Entity()
 export default class Child extends BaseUser {

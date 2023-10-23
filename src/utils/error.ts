@@ -30,3 +30,9 @@ export class ServerError extends HttpException {
     super(message, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+export class UserNotFoundError extends HttpException {
+  constructor(message: string = 'The Thing You Looking For is Not Found') {
+    super(message, HttpStatus.NOT_FOUND);
+  }
+}

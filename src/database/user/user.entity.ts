@@ -2,7 +2,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest.entity';
-import Identification from 'src/database/user/identification.entity';
+import Identification from 'src/database/user/identification/identification.entity';
 import { SponsorShip } from 'src/database/sponsor/sponsorShip.entity';
 
 @Entity()

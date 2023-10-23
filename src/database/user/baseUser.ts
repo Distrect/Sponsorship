@@ -27,6 +27,9 @@ export default class BaseUser {
   @Column({ type: 'enum', default: Role.Authority })
   role: Role;
 
+  @Column('boolean', { default: false })
+  isDeleted: boolean;
+
   @BeforeInsert()
   setFullName() {
     this.fullName = this.name + ' ' + this.lastname;

@@ -1,8 +1,11 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, IsNumberString } from 'class-validator';
 import { CityEnum, NationalityEnum } from 'src/database/user';
+import Child from 'src/database/user/child/child.entity';
+import { ListPaginationDto } from 'src/shared/dtos';
 
 class IdentificationDto {
   @IsNotEmpty()
+  @IsNumberString()
   @Length(10, 11)
   public idNumber: string;
 
@@ -29,4 +32,12 @@ export class CreateChildDto {
   public file: Express.Multer.File;
 
   public identification: IdentificationDto;
+}
+
+export class UpdateChildDto extends Child {}
+
+export class ChildPagination extends ListPaginationDto {
+  public fullNameLike: string;
+
+  public age: number;
 }

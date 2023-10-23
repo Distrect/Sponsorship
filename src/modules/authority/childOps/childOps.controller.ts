@@ -1,16 +1,24 @@
 import {
-  Controller,
-  UseGuards,
   Post,
   Body,
-  UseInterceptors,
+  Param,
+  Delete,
+  Patch,
+  UseGuards,
+  Controller,
   UploadedFile,
+  UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common';
+import {
+  ChildPagination,
+  CreateChildDto,
+  UpdateChildDto,
+} from 'src/modules/authority/childOps/childOps.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IAuthority, Role } from 'src/database/user';
 import { RoleGuard } from 'src/guards/userAuthentication.guard';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
-import { CreateChildDto } from 'src/modules/authority/childOps/childOps.dto';
 import ChildOpsService from 'src/modules/authority/childOps/childOps.service';
 
 @UseGuards(new RoleGuard(Role.Authority))
@@ -25,10 +33,41 @@ export default class ChildOpsController {
     @Body() requestBody: CreateChildDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const result = await this.childOpsService.createChild(
+    const newChild = await this.childOpsService.createChild(
       requestBody,
       authority,
       file,
     );
+
+    return { ok: true, message: 'Child has been created', newChild };
+  }
+
+  @Delete('deleteChild/:childId')
+  public async DeleteChild(@Param('childId', ParseIntPipe) childId: number) {
+    const deletedChild = await this.childOpsService.deleteChild(childId);
+
+    return {
+      ok: true,
+      message: 'The Child Successfully Deleted',
+      deletedChild,
+    };
+  }
+
+  @Patch('updateChild/:childId')
+  public async UpdateChild(
+    @Body() requestBody: UpdateChildDto,
+    @Param('childId', ParseIntPipe) childId: number,
+  ) {
+    const updatedChild = await this.childOpsService.updateChild(
+      childId,
+      requestBody,
+    );
+
+    return { ok: true, message: 'The Child is Updated', updatedChild };
+  }
+
+  @Post('listChilds')
+  public async ListChilds(@Body() requestBody: ChildPagination) {
+    const listedChilds = await this.childOpsService.listChilds(requestBody);
   }
 }
