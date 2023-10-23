@@ -6,15 +6,15 @@ import SponsorShipRequest from 'src/database/sponsor/sponsorShipRequest';
 
 @Entity()
 export default class Admin extends BaseUser {
-  @Column('enum')
+  @Column('enum', { enum: CityEnum })
   city: CityEnum;
 
   @OneToMany(() => UserRequest, (userRequest) => userRequest.admin)
   userRequests: UserRequest[];
 
-  @OneToMany(
+  /* @OneToMany(
     () => SponsorShipRequest,
     (sponsorrshipRequest) => sponsorrshipRequest.admin,
-  )
+  )*/
   sponsorshipRequests: SponsorShipRequest[];
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IDatabaseConfig, IMailConfig, IMailUser } from './types';
+import { IMailConfig, IMailUser } from './types';
 import { DataSourceOptions } from 'typeorm';
 
 @Injectable()
@@ -9,7 +9,6 @@ export class GlobalConfigService {
 
   public getDatabaseConfig(): DataSourceOptions {
     return {
-      // dialect: this.configService.get<string>('DIALECT'),
       type: 'mysql',
       database: this.configService.get<string>('DATABASE'),
       host: this.configService.get<string>('HOST'),
@@ -35,5 +34,11 @@ export class GlobalConfigService {
 
   public getAuthKey(): string {
     return this.configService.get<string>('JWT_PRIVATE_KEY');
+  }
+
+  public getDevMode(): boolean {
+    const devMode = this.configService.get<string>('IS_dEV');
+
+    return devMode === 'true' ? true : false;
   }
 }

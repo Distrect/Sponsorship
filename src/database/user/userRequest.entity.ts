@@ -18,10 +18,10 @@ export default class UserRequest {
   @PrimaryGeneratedColumn()
   requestId: number;
 
-  @Column('enum')
+  @Column('enum', { enum: Type })
   type: Type;
 
-  @Column({ type: 'enum', default: Status.WAITING })
+  @Column({ type: 'enum', default: Status.WAITING, enum: Status })
   status: Status;
 
   @Column('text', { nullable: true })

@@ -17,17 +17,17 @@ export default class Identification {
   identificationId: number;
 
   @Length(10, 11)
-  @Column('string')
+  @Column('varchar')
   idNumber: string;
 
-  @Column('enum')
+  @Column('enum', { enum: NationalityEnum })
   nationality: NationalityEnum;
 
-  @Column('enum')
+  @Column('enum', { enum: ActorType })
   actorType: ActorType;
 
   @IsUrl()
-  @Column('string')
+  @Column('varchar')
   path: string;
 
   @ManyToOne(() => User, (user) => user.identifications)

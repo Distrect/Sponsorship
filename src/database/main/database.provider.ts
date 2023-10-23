@@ -1,4 +1,6 @@
 import * as path from 'path';
+import { generateMockChild } from 'src/database/main/mockData';
+import Child from 'src/database/user/child/child.entity';
 import { GlobalConfigService } from 'src/services/config/config.service';
 import { DataSource } from 'typeorm';
 
@@ -17,10 +19,25 @@ export const databaseProviders = [
     useFactory: async (configService: GlobalConfigService) => {
       const databaseOptions = configService.getDatabaseConfig();
       const Database = new DataSource({
+        synchronize: true,
         ...databaseOptions,
-        entities: [path.join(__dirname, '..', '/../**/*.entity.ts')],
+        entities: [__dirname + '/../**/*.entity.{js,ts}'],
+        // entities: [path.join(__dirname, '..', '/../**/*.entity.ts')],
       });
       const InitializedDatabase = await Database.initialize();
+
+      console.log(__dirname + '/../**/*.entity.{js,ts}');
+      const childs = InitializedDatabase.manager.create(
+        Child,
+        generateMockChild(20),
+      );
+
+      await InitializedDatabase.manager.save(childs);
+
+      //const childRepo = InitializedDatabase.getRepository(Child);
+
+      //const childs = await childRepo.create(generateMockChild(20));
+
       return new Promise((res) => res(InitializedDatabase));
     },
     inject: [GlobalConfigService],

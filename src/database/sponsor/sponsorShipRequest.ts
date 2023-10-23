@@ -17,10 +17,10 @@ export default class SponsorShipRequest {
   @Column('text', { nullable: true })
   denyMessage: string;
 
-  @ManyToOne(() => Authority, (authority) => authority.sponsorShipRequests)
-  authority: Authority;
+  /* @ManyToOne(() => Authority, (authority) => authority.sponsorShipRequests)
+  authority: Authority;*/
 
-  @ManyToOne(() => Admin, (admin) => admin.sponsorshipRequests)
+  // @ManyToOne(() => Admin, (admin) => admin.sponsorshipRequests)
   admin: Admin;
 
   @Column('boolean', { default: false })

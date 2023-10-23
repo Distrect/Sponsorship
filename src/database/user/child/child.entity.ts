@@ -11,7 +11,7 @@ export default class Child extends BaseUser {
   @Column('date')
   dateOfBirth: Date;
 
-  @Column('enum')
+  @Column('enum', { enum: CityEnum })
   city: CityEnum;
 
   @Column('text')

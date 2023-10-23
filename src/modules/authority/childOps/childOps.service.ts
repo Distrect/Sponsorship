@@ -66,6 +66,6 @@ export default class ChildOpsService {
   }
 
   public async listChilds(body: ChildPagination) {
-    const listedChilds = await this.childEntityService.listChilds(body);
+    //const listedChilds = await this.childEntityService.listChilds(body);
   }
 }

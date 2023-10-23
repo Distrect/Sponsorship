@@ -15,7 +15,10 @@ export default class SponsorShip {
   @PrimaryGeneratedColumn()
   sponsorShipId: number;
 
-  @Column('enum', { default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION })
+  @Column('enum', {
+    default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
+    enum: SponsorshipStatus,
+  })
   status: SponsorshipStatus;
 
   @ManyToOne(() => Child, (child) => child.sponsors)

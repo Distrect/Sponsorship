@@ -23,6 +23,6 @@ export class AuthorityAuthorizationService {
         { field: 'password', errorMessage: 'Password is incorrect' },
       ]);
 
-    return authorityUser.toJSON();
+    return authorityUser;
   }
 }

@@ -9,17 +9,17 @@ export default class Authority extends BaseUser {
   @Column('date')
   dateOfBirth: Date;
 
-  @Column({ type: 'enum' })
+  @Column({ type: 'enum', enum: CityEnum })
   city: CityEnum;
 
   @OneToMany(() => UserRequest, (userRequest) => userRequest.authority)
   userRequests: UserRequest[];
 
-  @OneToMany(
+  /*@OneToMany(
     () => SponsorShipRequest,
     (sponsorshipRequest) => sponsorshipRequest.authority,
   )
-  sponsorShipRequests: SponsorShipRequest[];
+  sponsorShipRequests: SponsorShipRequest[];*/
 }
 
 //import { DataTypes } from 'sequelize';

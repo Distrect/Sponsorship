@@ -16,7 +16,7 @@ export default class UserCredentialDocuments {
   credentialId: number;
 
   @IsUrl()
-  @Column('string')
+  @Column('varchar')
   path: string;
 
   /*@ManyToOne(() => Identification, (identification) => identification.documents)

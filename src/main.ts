@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CustomValidationPipe } from 'src/pipes/validation.pipe';
-import * as cookieParser from 'cookie-parser';
-import { Authority } from 'src/database';
+import cookieParser from 'cookie-parser';
 
 declare const module: any;
 

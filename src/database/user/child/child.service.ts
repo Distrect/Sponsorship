@@ -47,5 +47,9 @@ export default class ChildEntityService {
     return await this.saveChildEntity(child, body);
   }
 
-  public async listChilds();
+  public async listChilds() {
+    const result = this.childRepository
+      .createQueryBuilder('child')
+      .select(['name', 'lastname', 'city']);
+  }
 }

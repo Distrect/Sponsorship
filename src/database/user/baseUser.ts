@@ -8,23 +8,23 @@ export default class BaseUser {
   userId: number;
 
   @Index()
-  @Column('string')
+  @Column('varchar')
   name: string;
 
-  @Column('string')
+  @Column('varchar')
   lastname: string;
 
-  @Column('string')
+  @Column('varchar')
   fullName: string;
 
-  @Column('string')
+  @Column('varchar')
   password: string;
 
   @IsEmail()
-  @Column('string')
+  @Column('varchar')
   email: string;
 
-  @Column({ type: 'enum', default: Role.Authority })
+  @Column({ type: 'enum', default: Role.Authority, enum: Role })
   role: Role;
 
   @Column('boolean', { default: false })
