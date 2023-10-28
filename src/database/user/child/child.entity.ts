@@ -1,7 +1,7 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
-import SponsorShip from 'src/database/sponsor/sponsorShip.entity';
+import SponsorShip from 'src/database/sponsor/sponsor/sponsorShip.entity';
 import ChildStatus from 'src/database/user/childStatus.entity';
 import FixNeed from 'src/database/sponsor/fixNeed.entity';
 import Identification from 'src/database/user/identification/identification.entity';
@@ -11,10 +11,10 @@ export default class Child extends BaseUser {
   @Column('date')
   dateOfBirth: Date;
 
-  @Column('enum', { enum: CityEnum })
-  city: CityEnum;
+  // @Column('enum', { enum: CityEnum })
+  // city: CityEnum;
 
-  @Column('text')
+  @Column('varchar', { default: '1' })
   story: string;
 
   @OneToMany(() => Identification, (identification) => identification.child)

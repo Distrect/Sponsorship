@@ -16,10 +16,11 @@ import {
   UpdateChildDto,
 } from 'src/modules/authority/childOps/childOps.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { IAuthority, Role } from 'src/database/user';
+import { Role } from 'src/database/user';
 import { RoleGuard } from 'src/guards/userAuthentication.guard';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import ChildOpsService from 'src/modules/authority/childOps/childOps.service';
+import { IUserCookie } from 'src/shared/types';
 
 @UseGuards(new RoleGuard(Role.Authority))
 @Controller('childops')
@@ -29,7 +30,7 @@ export default class ChildOpsController {
   @Post('createChild')
   @UseInterceptors(FileInterceptor('file'))
   public async CreateChild(
-    @User(Role.Authority) authority: IAuthority,
+    @User(Role.Authority) authority: IUserCookie,
     @Body() requestBody: CreateChildDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -67,7 +68,13 @@ export default class ChildOpsController {
   }
 
   @Post('listChilds')
-  public async ListChilds(@Body() requestBody: ChildPagination) {
-    const listedChilds = await this.childOpsService.listChilds(requestBody);
+  public async ListChilds(@Body() requestBody: ChildPagination): Promise<any> {
+    const result = await this.childOpsService.listChilds(requestBody);
+
+    return {
+      ok: true,
+      message: 'Child List has been successfully retrieved',
+      ...result,
+    };
   }
 }

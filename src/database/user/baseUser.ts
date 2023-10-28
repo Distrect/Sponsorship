@@ -1,5 +1,5 @@
 import { IsEmail } from 'class-validator';
-import { Role } from 'src/database/user';
+import { CityEnum, Role } from 'src/database/user';
 import { Index, Column, BeforeInsert, PrimaryGeneratedColumn } from 'typeorm';
 
 export default class BaseUser {
@@ -29,6 +29,9 @@ export default class BaseUser {
 
   @Column('boolean', { default: false })
   isDeleted: boolean;
+
+  @Column('enum', { enum: CityEnum })
+  city: CityEnum;
 
   @BeforeInsert()
   setFullName() {

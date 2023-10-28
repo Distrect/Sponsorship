@@ -5,7 +5,7 @@ import ChildEntityService from 'src/database/user/child/child.service';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [ChildProvider, ChildEntityService],
+  providers: [ChildProvider, ChildProvider, ChildEntityService],
   exports: [ChildEntityService],
 })
 export default class ChildEntityModule {}

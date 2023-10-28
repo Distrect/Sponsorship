@@ -5,9 +5,9 @@ import {
   Index,
   ManyToOne,
 } from 'typeorm';
-import { SponsorshipStatus } from '.';
-import Child from '../user/child/child.entity';
-import User from '../user/user.entity';
+import { SponsorshipStatus } from '..';
+import Child from '../../user/child/child.entity';
+import User from '../../user/user.entity';
 
 @Entity()
 export default class SponsorShip {
@@ -25,5 +25,5 @@ export default class SponsorShip {
   child: Child;
 
   @ManyToOne(() => User, (user) => user.sponsor)
-  user: User[];
+  user: User;
 }

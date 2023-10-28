@@ -4,12 +4,15 @@ import {
   CreateChildDto,
   UpdateChildDto,
 } from 'src/modules/authority/childOps/childOps.dto';
-import { ActorType, IAuthority } from 'src/database/user';
-import IdentificationEntityService from 'src/database/user/identification/identification.service';
-import ChildEntityService from 'src/database/user/child/child.service';
-import FileService from 'src/services/file/file.service';
+import { ActorType } from 'src/database/user';
 import { checkIdentityNo } from 'src/utils/util';
 import { FormFieldError } from 'src/utils/error';
+import { IUserCookie } from 'src/shared/types';
+import IdentificationEntityService from 'src/database/user/identification/identification.service';
+import ChildEntityService, {
+  IChildListMethod,
+} from 'src/database/user/child/child.service';
+import FileService from 'src/services/file/file.service';
 
 @Injectable()
 export default class ChildOpsService {
@@ -18,7 +21,7 @@ export default class ChildOpsService {
 
   public async createChild(
     body: CreateChildDto,
-    user: IAuthority,
+    user: IUserCookie,
     file: Express.Multer.File,
   ) {
     if (body.identification && !checkIdentityNo(body.identification.idNumber))
@@ -65,7 +68,8 @@ export default class ChildOpsService {
     return updatedChild;
   }
 
-  public async listChilds(body: ChildPagination) {
-    //const listedChilds = await this.childEntityService.listChilds(body);
+  public async listChilds(body: ChildPagination): Promise<IChildListMethod> {
+    const childsAndCount = await this.childEntityService.listChilds(body);
+    return childsAndCount;
   }
 }
