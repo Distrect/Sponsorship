@@ -5,7 +5,7 @@ import {
   // OneToMany,
   ManyToOne,
 } from 'typeorm';
-import User from '../user.entity';
+import User from '../sponsor/user.entity';
 import { ActorType, NationalityEnum } from 'src/database/user';
 // import UserCredentialDocuments from './userCredentialDocs.entity';
 import { IsUrl, Length } from 'class-validator';

@@ -11,9 +11,6 @@ export default class Child extends BaseUser {
   @Column('date')
   dateOfBirth: Date;
 
-  // @Column('enum', { enum: CityEnum })
-  // city: CityEnum;
-
   @Column('varchar', { default: '1' })
   story: string;
 

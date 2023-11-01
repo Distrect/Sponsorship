@@ -2,7 +2,7 @@ import Child from 'src/database/user/child/child.entity';
 import SponsorShip from 'src/database/sponsor/sponsor/sponsorShip.entity';
 import { faker } from '@faker-js/faker';
 import { ActorType, CityEnum, NationalityEnum, Role } from 'src/database/user';
-import User from 'src/database/user/user.entity';
+import User from 'src/database/user/sponsor/user.entity';
 import BaseUser from 'src/database/user/baseUser';
 import { SponsorshipStatus } from 'src/database/sponsor';
 import { DeepPartial } from 'typeorm';

@@ -7,7 +7,7 @@ import { CityEnum, Role } from 'src/database/user';
 import Child from 'src/database/user/child/child.entity';
 import type { DeepPartial } from 'typeorm';
 import { PlainObjectToNewEntityTransformer } from 'typeorm/query-builder/transformer/PlainObjectToNewEntityTransformer';
-import User from 'src/database/user/user.entity';
+import User from 'src/database/user/sponsor/user.entity';
 
 export interface IChildListMethod {
   childs: IChildList[];

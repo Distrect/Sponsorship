@@ -5,7 +5,12 @@ import SponsorshipDao from 'src/database/sponsor/sponsor/sponsorShip.dao';
 export default class SponsorshipService {
   @Inject() private sposnorShipDao: SponsorshipDao;
 
-  public async getUserSponsorShips() {
-    return await this.sposnorShipDao.getChildSponsors(1);
+  public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
+    if (user === 'Child')
+      return await this.sposnorShipDao.getChildSponsors(userId);
+
+    return await this.sposnorShipDao.getUserSponsors(userId);
   }
+
+  public async blockSponsorShip(sponsorShipId: number) {}
 }

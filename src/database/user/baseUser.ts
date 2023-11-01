@@ -2,7 +2,7 @@ import { IsEmail } from 'class-validator';
 import { CityEnum, Role } from 'src/database/user';
 import { Index, Column, BeforeInsert, PrimaryGeneratedColumn } from 'typeorm';
 
-export default class BaseUser {
+export default abstract class BaseUser {
   @Index()
   @PrimaryGeneratedColumn()
   userId: number;

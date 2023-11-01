@@ -12,6 +12,9 @@ export default class SponsorShipRequest {
   status: SponsorshipStatus;
 
   @Column('text', { nullable: true })
+  reason: string;
+
+  @Column('text', { nullable: true })
   approveMessage: string;
 
   @Column('text', { nullable: true })

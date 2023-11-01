@@ -14,7 +14,7 @@ export class AppController {
   @Get()
   async getHello() {
     // await this.childEntityService.deneme();
-    await this.sposnorShipService.getUserSponsorShips();
+    await this.sposnorShipService.getUserSponsorShips('User', 1);
     return this.appService.getHello();
   }
 }
