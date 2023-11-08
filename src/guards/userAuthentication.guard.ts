@@ -2,24 +2,37 @@ import { Role } from './../database/user/index';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { IUserCookie } from 'src/shared/types';
 import { AuthorizationError } from 'src/utils/error';
+
+//Eğer bir tarayıcıdan farklı kullanıcı tiplerinin hesabı açıldıysa burası patlar aga düzelt
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-  private role: Role;
-
-  constructor(role: Role) {
-    this.role = role;
-  }
+  constructor(private roles: Role[] | Role) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     const cookies = request.cookies();
-    const authCookie = cookies[Role[this.role + 'Authorization']];
+
+    let authCookie: IUserCookie;
+
+    if (Array.isArray(this.roles)) {
+      for (const role of this.roles) {
+        const cookieProperty = role + 'Authorization';
+        if (cookies[cookieProperty]) {
+          authCookie = cookies[cookieProperty];
+          break;
+        }
+      }
+    } else {
+      authCookie = cookies[this.roles + 'Authorization'];
+    }
 
     if (!authCookie) throw new AuthorizationError();
-    if (authCookie.type !== this.role) return false;
+    if (!this.roles.includes(authCookie.role) || authCookie.role !== this.roles)
+      return false;
 
     return true;
   }

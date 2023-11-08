@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/main/database.module';
-import { ChildProvider } from 'src/database/user/child/child.provider';
+import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
+import Child from 'src/database/user/child/child.entity';
+import DatabaseModule from 'src/database/main/database.module';
 import ChildEntityService from 'src/database/user/child/child.service';
+
+const ChildProvider = createRepositoryProvider(Child);
 
 @Module({
   imports: [DatabaseModule],

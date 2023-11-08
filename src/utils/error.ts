@@ -36,3 +36,21 @@ export class UserNotFoundError extends HttpException {
     super(message, HttpStatus.NOT_FOUND);
   }
 }
+
+export class NotFound extends HttpException {
+  constructor(message: string = 'The Thing You Are Looking For Is Not Found') {
+    super(message, HttpStatus.NOT_FOUND);
+  }
+}
+
+export class HasActiveNeedGroupError extends Error {
+  constructor() {
+    super('The Child has Active Needs. You Cannot Create New Need Group');
+  }
+}
+
+export class IsNotActiveGroup extends Error {
+  constructor(message: string = 'The Need Group is Not Active') {
+    super(message);
+  }
+}
