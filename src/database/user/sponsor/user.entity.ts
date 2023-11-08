@@ -3,7 +3,7 @@ import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
-import SponsorShip from 'src/database/sponsor/sponsor/sponsorShip.entity';
+import SponsorShip from 'src/database/sponsor/entities/sponsorShip.entity';
 
 @Entity()
 export default class User extends BaseUser {

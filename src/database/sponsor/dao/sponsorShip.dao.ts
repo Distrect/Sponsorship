@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import SponsorShip from 'src/database/sponsor/sponsor/sponsorShip.entity';
+import SponsorShip from 'src/database/sponsor/entities/sponsorShip.entity';
 
 @Injectable()
 export default class SponsorshipDao {

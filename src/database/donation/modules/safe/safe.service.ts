@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import NeedSafeDao from 'src/database/donation/dao/needSafe.dao';
-import { NeedSafeType } from 'src/database/donation/entities';
+import { NeedSafeType } from 'src/database/donation';
 
 @Injectable()
 export default class SafeService {

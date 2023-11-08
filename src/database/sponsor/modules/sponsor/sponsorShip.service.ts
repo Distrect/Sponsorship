@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import SponsorshipDao from 'src/database/sponsor/sponsor/sponsorShip.dao';
+import SponsorshipDao from 'src/database/sponsor/dao/sponsorShip.dao';
 
 @Injectable()
 export default class SponsorshipService {

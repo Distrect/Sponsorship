@@ -6,7 +6,7 @@ import {
   NotFound,
   ServerError,
 } from 'src/utils/error';
-import { ChildNeedGroupStatus } from 'src/database/donation/entities';
+import { ChildNeedGroupStatus } from 'src/database/donation';
 import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup.entity';
 
 @Injectable()

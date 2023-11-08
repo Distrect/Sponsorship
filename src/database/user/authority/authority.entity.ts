@@ -2,7 +2,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest.entity';
-import SponsorShipRequest from 'src/database/sponsor/sponsorShipRequest';
+import SponsorShipRequest from 'src/database/sponsor/entities/sponsorShipRequest';
 
 @Entity()
 export default class Authority extends BaseUser {

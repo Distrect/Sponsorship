@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import Child from '../user/child/child.entity';
+import Child from '../../user/child/child.entity';
 
 @Entity()
 export default class FixNeed {

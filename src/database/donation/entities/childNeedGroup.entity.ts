@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { ChildNeedGroupStatus } from 'src/database/donation/entities';
+import { ChildNeedGroupStatus } from 'src/database/donation';
 import ChildNeed from 'src/database/donation/entities/childNeed.entity';
 
 @Entity()

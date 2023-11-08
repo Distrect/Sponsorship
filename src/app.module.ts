@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { GlobalConfigModule } from './services/config/config.module';
 import { DatabaseModule } from './database/main/database.module';
 import MailModule from './services/mail/mail.module';
-import SponsorShipModule from 'src/database/sponsor/sponsor/sponsorShip.module';
+import SponsorShipModule from 'src/database/sponsor/modules/sponsor/sponsorShip.module';
 import ChildEntityModule from 'src/database/user/child/child.module';
 
 @Module({

@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { SponsorshipStatus } from 'src/database/sponsor';
-import Authority from '../user/authority/authority.entity';
-import Admin from '../user/admin.entity';
+import Admin from '../../user/admin.entity';
 
 @Entity()
 export default class SponsorShipRequest {
