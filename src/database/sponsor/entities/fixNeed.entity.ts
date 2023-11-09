@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import Child from '../../user/child/child.entity';
+import { FixNeedStatus } from 'src/database/sponsor';
 
 @Entity()
 export default class FixNeed {
@@ -18,8 +19,8 @@ export default class FixNeed {
   @Column('varchar')
   category: string;
 
-  @Column('varchar')
-  status: boolean;
+  @Column('enum', { enum: FixNeedStatus })
+  status: FixNeedStatus;
 
   @ManyToOne(() => Child, (child) => child.fixNeeds)
   child: Child;

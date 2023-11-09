@@ -5,3 +5,8 @@ export enum SponsorshipStatus {
   WAITING_FOR_AUTHORIZATION = 'Waiting for Authorization',
   BLOCKED = 'Blocked',
 }
+
+export enum FixNeedStatus {
+  ACTIVE = 'Active',
+  DEACTIVE = 'Deactive',
+}
