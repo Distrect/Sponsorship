@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
 import { CreateFixNeedDTO } from 'src/database/sponsor/modules/fixNeed/fixNeed.dto';
-import FixNeedDao from 'src/database/sponsor/dao/fixNeed.dao';
-import FixNeed from 'src/database/sponsor/entities/fixNeed.entity';
+import FixNeedDao from 'src/database/sponsor/dao/fixNeed/fixNeed.dao';
+import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 
 @Injectable()
 export default class FixNeedService {

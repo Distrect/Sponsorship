@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import NeedSafeDao from 'src/database/donation/dao/needSafe.dao';
+import NeedSafeDao from 'src/database/donation/dao/needSafe/needSafe.dao';
 import { NeedSafeType } from 'src/database/donation';
 
 @Injectable()

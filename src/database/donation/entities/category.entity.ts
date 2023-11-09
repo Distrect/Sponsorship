@@ -1,4 +1,4 @@
-import ChildNeed from 'src/database/donation/entities/childNeed.entity';
+import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()

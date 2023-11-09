@@ -1,5 +1,5 @@
 import { NeedSafeType } from 'src/database/donation';
-import ChildNeed from 'src/database/donation/entities/childNeed.entity';
+import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()

@@ -1,25 +1,19 @@
 import { Module } from '@nestjs/common';
-import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
-import ChildNeed from 'src/database/donation/entities/childNeed.entity';
-import DatabaseModule from 'src/database/main/database.module';
+import ChildNeedEntityModule from 'src/database/donation/dao/childNeed/childNeedEntity.module';
 import ChildNeedController from 'src/database/donation/modules/childNeed/childNeed.controller';
 import ChildNeedService from 'src/database/donation/modules/childNeed/childNeed.service';
 import ChildEntityModule from 'src/database/user/child/child.module';
-import ChildNeedDao from 'src/database/donation/dao/childNeed.dao';
-import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup.entity';
 import SafeModule from 'src/database/donation/modules/safe/safe.module';
-
-const ChildNeedProvider = createRepositoryProvider(ChildNeed);
-const ChildNeedGroupProvider = createRepositoryProvider(ChildNeedGroup);
+import ChildNeedGroupEntityModule from 'src/database/donation/dao/childNeedGroup/childneedgroupentity.module';
 
 @Module({
-  imports: [DatabaseModule, ChildEntityModule, SafeModule],
-  providers: [
-    ChildNeedProvider,
-    ChildNeedGroupProvider,
-    ChildNeedService,
-    ChildNeedDao,
+  imports: [
+    ChildEntityModule,
+    SafeModule,
+    ChildNeedEntityModule,
+    ChildNeedGroupEntityModule,
   ],
+  providers: [ChildNeedService],
   controllers: [ChildNeedController],
 })
 export default class ChildNeedModule {}

@@ -1,5 +1,5 @@
 import Child from 'src/database/user/child/child.entity';
-import SponsorShip from 'src/database/sponsor/entities/sponsorShip.entity';
+import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
 import { faker } from '@faker-js/faker';
 import { ActorType, CityEnum, NationalityEnum, Role } from 'src/database/user';
 import User from 'src/database/user/sponsor/user.entity';

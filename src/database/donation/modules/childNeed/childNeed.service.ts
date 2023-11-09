@@ -1,4 +1,4 @@
-import { INeedWithTotal } from '../../dao/childNeed.dao';
+import { INeedWithTotal } from '../../dao/childNeed/childNeed.dao';
 import { Injectable } from '@nestjs/common';
 import { IUserCookie } from 'src/shared/types';
 import {
@@ -11,8 +11,8 @@ import {
   ServerError,
   UserNotFoundError,
 } from 'src/utils/error';
-import ChildNeedDao from 'src/database/donation/dao/childNeed.dao';
-import ChildNeedGroupDao from 'src/database/donation/dao/childNeedGroup.dao';
+import ChildNeedDao from 'src/database/donation/dao/childNeed/childNeed.dao';
+import ChildNeedGroupDao from 'src/database/donation/dao/childNeedGroup/childNeedGroup.dao';
 import ChildEntityService from 'src/database/user/child/child.service';
 import type SafeService from 'src/database/donation/modules/safe/safe.service';
 

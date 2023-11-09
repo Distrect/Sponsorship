@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildNeed from 'src/database/donation/entities/childNeed.entity';
+import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
 
 @Entity()
 export default class ChildNeedGroup {

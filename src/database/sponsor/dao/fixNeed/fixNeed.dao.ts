@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NotFound } from 'src/utils/error';
 import { FixNeedStatus } from 'src/database/sponsor';
-import FixNeed from 'src/database/sponsor/entities/fixNeed.entity';
+import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 
 @Injectable()
 export default class FixNeedDao {

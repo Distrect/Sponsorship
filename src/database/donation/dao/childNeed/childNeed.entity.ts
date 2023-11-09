@@ -1,4 +1,4 @@
-import { Status } from './donation.global';
+import { Status } from '../../entities/donation.global';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,8 +7,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import Category from 'src/database/donation/entities/category.entity';
-import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup.entity';
-import NeedSafe from 'src/database/donation/entities/needSafe.entity';
+import ChildNeedGroup from 'src/database/donation/dao/childNeedGroup/childNeedGroup.entity';
+import NeedSafe from 'src/database/donation/dao/needSafe/needSafe.entity';
 import Donation from 'src/database/donation/entities/donation.entity';
 
 @Entity()

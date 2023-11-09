@@ -7,7 +7,7 @@ import {
   ServerError,
 } from 'src/utils/error';
 import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup.entity';
+import ChildNeedGroup from 'src/database/donation/dao/childNeedGroup/childNeedGroup.entity';
 
 @Injectable()
 export default class ChildNeedGroupDao {

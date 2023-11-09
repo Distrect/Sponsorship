@@ -1,9 +1,9 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
-import SponsorShip from 'src/database/sponsor/entities/sponsorShip.entity';
+import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
 import ChildStatus from 'src/database/user/childStatus.entity';
-import FixNeed from 'src/database/sponsor/entities/fixNeed.entity';
+import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 
 @Entity()

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NeedSafeType } from 'src/database/donation';
 import { DeepPartial, Repository } from 'typeorm';
-import NeedSafe from 'src/database/donation/entities/needSafe.entity';
+import NeedSafe from 'src/database/donation/dao/needSafe/needSafe.entity';
 
 @Injectable()
 export default class NeedSafeDao {
