@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
-import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
+import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 import { NotFound } from 'src/utils/error';
 
 export interface INeedWithTotal extends ChildNeed {

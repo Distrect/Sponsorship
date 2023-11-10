@@ -1,6 +1,12 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  BeforeInsert,
+} from 'typeorm';
 import { NeedSafeType } from 'src/database/donation';
-import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 
 @Entity()
 export default class NeedSafe {
@@ -15,4 +21,11 @@ export default class NeedSafe {
 
   @ManyToOne(() => ChildNeed, (childNeed) => childNeed.needSafes)
   childNeed: ChildNeed;
+
+  @BeforeInsert()
+  private chcek() {
+    if (this.amount < 0) {
+      throw new Error('Bro POlease');
+    }
+  }
 }

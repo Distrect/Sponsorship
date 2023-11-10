@@ -1,10 +1,11 @@
-import { Entity, Column, OneToMany } from 'typeorm';
-import { CityEnum } from 'src/database/user';
+import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import BaseUser from 'src/database/user/baseUser';
 import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
 import ChildStatus from 'src/database/user/childStatus.entity';
 import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 import Identification from 'src/database/user/identification/identification.entity';
+import Safe from 'src/database/donation/entities/safe/safe.entity';
+import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup/childNeedGroup.entity';
 
 @Entity()
 export default class Child extends BaseUser {
@@ -13,6 +14,10 @@ export default class Child extends BaseUser {
 
   @Column('varchar', { default: '1' })
   story: string;
+
+  @OneToOne(() => Safe, (safe) => safe.child)
+  @JoinColumn()
+  safe: Safe;
 
   @OneToMany(() => Identification, (identification) => identification.child)
   identifications: Identification[];
@@ -25,6 +30,9 @@ export default class Child extends BaseUser {
 
   @OneToMany(() => FixNeed, (fixNeed) => fixNeed.child)
   fixNeeds: FixNeed[];
+
+  @OneToMany(() => ChildNeedGroup, (needGroup) => needGroup.child)
+  needGroups: ChildNeedGroup[];
 }
 
 // import { DataTypes } from 'sequelize';

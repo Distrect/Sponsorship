@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import ChildNeedDao from 'src/database/donation/dao/childNeed/childNeed.dao';
-import ChildNeed from 'src/database/donation/dao/childNeed/childNeed.entity';
+import ChildNeedDao from 'src/database/donation/entities/childNeed/childNeed.dao';
+import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 import DatabaseModule from 'src/database/main/database.module';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 

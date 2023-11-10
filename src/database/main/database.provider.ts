@@ -9,7 +9,6 @@ import User from 'src/database/user/sponsor/user.entity';
 import Child from 'src/database/user/child/child.entity';
 import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
 import Identification from 'src/database/user/identification/identification.entity';
-import { ActorType, NationalityEnum } from 'src/database/user';
 
 export interface DatabaseOption {
   dialect: string;
@@ -31,6 +30,7 @@ export const databaseProviders = [
         dropSchema: isDevMode,
         ...databaseOptions,
         entities: [__dirname + '/../**/*.entity.{js,ts}'],
+        subscribers: [__dirname + '/../**/*.listener.{js,ts}'],
       });
       const InitializedDatabase = await Database.initialize();
 

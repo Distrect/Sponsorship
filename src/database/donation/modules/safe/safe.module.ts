@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import SafeService from 'src/database/donation/modules/safe/safe.service';
-import NeedSafeEntityModule from 'src/database/donation/dao/needSafe/needSafeEntity.module';
+import NeedSafeEntityModule from 'src/database/donation/entities/needSafe/needSafeEntity.module';
+import SafeEntityModule from 'src/database/donation/entities/safe/safeEntity.module';
 
 @Module({
-  imports: [NeedSafeEntityModule],
+  imports: [NeedSafeEntityModule, SafeEntityModule],
   providers: [SafeService],
   exports: [SafeService],
 })

@@ -15,4 +15,5 @@ export const createRepositoryProvider = <T extends new (...args: any[]) => any>(
   };
 };
 
-export const Injector = (entity: any) => Inject(generateName(entity));
+export const Injector = <T extends new (...args: any[]) => any>(entity: T) =>
+  Inject(generateName(entity));
