@@ -1,7 +1,8 @@
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import User from 'src/database/user/sponsor/user.entity';
 import { Injector } from 'src/database/utils/repositoryProvider';
+import { UserNotFoundError } from 'src/utils/error';
 
 @Injectable()
 export default class UserDao {
@@ -16,5 +17,15 @@ export default class UserDao {
         'sponsor_ship.sponsorShipId = user.sponsor',
       )
       .where('sponsor_ship.child.userId = :childId', { childId });
+  }
+
+  public async getUser(userParams: FindOptionsWhere<User>) {
+    const user = await this.userRepository.findOne({
+      where: { ...userParams },
+    });
+
+    if (!user) throw new UserNotFoundError();
+
+    return user;
   }
 }

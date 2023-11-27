@@ -7,7 +7,7 @@ import {
 } from 'src/database/main/mockData';
 import User from 'src/database/user/sponsor/user.entity';
 import Child from 'src/database/user/child/child.entity';
-import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 
 export interface DatabaseOption {
@@ -57,7 +57,7 @@ export const databaseProviders = [
 
         await managerSave(
           InitializedDatabase.manager.create(
-            SponsorShip,
+            Sponsorship,
             generateMockSponsorship(userIds, childIds),
           ),
         );

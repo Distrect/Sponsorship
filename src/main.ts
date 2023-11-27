@@ -10,6 +10,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new CustomValidationPipe());
   app.use(cookieParser());
+
   await app.listen(3000);
 
   if (module.hot) {

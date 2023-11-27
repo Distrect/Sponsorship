@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import BaseUser from 'src/database/user/baseUser';
-import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
 import ChildStatus from 'src/database/user/childStatus.entity';
 import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 import Identification from 'src/database/user/identification/identification.entity';
@@ -22,8 +22,8 @@ export default class Child extends BaseUser {
   @OneToMany(() => Identification, (identification) => identification.child)
   identifications: Identification[];
 
-  @OneToMany(() => SponsorShip, (sponsorship) => sponsorship.child)
-  sponsors: SponsorShip[];
+  @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.child)
+  sponsors: Sponsorship[];
 
   @OneToMany(() => ChildStatus, (childStatus) => childStatus.child)
   status: ChildStatus[];

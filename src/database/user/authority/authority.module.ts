@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/main/database.module';
-import { AuthorityProvider } from './authority.provider';
-import { AuthorityEntityService } from './authority.service';
+import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
+import DatabaseModule from 'src/database/main/database.module';
+import Authority from 'src/database/user/authority/authority.entity';
+import AuthorityDao from 'src/database/user/authority/authority.dao';
+
+const AuthorityProvider = createRepositoryProvider(Authority);
 
 @Module({
   imports: [DatabaseModule],
-  providers: [AuthorityProvider, AuthorityEntityService],
-  exports: [AuthorityEntityService],
+  providers: [AuthorityProvider, AuthorityDao],
+  exports: [AuthorityDao],
 })
 export class AuthorityEntityModule {}

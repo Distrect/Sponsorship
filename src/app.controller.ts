@@ -1,14 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import SponsorshipService from 'src/database/sponsor/modules/sponsor/sponsorShip.service';
-import ChildEntityService from 'src/database/user/child/child.service';
+import SponsorshipService from 'src/database/sponsor/modules/sponsor/sponsorship.service';
+import ChildDao from 'src/database/user/child/child.dao';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private sposnorShipService: SponsorshipService,
-    private childEntityService: ChildEntityService,
+    private childEntityService: ChildDao,
   ) {}
 
   @Get()

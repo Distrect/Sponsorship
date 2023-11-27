@@ -3,7 +3,7 @@ import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
-import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 
 @Entity()
 export default class User extends BaseUser {
@@ -22,6 +22,6 @@ export default class User extends BaseUser {
   @OneToMany(() => Identification, (identification) => identification.user)
   identifications: Identification[];
 
-  @OneToMany(() => SponsorShip, (sponsorship) => sponsorship.user)
-  sponsor: SponsorShip[];
+  @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
+  sponsor: Sponsorship[];
 }

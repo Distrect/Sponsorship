@@ -1,5 +1,5 @@
 import Child from 'src/database/user/child/child.entity';
-import SponsorShip from 'src/database/sponsor/dao/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
 import { faker } from '@faker-js/faker';
 import { ActorType, CityEnum, NationalityEnum, Role } from 'src/database/user';
 import User from 'src/database/user/sponsor/user.entity';
@@ -11,14 +11,14 @@ import Identification from 'src/database/user/identification/identification.enti
 type EntityMap = {
   Child: Partial<Child>;
   User: Partial<User>;
-  SponsorShip: Partial<SponsorShip>[];
+  Sponsorship: Partial<Sponsorship>[];
 };
 
 const EntityObject: Record<keyof EntityMap, (...args: any[]) => Partial<any>> =
   {
     Child: generateMockChild,
     User: generateMockUser,
-    SponsorShip: generateMockSponsorship,
+    Sponsorship: generateMockSponsorship,
   };
 
 function generateMockBaseUser(): Partial<BaseUser> {
@@ -66,7 +66,7 @@ export function generateMockIdentification(
 export function generateMockSponsorship(
   userIds: number[],
   childIds: number[],
-): DeepPartial<SponsorShip>[] {
+): DeepPartial<Sponsorship>[] {
   if (childIds.length === 0) throw new Error('Not Possible');
 
   return childIds
