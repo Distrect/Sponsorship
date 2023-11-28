@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import User from 'src/database/user/sponsor/user.entity';
+import User from 'src/database/user/user/user.entity';
 import Child from 'src/database/user/child/child.entity';
 import FixNeed from 'src/database/sponsor/dao/fixNeed/fixNeed.entity';
 import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';

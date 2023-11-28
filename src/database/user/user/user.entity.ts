@@ -1,9 +1,10 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Answer from 'src/database/user/answer/answer.entity';
 
 @Entity()
 export default class User extends BaseUser {
@@ -24,4 +25,8 @@ export default class User extends BaseUser {
 
   @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
   sponsor: Sponsorship[];
+
+  @OneToOne(() => Answer, (answer) => answer.user)
+  @JoinColumn()
+  answer: Answer;
 }

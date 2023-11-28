@@ -5,7 +5,7 @@ import {
   generateMockIdentification,
   generateMockSponsorship,
 } from 'src/database/main/mockData';
-import User from 'src/database/user/sponsor/user.entity';
+import User from 'src/database/user/user/user.entity';
 import Child from 'src/database/user/child/child.entity';
 import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
 import Identification from 'src/database/user/identification/identification.entity';

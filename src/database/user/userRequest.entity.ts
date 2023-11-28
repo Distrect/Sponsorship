@@ -6,7 +6,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Status, Type } from 'src/database/user';
-import User from 'src/database/user/sponsor/user.entity';
+import User from 'src/database/user/user/user.entity';
 import Admin from 'src/database/user/admin.entity';
 import Authority from 'src/database/user/authority/authority.entity';
 

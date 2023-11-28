@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import FixNeedDao from 'src/database/sponsor/dao/fixNeed/fixNeed.dao';
 import SponsorshipDao from 'src/database/sponsor/dao/sponsorship/sponsorship.dao';
 import ChildDao from 'src/database/user/child/child.dao';
-import UserDao from 'src/database/user/sponsor/user.dao';
+import UserDao from 'src/database/user/user/user.dao';
 
 @Injectable()
 export default class SponsorshipService {

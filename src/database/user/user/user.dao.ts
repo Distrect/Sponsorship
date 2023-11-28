@@ -1,6 +1,6 @@
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import User from 'src/database/user/sponsor/user.entity';
+import User from 'src/database/user/user/user.entity';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { UserNotFoundError } from 'src/utils/error';
 
