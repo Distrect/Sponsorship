@@ -1,4 +1,6 @@
 import { IsNotEmpty, Min } from 'class-validator';
+import { NeedUrgency } from 'src/database/donation';
+import { CityEnum } from 'src/database/user';
 
 class Need {
   @IsNotEmpty()
@@ -43,4 +45,24 @@ export class CreateNeedDTO {
 
 export class EditNeedDTO {
   editedNeeds: EditNeed[];
+}
+
+export class ListChildWithNeeds {
+  city?: CityEnum;
+  urgency?: NeedUrgency;
+  age?: [number, number];
+}
+
+export class DonateToNeed {
+  needId: number;
+  cost: number;
+}
+
+export class DonateToChild {
+  childId: number;
+  needs: DonateToNeed[];
+}
+
+export class DonationHistoryParams {
+  dateRange?: [Date, Date];
 }

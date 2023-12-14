@@ -24,7 +24,7 @@ export default abstract class BaseUser {
   @Column('varchar')
   email: string;
 
-  @Column({ type: 'enum', default: Role.Authority, enum: Role })
+  @Column({ type: 'enum', enum: Role })
   role: Role;
 
   @Column('boolean', { default: false })

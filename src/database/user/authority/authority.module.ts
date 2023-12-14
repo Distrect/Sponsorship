@@ -11,4 +11,4 @@ const AuthorityProvider = createRepositoryProvider(Authority);
   providers: [AuthorityProvider, AuthorityDao],
   exports: [AuthorityDao],
 })
-export class AuthorityEntityModule {}
+export default class AuthorityEntityModule {}

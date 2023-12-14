@@ -8,6 +8,10 @@ import { UserNotFoundError } from 'src/utils/error';
 export default class UserDao {
   @Injector(User) private userRepository: Repository<User>;
 
+  private async saveUserEntity(entity: User) {
+    return await this.userRepository.save(entity);
+  }
+
   public getUsersofChild(childId: number) {
     return this.userRepository
       .createQueryBuilder('user')
@@ -27,5 +31,10 @@ export default class UserDao {
     if (!user) throw new UserNotFoundError();
 
     return user;
+  }
+
+  public async createUser(userData: Partial<User>) {
+    const freshUser = this.userRepository.create(userData);
+    return await this.saveUserEntity(freshUser);
   }
 }

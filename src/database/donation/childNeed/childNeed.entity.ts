@@ -5,24 +5,19 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Status } from 'src/database/donation';
-import Category from 'src/database/donation/entities/category/category.entity';
-import ChildNeedGroup from 'src/database/donation/entities/childNeedGroup/childNeedGroup.entity';
-import NeedSafe from 'src/database/donation/entities/needSafe/needSafe.entity';
-import Donation from 'src/database/donation/entities/donation.entity';
+import { NeedUrgency, Status } from 'src/database/donation';
+import Category from 'src/database/donation/category/category.entity';
+import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
+import Donation from 'src/database/donation/donation/donation.entity';
+import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 
 @Entity()
 export default class ChildNeed {
   @PrimaryGeneratedColumn()
   needId: number;
 
-  needGroupId: number;
-
   @Column('varchar')
   title: string;
-
-  @Column('varchar')
-  description: string;
 
   @Column('integer')
   price: number;
@@ -38,6 +33,9 @@ export default class ChildNeed {
 
   @Column('boolean', { default: false })
   isDeleted: boolean;
+
+  @Column('enum', { default: NeedUrgency.NORMAL, enum: NeedUrgency })
+  urgency: NeedUrgency;
 
   @OneToMany(() => NeedSafe, (needSafe) => needSafe.childNeed)
   needSafes: NeedSafe[];

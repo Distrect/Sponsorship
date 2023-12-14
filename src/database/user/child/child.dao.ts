@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { ChildPagination } from 'src/modules/authority/childOps/childOps.dto';
-import { UserNotFoundError } from 'src/utils/error';
+import { NotFound, UserNotFoundError } from 'src/utils/error';
 import { CityEnum, Role } from 'src/database/user';
 import Child from 'src/database/user/child/child.entity';
 import type { DeepPartial } from 'typeorm';
@@ -28,21 +28,32 @@ export default class ChildDao {
     return await Promise.all(args);
   }
 
-  /*Buna da El AT*/
-  private async saveChildEntity(
+  private async updateChildEntity(
     entity: Child,
-    updateChildData?: DeepPartial<Child>,
-  ): Promise<Child> {
+    updatedChildData: DeepPartial<Child>,
+  ) {
     return await this.childRepository.save(
-      updateChildData ? { ...entity, ...updateChildData } : entity,
+      {
+        ...entity,
+        ...updatedChildData,
+        userId: entity.userId,
+      },
       { reload: true },
     );
   }
 
+  private async saveChildEntity(entity: Child) {
+    return await this.childRepository.save(entity);
+  }
+
   public async getChild(childAttributes: FindOptionsWhere<Child>) {
-    return await this.childRepository.findOne({
+    const child = await this.childRepository.findOne({
       where: { ...childAttributes },
     });
+
+    if (!child) throw new NotFound('Child is not Found');
+
+    return child;
   }
 
   public async createChild(childData: DeepPartial<Child>) {
@@ -68,10 +79,10 @@ export default class ChildDao {
 
     if (!child) throw new UserNotFoundError('The Child is Not Found');
 
-    return await this.saveChildEntity(child, body);
+    return await this.updateChildEntity(child, body);
   }
 
-  /*Buna El At*/
+  /*Buna Kesinlikel el at El At*/
   public async listChilds({
     // age,
     fullNameLike,

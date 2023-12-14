@@ -5,9 +5,9 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import Child from '../../../user/child/child.entity';
 import { FixNeedStatus } from 'src/database/sponsor';
-import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
+import Child from 'src/database/user/child/child.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 
 @Entity()
 export default class FixNeed {
@@ -20,8 +20,11 @@ export default class FixNeed {
   @Column('varchar')
   explanation: string;
 
-  @Column('varchar')
-  amount: number;
+  // @Column('varchar')
+  // amount: number;
+
+  @Column('boolean', { default: false })
+  isDeleted: boolean;
 
   @Column('varchar')
   category: string;

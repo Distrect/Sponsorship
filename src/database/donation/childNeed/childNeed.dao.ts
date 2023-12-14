@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
-import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 import { NotFound } from 'src/utils/error';
+import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
+import {
+  DonateToNeed,
+  ListChildWithNeeds,
+} from 'src/modules/donationModule/childNeed/childNeed.dto';
+import UserDao from 'src/database/user/user/user.dao';
+import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 
 export interface INeedWithTotal extends ChildNeed {
   totalDonation: number;
@@ -11,6 +17,8 @@ export interface INeedWithTotal extends ChildNeed {
 @Injectable()
 export default class ChildNeedDao {
   @Injector(ChildNeed) private childNeedRepository: Repository<ChildNeed>;
+  @Injector(NeedGroup) private needGroupRepository: Repository<NeedGroup>;
+  private userDao: UserDao;
 
   private updateInstance(
     needEntity: ChildNeed,
@@ -41,7 +49,7 @@ export default class ChildNeedDao {
         where: { ...attributes },
       });
 
-      if (needs.length !== attributes.length) throw new NotFound();
+      if (needs.some((need) => !!need === false)) throw new NotFound();
       return needs;
     }
 
@@ -54,7 +62,7 @@ export default class ChildNeedDao {
     return need;
   }
 
-  public async getNeedsWithTotalDonation(needId: number) {
+  public async getNeedWithTotalDonation(needId: number) {
     const needWithTotal = (await this.childNeedRepository
       .createQueryBuilder('child_need')
       .leftJoinAndSelect('child_need.donations', 'donation')
@@ -88,5 +96,50 @@ export default class ChildNeedDao {
     const deletedNeed = await this.updateNeed({ needId, isDeleted: true });
 
     return deletedNeed;
+  }
+
+  public async listNeedsWithChild(
+    userId: number,
+    { age, city, urgency }: ListChildWithNeeds,
+  ) {
+    await this.userDao.getUser({ userId });
+
+    let needListWİthChild = this.needGroupRepository
+      .createQueryBuilder('need_group')
+      .leftJoinAndSelect('need_group.child', 'child')
+      .leftJoinAndSelect('need_group.needs', 'child_need');
+
+    if (age) {
+      needListWİthChild = needListWİthChild.andWhere(
+        'child.age BETWEEN :min and :max',
+        {
+          min: age[0],
+          max: age[1],
+        },
+      );
+    }
+
+    if (city) {
+      needListWİthChild = needListWİthChild.andWhere('child.city = :city', {
+        city,
+      });
+    }
+
+    if (urgency) {
+      needListWİthChild = needListWİthChild.andWhere(
+        'child_need.urgency = :urgency',
+        { urgency },
+      );
+    }
+
+    // sort edilmesi gerek
+
+    const count = await needListWİthChild.getCount();
+
+    return await needListWİthChild.getMany();
+  }
+
+  public async donateToChild({ needId, cost }: DonateToNeed) {
+    const needWithTotalDonation = await this.getNeedWithTotalDonation(needId);
   }
 }

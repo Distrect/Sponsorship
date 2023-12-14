@@ -49,6 +49,7 @@ export interface IAuthority extends IBaseUser {
 export interface IAdmin extends IBaseUser {
   adminId: number;
 }
+
 export interface IUser extends IBaseUser {
   userId: number;
 }

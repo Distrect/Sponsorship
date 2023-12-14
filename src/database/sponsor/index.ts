@@ -6,6 +6,13 @@ export enum SponsorshipStatus {
   BLOCKED = 'Blocked',
 }
 
+export enum SpStatus {
+  ACTIVE = 'ACTIVE',
+  REQUIRES_PAYMENT = 'REQUIRES_PAYMENT',
+  CANCELLED_BY_USER = 'CANCELLED_BY_USER',
+  CANCELLED_BY_AUTHORITY = 'CANCELLED_BY_AUTHORITY',
+}
+
 export enum FixNeedStatus {
   ACTIVE = 'Active',
   DEACTIVE = 'Deactive',

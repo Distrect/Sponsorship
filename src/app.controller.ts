@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import SponsorshipService from 'src/database/sponsor/modules/sponsor/sponsorship.service';
+import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
 import ChildDao from 'src/database/user/child/child.dao';
 
 @Controller()

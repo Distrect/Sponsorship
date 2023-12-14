@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Status, Type } from 'src/database/user';
 import User from 'src/database/user/user/user.entity';
-import Admin from 'src/database/user/admin.entity';
+import Admin from 'src/database/user/admin/admin.entity';
 import Authority from 'src/database/user/authority/authority.entity';
 
 //Tabloya kimin hangi cevabı verdiğini ve onaymı yok redmi açıklaması konulmalıdır

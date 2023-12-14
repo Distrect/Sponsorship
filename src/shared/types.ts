@@ -1,4 +1,5 @@
 import { CityEnum, Role } from 'src/database/user';
+import { Request } from 'express';
 
 export interface IUserCookie {
   userId: number;
@@ -8,4 +9,8 @@ export interface IUserCookie {
   email: string;
   role: Role;
   city: CityEnum;
+}
+
+export interface ExtendedRequest extends Request {
+  user?: IUserCookie;
 }

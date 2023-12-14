@@ -54,3 +54,15 @@ export class IsNotActiveGroup extends Error {
     super(message);
   }
 }
+
+export class EmptyData extends HttpException {
+  constructor(message: string = 'Data is Empty') {
+    super(message, HttpStatus.NO_CONTENT);
+  }
+}
+
+export class AlreadyHave extends HttpException {
+  constructor(message: string) {
+    super(message, HttpStatus.CONFLICT);
+  }
+}

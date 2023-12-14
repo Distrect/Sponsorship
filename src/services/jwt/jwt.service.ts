@@ -3,9 +3,9 @@ import jwt, {
   TokenExpiredError,
   VerifyOptions,
 } from 'jsonwebtoken';
-import { ServerError } from 'src/utils/error';
+import { FormFieldError, ServerError } from 'src/utils/error';
 
-export class AuthService {
+export default class JwtService {
   private static secretKey: string = process.env.JWT_SECRET_KEY;
 
   public static tokenizeData(data: any, options?: SignOptions) {

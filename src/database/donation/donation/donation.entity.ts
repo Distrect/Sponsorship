@@ -1,5 +1,6 @@
-import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import User from 'src/database/user/user/user.entity';
 
 @Entity()
 export default class Donation {
@@ -11,4 +12,7 @@ export default class Donation {
 
   @ManyToOne(() => ChildNeed, (childNeed) => childNeed.donations)
   childNeed: ChildNeed;
+
+  @ManyToOne(() => User, (user) => user.donations)
+  user: User;
 }

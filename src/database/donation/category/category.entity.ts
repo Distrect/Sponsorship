@@ -1,4 +1,3 @@
-import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
 import {
   Column,
   Entity,
@@ -6,6 +5,7 @@ import {
   OneToMany,
   BeforeInsert,
 } from 'typeorm';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 
 @Entity()
 export default class Category {

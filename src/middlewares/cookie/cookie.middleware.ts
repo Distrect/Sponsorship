@@ -1,14 +1,10 @@
 import { NestMiddleware, Injectable } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { Role } from 'src/database/user';
-import { AuthService } from 'src/services/auth/auth.service';
-import { IUserCookie } from 'src/shared/types';
+import { ExtendedRequest, IUserCookie } from 'src/shared/types';
 import { AuthorizationError } from 'src/utils/error';
 import _ from 'lodash';
-
-interface ExtendedRequest extends Request {
-  user?: IUserCookie;
-}
+import AuthService from 'src/services/jwt/jwt.service';
 
 @Injectable()
 export default class CookieMiddleware implements NestMiddleware {

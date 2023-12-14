@@ -1,11 +1,11 @@
-import Child from 'src/database/user/child/child.entity';
-import Sponsorship from 'src/database/sponsor/dao/sponsorship/sponsorship.entity';
 import { faker } from '@faker-js/faker';
+import { DeepPartial } from 'typeorm';
+import { SponsorshipStatus } from 'src/database/sponsor';
 import { ActorType, CityEnum, NationalityEnum, Role } from 'src/database/user';
 import User from 'src/database/user/user/user.entity';
+import Child from 'src/database/user/child/child.entity';
 import BaseUser from 'src/database/user/baseUser';
-import { SponsorshipStatus } from 'src/database/sponsor';
-import { DeepPartial } from 'typeorm';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 
 type EntityMap = {
@@ -55,7 +55,7 @@ function generateMockChild(): Partial<Child> {
 export function generateMockIdentification(
   userIds: number[],
 ): Partial<Identification>[] {
-  return userIds.map((userId) => ({
+  return userIds.map(() => ({
     actorType: ActorType.USER,
     idNumber: faker.string.numeric({ length: 11 }),
     nationality: NationalityEnum.TC,

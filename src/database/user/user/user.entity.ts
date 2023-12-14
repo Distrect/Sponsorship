@@ -5,6 +5,7 @@ import UserRequest from 'src/database/user/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 import Answer from 'src/database/user/answer/answer.entity';
+import Donation from 'src/database/donation/donation/donation.entity';
 
 @Entity()
 export default class User extends BaseUser {
@@ -25,6 +26,9 @@ export default class User extends BaseUser {
 
   @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
   sponsor: Sponsorship[];
+
+  @OneToMany(() => Donation, (donation) => donation.user)
+  donations: Donation;
 
   @OneToOne(() => Answer, (answer) => answer.user)
   @JoinColumn()

@@ -12,6 +12,13 @@ export enum NeedSafeType {
 export enum Status {
   ACTIVE = 'Active',
   COMPLETED = 'Completed',
-  NOT_COMPLETED = 'Not Completed',
+  NOT_COMPLETED = 'Not Completed', // Bunu otorite seçer
   MET = 'Met',
+}
+
+export enum NeedUrgency {
+  NORMAL = 0,
+  LOW = 1,
+  MEDIUM = 2,
+  HIGH = 3,
 }

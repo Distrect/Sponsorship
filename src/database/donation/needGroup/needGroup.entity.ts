@@ -6,13 +6,16 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import Child from 'src/database/user/child/child.entity';
 
 @Entity()
-export default class ChildNeedGroup {
+export default class NeedGroup {
   @PrimaryGeneratedColumn()
   needGroupId: number;
+
+  @Column('varchar')
+  title: string;
 
   @Column('enum', { enum: ChildNeedGroupStatus })
   status: ChildNeedGroupStatus;
