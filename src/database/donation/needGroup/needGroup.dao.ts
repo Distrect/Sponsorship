@@ -8,20 +8,52 @@ import {
 } from 'src/utils/error';
 import { ChildNeedGroupStatus } from 'src/database/donation';
 import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import ChildDao from 'src/database/user/child/child.dao';
+import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
+import { NeedGroupWithNeedsWithTotalDonation } from 'src/database/donation/needGroup/needGroup.dao.interface';
 ChildNeedGroup;
 
 @Injectable()
 export default class NeedGroupDao {
-  @Injector(ChildNeedGroup)
-  private childNeedGroupRepository: Repository<ChildNeedGroup>;
+  constructor(
+    @Injector(ChildNeedGroup)
+    private childNeedGroupRepository: Repository<ChildNeedGroup>,
+    private childDao: ChildDao,
+    private childNeedDao: ChildNeedDao,
+  ) {}
 
   public async saveNeedGroupEntity(entity: ChildNeedGroup) {
     return await this.childNeedGroupRepository.save(entity);
   }
 
-  public async getActiveNeedGroups() {
+  public async getActiveNeedGroupWithNeeds(
+    childId: number,
+  ): Promise<NeedGroupWithNeedsWithTotalDonation> {
+    const child = await this.childDao.getChild({ userId: childId });
+    const activeNeedGroup = (await this.getActiveNeedGroups(
+      child.userId,
+    )) as NeedGroupWithNeedsWithTotalDonation;
+
+    const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
+      this.childNeedDao.getNeedWithTotalDonation(needId),
+    );
+
+    const childNeeds = await Promise.all([...promiseChildNeeds]).then(
+      (res) => res,
+    );
+
+    activeNeedGroup.needs = childNeeds;
+    activeNeedGroup.child = child;
+
+    return activeNeedGroup;
+  }
+
+  public async getActiveNeedGroups(userId: number) {
+    const child = await this.childDao.getChild({ userId });
+
     const activeGroups = await this.childNeedGroupRepository.find({
-      where: { status: ChildNeedGroupStatus.OPEN },
+      where: { status: ChildNeedGroupStatus.OPEN, child: { userId } },
+      select: { needs: { needId: true } },
     });
 
     if (activeGroups.length > 1)
@@ -31,10 +63,13 @@ export default class NeedGroupDao {
   }
 
   public async createChildNeedGroup(
+    userId: number,
     explanation: string,
     active: ChildNeedGroupStatus = ChildNeedGroupStatus.OPEN,
   ) {
-    const activeNeeds = await this.getActiveNeedGroups();
+    const child = await this.childDao.getChild({ userId });
+
+    const activeNeeds = await this.getActiveNeedGroups(child.userId);
 
     if (activeNeeds) throw new HasActiveNeedGroupError();
 

@@ -2,8 +2,10 @@ import {
   Entity,
   Column,
   Index,
-  PrimaryGeneratedColumn,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Status, Type } from 'src/database/user';
 import User from 'src/database/user/user/user.entity';
@@ -18,7 +20,7 @@ export default class UserRequest {
   @PrimaryGeneratedColumn()
   requestId: number;
 
-  @Column('enum', { enum: Type })
+  @Column('enum', { enum: Type, default: Type.SIGNIN })
   type: Type;
 
   @Column({ type: 'enum', default: Status.WAITING, enum: Status })
@@ -30,7 +32,7 @@ export default class UserRequest {
   @Column('text', { nullable: true })
   authorityMessage: string;
 
-  @ManyToOne(() => User, (user) => user.userRequests)
+  @ManyToOne(() => User, (user) => user.loginRequests)
   user: User;
 
   @ManyToOne(() => Admin, (admin) => admin.userRequests)
@@ -38,4 +40,10 @@ export default class UserRequest {
 
   @ManyToOne(() => Authority, (authority) => authority.userRequests)
   authority: Authority;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  upodatedAt: Date;
 }

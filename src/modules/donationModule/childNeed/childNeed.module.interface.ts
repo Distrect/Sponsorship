@@ -7,9 +7,6 @@ class Need {
   title: string;
 
   @IsNotEmpty()
-  description: string;
-
-  @IsNotEmpty()
   price: number;
 
   @IsNotEmpty()
@@ -18,6 +15,18 @@ class Need {
   @IsNotEmpty()
   categoryId: number;
 }
+
+export class CreateNeedDTO {
+  @IsNotEmpty()
+  public needs: Need[];
+
+  @IsNotEmpty()
+  needExplanation: string;
+
+  @IsNotEmpty()
+  title: string;
+}
+
 export class EditNeed {
   @IsNotEmpty()
   needId: number;
@@ -33,14 +42,6 @@ export class EditNeed {
   amount: number;
 
   categoryId: number;
-}
-
-export class CreateNeedDTO {
-  @IsNotEmpty()
-  public needs: Need[];
-
-  @IsNotEmpty()
-  needExplanation: string;
 }
 
 export class EditNeedDTO {

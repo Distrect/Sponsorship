@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import FixNeedService from 'src/new modules/donationModules/fixNeed/fixNeed.service';
-import FixNeedEntityModule from 'src/database/sponsor/dao/fixNeed/fixNeedEntity.module';
+import FixNeedService from 'src/modules/sponsorModule/fixNeed/fixNeed.service';
+import FixNeedEntityModule from 'src/database/sponsor/fixNeed/fixNeedEntity.module';
 
 @Module({
   imports: [FixNeedEntityModule],

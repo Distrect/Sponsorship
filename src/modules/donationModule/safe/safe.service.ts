@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import NeedSafeDao from 'src/database/donation/entities/needSafe/needSafe.dao';
 import { NeedSafeType } from 'src/database/donation';
-import SafeDao from 'src/database/donation/entities/safe/safe.dao';
+import NeedSafeDao from 'src/database/donation/needSafe/needSafe.dao';
+import SafeDao from 'src/database/donation/safe/safe.dao';
 
 @Injectable()
 export default class SafeService {

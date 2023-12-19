@@ -12,10 +12,13 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+
     "paths": {
+      "exclude": ["./çöp"],
       "@services": ["services/*"],
       "@modules": ["modules/*"]
     },
+
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

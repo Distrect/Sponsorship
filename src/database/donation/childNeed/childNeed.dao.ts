@@ -5,19 +5,15 @@ import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
 import {
   DonateToNeed,
   ListChildWithNeeds,
-} from 'src/modules/donationModule/childNeed/childNeed.dto';
+} from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import UserDao from 'src/database/user/user/user.dao';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
-
-export interface INeedWithTotal extends ChildNeed {
-  totalDonation: number;
-}
+import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.dao.interface';
 
 @Injectable()
 export default class ChildNeedDao {
   @Injector(ChildNeed) private childNeedRepository: Repository<ChildNeed>;
-  @Injector(NeedGroup) private needGroupRepository: Repository<NeedGroup>;
   private userDao: UserDao;
 
   private updateInstance(
@@ -97,7 +93,7 @@ export default class ChildNeedDao {
 
     return deletedNeed;
   }
-
+  /*
   public async listNeedsWithChild(
     userId: number,
     { age, city, urgency }: ListChildWithNeeds,
@@ -138,7 +134,7 @@ export default class ChildNeedDao {
 
     return await needListWİthChild.getMany();
   }
-
+*/
   public async donateToChild({ needId, cost }: DonateToNeed) {
     const needWithTotalDonation = await this.getNeedWithTotalDonation(needId);
   }

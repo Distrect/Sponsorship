@@ -1,5 +1,5 @@
-import NeedSafe from 'src/database/donation/entities/needSafe/needSafe.entity';
-import Safe from 'src/database/donation/entities/safe/safe.entity';
+import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
+import Safe from 'src/database/donation/safe/safe.entity';
 import {
   EventSubscriber,
   EntitySubscriberInterface,

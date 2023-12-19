@@ -12,14 +12,14 @@ import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { RoleGuard } from 'src/guards/userAuthentication.guard';
 import { IUserCookie } from 'src/shared/types';
 import {
-  CreateNeedDTO,
   EditNeedDTO,
-} from 'src/new modules/donationModules/childNeed/childNeed.dto';
-import ChildNeedService from 'src/new modules/donationModules/childNeed/childNeed.service';
+  CreateNeedDTO,
+} from 'src/modules/donationModule/childNeed/childNeed.module.interface';
+import ChildNeedService from 'src/modules/donationModule/childNeed/childNeed.service';
 
 @UseGuards(new RoleGuard(Role.Authority))
 @Controller('childNeed')
-export default class ChildNeedController {
+export default class NeedManagmentRouteController {
   private childNeedService: ChildNeedService;
 
   @Post('createNeed/:childId')
@@ -49,7 +49,7 @@ export default class ChildNeedController {
   ) {
     const updatedNeeds = await this.childNeedService.editNeed(
       needGroupId,
-      requestBody,
+      requestBody.editedNeeds,
       childId,
     );
 

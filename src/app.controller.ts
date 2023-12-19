@@ -1,20 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
-import ChildDao from 'src/database/user/child/child.dao';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { AppService } from 'src/app.service';
+import { LoginDto } from 'src/shared/dtos';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private sposnorShipService: SponsorshipService,
-    private childEntityService: ChildDao,
-  ) {}
+  constructor(private appService: AppService) {}
 
-  @Get()
-  async getHello() {
-    // await this.childEntityService.deneme();
-    await this.sposnorShipService.getUserSponsorShips('User', 1);
-    return this.appService.getHello();
+  @Post('/')
+  async getHello(@Body() body: LoginDto) {
+    return { ok: true };
   }
 }

@@ -1,4 +1,14 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsEmail, Length } from 'class-validator';
+
+export class LoginDto {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @Length(8, 20, { message: 'Plase enter enter pass min 8 max 20 charachters' })
+  password: string;
+}
 
 export class ListPaginationDto {
   @IsNotEmpty()

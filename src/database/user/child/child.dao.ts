@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { ChildPagination } from 'src/modules/authority/childOps/childOps.dto';
+import { ChildPagination } from 'src/old.dto';
 import { NotFound, UserNotFoundError } from 'src/utils/error';
 import { CityEnum, Role } from 'src/database/user';
 import Child from 'src/database/user/child/child.entity';
 import type { DeepPartial } from 'typeorm';
+import {
+  ChildWhere,
+  DeepPartialChild,
+} from 'src/database/user/child/child.dao.interface';
 
 export interface IChildListMethod {
   childs: IChildList[];
@@ -46,7 +50,7 @@ export default class ChildDao {
     return await this.childRepository.save(entity);
   }
 
-  public async getChild(childAttributes: FindOptionsWhere<Child>) {
+  public async getChild(childAttributes: ChildWhere) {
     const child = await this.childRepository.findOne({
       where: { ...childAttributes },
     });
@@ -56,7 +60,7 @@ export default class ChildDao {
     return child;
   }
 
-  public async createChild(childData: DeepPartial<Child>) {
+  public async createChild(childData: DeepPartialChild) {
     const createdChild = this.childRepository.create({
       ...childData,
       role: Role.Child,
@@ -74,7 +78,7 @@ export default class ChildDao {
     return await this.saveChildEntity(child);
   }
 
-  public async updateChild(userId: number, body: DeepPartial<Child>) {
+  public async updateChild(userId: number, body: DeepPartialChild) {
     const child = await this.getChild({ userId });
 
     if (!child) throw new UserNotFoundError('The Child is Not Found');

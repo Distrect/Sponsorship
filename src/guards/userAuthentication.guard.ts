@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 import { IUserCookie } from 'src/shared/types';
 import { AuthorizationError } from 'src/utils/error';
 
-//Eğer bir tarayıcıdan farklı kullanıcı tiplerinin hesabı açıldıysa burası patlar aga düzelt
-
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private roles: Role[] | Role) {}

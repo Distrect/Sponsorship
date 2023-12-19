@@ -1,22 +1,37 @@
-import { NestMiddleware, Injectable } from '@nestjs/common';
-import { Response, NextFunction } from 'express';
+import {
+  NestMiddleware,
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  mixin,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { Response, NextFunction, Request } from 'express';
 import { Role } from 'src/database/user';
 import { ExtendedRequest, IUserCookie } from 'src/shared/types';
 import { AuthorizationError } from 'src/utils/error';
 import _ from 'lodash';
 import AuthService from 'src/services/jwt/jwt.service';
 
-@Injectable()
-export default class CookieMiddleware implements NestMiddleware {
+export class CookieInterceptor implements NestInterceptor {
   constructor(private role: Role) {}
 
   private isEmpty(user: IUserCookie) {
-    return _.some(user, (val) => !!val);
+    return !Object.values(user).every((val) => !!val);
   }
 
-  use(req: ExtendedRequest, res: Response, next: NextFunction) {
+  public intercept(
+    context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Observable<any> | Promise<Observable<any>> {
+    const req = context.switchToHttp().getRequest() as ExtendedRequest;
+    const res = context.switchToHttp().getResponse() as Response;
+
     const token = req.cookies[this.role + 'Authorization'];
     const refreshToken = req.cookies[this.role + 'Refresh'];
+
+    console.log(`Token:${token},refreshToken:${refreshToken}`);
 
     if (!token && !refreshToken) throw new AuthorizationError();
 
@@ -40,6 +55,53 @@ export default class CookieMiddleware implements NestMiddleware {
     if (this.isEmpty(userData)) throw new AuthorizationError();
 
     req.user = userData;
-    next();
+    return next.handle();
   }
+}
+
+export function CookieMiddlewareMixin(role: Role) {
+  @Injectable()
+  class CookieMiddleware implements NestMiddleware {
+    constructor() {}
+
+    isEmpty(user: IUserCookie) {
+      return !Object.values(user).every((val) => !!val);
+    }
+
+    use(req: ExtendedRequest, res: Response, next: NextFunction) {
+      console.log('MİDDLEWARE WORKS');
+      const token = req.cookies[role + 'Authorization'];
+      const refreshToken = req.cookies[role + 'Refresh'];
+
+      if (!token && !refreshToken) throw new AuthorizationError();
+
+      console.log('2 --------------------------------------------------');
+      const refreshData = AuthService.deTokenizData<IUserCookie>(refreshToken);
+      let userData = AuthService.deTokenizData<IUserCookie>(token);
+
+      console.log('3 --------------------------------------------------');
+      if (!refreshData && !userData) throw new AuthorizationError();
+
+      console.log('4 --------------------------------------------------');
+      if (!userData || !refreshData) {
+        const tokenType = !userData ? 'Authorization' : 'Refresh';
+        const data = !userData
+          ? AuthService.deTokenizData<IUserCookie>(refreshToken)
+          : userData;
+
+        console.log('5 --------------------------------------------------');
+        if (!data) throw new AuthorizationError();
+
+        res.cookie(role + tokenType, data);
+        userData = data;
+      }
+
+      console.log('6 --------------------------------------------------');
+      if (this.isEmpty(userData)) throw new AuthorizationError();
+
+      req.user = userData;
+      next();
+    }
+  }
+  return mixin(CookieMiddleware);
 }

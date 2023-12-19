@@ -1,7 +1,7 @@
 import { DeepPartial, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import Category from 'src/database/donation/entities/category/category.entity';
+import Category from 'src/database/donation/category/category.entity';
 
 @Injectable()
 export default class CategoryDao {

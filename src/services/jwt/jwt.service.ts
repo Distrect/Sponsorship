@@ -6,10 +6,12 @@ import jwt, {
 import { FormFieldError, ServerError } from 'src/utils/error';
 
 export default class JwtService {
-  private static secretKey: string = process.env.JWT_SECRET_KEY;
-
-  public static tokenizeData(data: any, options?: SignOptions) {
-    return jwt.sign(data, this.secretKey, options || { expiresIn: '1d' });
+  public static tokenizeData(data: any, options?: jwt.SignOptions) {
+    return jwt.sign(
+      { ...data },
+      process.env.JWT_PRIVATE_KEY,
+      typeof data === 'string' ? {} : options || { expiresIn: '1d' },
+    );
   }
 
   public static deTokenizData<T>(
@@ -17,7 +19,11 @@ export default class JwtService {
     options?: VerifyOptions,
   ) {
     try {
-      const verfied = jwt.verify(encryptedString, this.secretKey, options);
+      const verfied = jwt.verify(
+        encryptedString,
+        process.env.JWT_PRIVATE_KEY,
+        options,
+      );
       return verfied as T;
     } catch (error) {
       if (error instanceof TokenExpiredError) {

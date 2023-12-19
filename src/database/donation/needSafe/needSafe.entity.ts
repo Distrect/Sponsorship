@@ -6,7 +6,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 import { NeedSafeType } from 'src/database/donation';
-import ChildNeed from 'src/database/donation/entities/childNeed/childNeed.entity';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 
 @Entity()
 export default class NeedSafe {

@@ -34,7 +34,8 @@ export default abstract class BaseUser {
   city: CityEnum;
 
   @BeforeInsert()
-  setFullName() {
+  private setFullName() {
     this.fullName = this.name + ' ' + this.lastname;
+    return this.fullName;
   }
 }

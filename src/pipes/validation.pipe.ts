@@ -18,6 +18,7 @@ export class CustomValidationPipe implements PipeTransform<any> {
 
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
+    console.log(errors);
     if (errors.length > 0) {
       const formattedErrors = this.formatErrors(errors);
       throw new HttpException('Message', HttpStatus.BAD_REQUEST);

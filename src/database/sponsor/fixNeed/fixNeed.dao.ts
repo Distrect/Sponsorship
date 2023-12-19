@@ -10,6 +10,7 @@ import ChildDao from 'src/database/user/child/child.dao';
 export default class FixNeedDao {
   @Injector(FixNeed) private fixNeedRepository: Repository<FixNeed>;
   private childDao: ChildDao;
+
   private async saveFixNeedEntity(entity: FixNeed) {
     return await this.fixNeedRepository.save(entity);
   }

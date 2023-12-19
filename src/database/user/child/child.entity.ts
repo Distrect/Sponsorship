@@ -3,7 +3,7 @@ import Safe from 'src/database/donation/safe/safe.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import BaseUser from 'src/database/user/baseUser';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
-import ChildStatus from 'src/database/user/childStatus.entity';
+import ChildStatus from 'src/database/user/childStatus/childStatus.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 // import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 
@@ -22,9 +22,6 @@ export default class Child extends BaseUser {
   @OneToMany(() => Identification, (identification) => identification.child)
   identifications: Identification[];
 
-  // @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.child)
-  // sponsors: Sponsorship[];
-
   @OneToMany(() => ChildStatus, (childStatus) => childStatus.child)
   status: ChildStatus[];
 
@@ -33,7 +30,22 @@ export default class Child extends BaseUser {
 
   @OneToMany(() => NeedGroup, (needGroup) => needGroup.child)
   needGroups: NeedGroup[];
+
+  public get age() {
+    if (!this.dateOfBirth) {
+      throw new Error('dateOfBirth is null');
+    }
+
+    const todayDate = new Date();
+
+    const difference = todayDate.getTime() - this.dateOfBirth.getTime();
+
+    return difference;
+  }
 }
+
+// @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.child)
+// sponsors: Sponsorship[];
 
 /*
 // import { DataTypes } from 'sequelize';

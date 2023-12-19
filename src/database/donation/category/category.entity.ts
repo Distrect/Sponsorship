@@ -15,8 +15,8 @@ export default class Category {
   @Column('varchar')
   categoryName: string;
 
-  @OneToMany(() => ChildNeed, (childNeed) => childNeed.category)
-  needs: ChildNeed[];
+  // @OneToMany(() => ChildNeed, (childNeed) => childNeed.category)
+  // needs: ChildNeed[];
 
   @BeforeInsert()
   private fixUppercase() {

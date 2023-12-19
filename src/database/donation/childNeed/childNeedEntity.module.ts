@@ -10,7 +10,7 @@ const ChildNeedProvider = createRepositoryProvider(ChildNeed);
 
 @Module({
   imports: [DatabaseModule, UserEntityModule],
-  providers: [ChildNeedProvider, ChildNeedDao, NeedGroupProvider],
+  providers: [ChildNeedProvider, ChildNeedDao],
   exports: [ChildNeedDao],
 })
 export default class ChildNeedEntityModule {}

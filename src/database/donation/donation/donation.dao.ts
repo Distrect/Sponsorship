@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { Role } from 'src/database/user';
-import { DonationHistoryParams } from 'src/modules/donationModule/childNeed/childNeed.dto';
+import { DonationHistoryParams } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import Donation from 'src/database/donation/donation/donation.entity';
 import UserDao from 'src/database/user/user/user.dao';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';

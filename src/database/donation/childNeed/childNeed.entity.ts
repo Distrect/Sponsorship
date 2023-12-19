@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  BeforeInsert,
 } from 'typeorm';
 import { NeedUrgency, Status } from 'src/database/donation';
 import Category from 'src/database/donation/category/category.entity';
@@ -25,7 +26,7 @@ export default class ChildNeed {
   @Column('integer')
   amount: number;
 
-  @Column('integer')
+  @Column('integer', { nullable: true })
   startAmount: number;
 
   @Column('enum', { default: Status.ACTIVE, enum: Status })
@@ -43,9 +44,14 @@ export default class ChildNeed {
   @OneToMany(() => Donation, (donation) => donation.childNeed)
   donations: Donation[];
 
-  @ManyToOne(() => Category, (category) => category.needs)
-  category: Category;
+  // @ManyToOne(() => Category, (category) => category.needs)
+  // category: Category;
 
   @ManyToOne(() => ChildNeedGroup, (childNeedGroup) => childNeedGroup.needs)
   group: ChildNeedGroup;
+
+  @BeforeInsert()
+  private async setStartAmount() {
+    this.startAmount = this.amount;
+  }
 }

@@ -1,21 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { IUserCookie } from 'src/shared/types';
-import { INeedWithTotal } from './../../../database/donation/childNeed/childNeed.dao';
-import { Role } from 'src/database/user';
-import {
-  ServerError,
-  IsNotActiveGroup,
-  UserNotFoundError,
-} from 'src/utils/error';
+import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.dao.interface';
+import { ServerError, IsNotActiveGroup } from 'src/utils/error';
 import {
   EditNeed,
-  EditNeedDTO,
-  DonateToChild,
   CreateNeedDTO,
-  ListChildWithNeeds,
   DonationHistoryParams,
-} from 'src/modules/donationModule/childNeed/childNeed.dto';
-import Donation from 'src/database/donation/donation/donation.entity';
+} from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import ChildDao from 'src/database/user/child/child.dao';
 import DonationDao from 'src/database/donation/donation/donation.dao';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
@@ -31,29 +22,31 @@ export default class ChildNeedService {
   private safeService: SafeService;
 
   private compareNeed(
-    originalNeed: INeedWithTotal,
+    { totalDonation }: INeedWithTotal,
     { price, amount }: EditNeed,
   ) {
     const newPrice = price * amount;
 
-    if (newPrice < originalNeed.totalDonation) {
-      const excessMoney = originalNeed.totalDonation - newPrice;
+    if (newPrice < totalDonation) {
+      const excessMoney = totalDonation - newPrice;
 
       return excessMoney;
     } else {
-      return false;
+      return 0;
     }
   }
-  /*Aga Bunada bir el ata aq*/
+
   public async createNeeds(
-    userId: number,
-    user: IUserCookie,
+    childId: number,
+    authority: IUserCookie,
     { needs, needExplanation }: CreateNeedDTO,
   ) {
-    const child = await this.childRepository.getChild({ userId });
+    const child = await this.childRepository.getChild({ userId: childId });
 
-    const createdNeedGroup =
-      await this.needGroupDao.createChildNeedGroup(needExplanation);
+    const createdNeedGroup = await this.needGroupDao.createChildNeedGroup(
+      childId,
+      needExplanation,
+    );
 
     const needPromises = needs.map((need) =>
       this.childNeedDao.createNeed(need),
@@ -68,12 +61,17 @@ export default class ChildNeedService {
 
     createdNeedGroup.needs = createdNeeds;
 
-    return await this.needGroupDao.saveNeedGroupEntity(createdNeedGroup);
+    await this.needGroupDao.saveNeedGroupEntity(createdNeedGroup);
+
+    const needGroupWithNeedWithTotalDonation =
+      await this.needGroupDao.getActiveNeedGroupWithNeeds(child.userId);
+
+    return needGroupWithNeedWithTotalDonation;
   }
 
   public async editNeed(
     needGroupId: number,
-    { editedNeeds }: EditNeedDTO,
+    editedNeeds: EditNeed[],
     childId: number,
   ) {
     const needMap = new Map<number, EditNeed>();
@@ -99,17 +97,23 @@ export default class ChildNeedService {
 
       if (!updatedNeed) throw new ServerError();
 
-      if (!updatedNeed.price && !updatedNeed.amount) continue;
+      if (!updatedNeed.price && !updatedNeed.amount) {
+        promiseUpdateNeeds.push(this.childNeedDao.updateNeed(updatedNeed));
+        continue;
+      }
 
       const restMoney = this.compareNeed(need, updatedNeed);
 
-      if (typeof restMoney === 'number') {
-        await this.safeService.depositMoneyToChild(
-          need.needId,
-          child.userId,
-          restMoney,
-        );
+      if (!restMoney) {
+        promiseUpdateNeeds.push(this.childNeedDao.updateNeed(updatedNeed));
+        continue;
       }
+
+      await this.safeService.depositMoneyToChild(
+        need.needId,
+        child.userId,
+        restMoney,
+      );
 
       promiseUpdateNeeds.push(this.childNeedDao.updateNeed(updatedNeed));
     }
@@ -136,6 +140,13 @@ export default class ChildNeedService {
     return need;
   }
 
+  public async getChildNeedsData(authority: IUserCookie, childId: number) {
+    const needData =
+      await this.needGroupDao.getActiveNeedGroupWithNeeds(childId);
+
+    return needData;
+  }
+  /*
   public async listChildWithNeeds(
     user: IUserCookie,
     page: number,
@@ -174,13 +185,14 @@ export default class ChildNeedService {
         this.donationDao.createDonation(
           user.userId,
           needId,
-          cost /*Burayı leftAMount ile değiştir */,
+          cost //Burayı leftAMount ile değiştir ,
         ),
       );
     }
 
     return await Promise.all(donationPromises);
   }
+*/
 
   public async donationHistory(
     userId: number,

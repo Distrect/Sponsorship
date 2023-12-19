@@ -3,7 +3,7 @@ import { DeepPartial, Repository, FindOptionsWhere } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NeedSafeType } from 'src/database/donation';
 import { NotFound } from 'src/utils/error';
-import NeedSafe from 'src/database/donation/entities/needSafe/needSafe.entity';
+import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 
 interface INeedSafeTotal {
   total: number;

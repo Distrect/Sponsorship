@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import { Repository, FindOptionsWhere, DeepPartial } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NotFound } from 'src/utils/error';
-import Safe from 'src/database/donation/entities/safe/safe.entity';
+import Safe from 'src/database/donation/safe/safe.entity';
 
 @Injectable()
 export default class SafeDao {
@@ -12,10 +12,8 @@ export default class SafeDao {
     return await this.safeRepository.save(entity);
   }
 
-  public async createChildSafe(childId: number) {
-    const safeInstance = this.safeRepository.create({
-      child: { userId: childId },
-    });
+  public async createChildSafe(childParams: DeepPartial<Safe>) {
+    const safeInstance = this.safeRepository.create(childParams);
 
     return await this.saveSafeEntity(safeInstance);
   }

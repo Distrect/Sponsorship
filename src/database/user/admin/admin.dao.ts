@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import Admin from 'src/database/user/admin/admin.entity';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { UserNotFoundError } from 'src/utils/error';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import Admin from 'src/database/user/admin/admin.entity';
 
 @Injectable()
 export default class AdminDao {

@@ -10,7 +10,6 @@ import {
   IIdentification,
   IRegisterUser,
 } from 'src/modules/userModule/userModule/types';
-import AdminDao from 'src/database/user/admin/admin.dao';
 import AuthorityDao from 'src/database/user/authority/authority.dao';
 import ChildDao from 'src/database/user/child/child.dao';
 import UserDao from 'src/database/user/user/user.dao';
@@ -18,13 +17,24 @@ import JwtService from 'src/services/jwt/jwt.service';
 import BaseUser from 'src/database/user/baseUser';
 import moment from 'moment';
 import User from 'src/database/user/user/user.entity';
+import IdentificationDao from 'src/database/user/identification/identification.dao';
+import FileService from 'src/services/file/file.service';
+import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
 
 @Injectable()
 export default class UserService {
-  private authorityDao: AuthorityDao;
-  private userDao: UserDao;
-  private childDao: ChildDao;
-  private adminDao: AdminDao;
+  constructor(
+    private authorityDao: AuthorityDao,
+    private userDao: UserDao,
+    private childDao: ChildDao,
+    private userRequestDao: UserRequestDao,
+    private identificationDao: IdentificationDao,
+    private fileService: FileService,
+  ) {}
+
+  public clearPrivateData({ password, isDeleted, ...rest }: BaseUser) {
+    return rest;
+  }
 
   private isTCKNValid(tckn: string): boolean {
     if (!/^\d{11}$/.test(tckn)) {
@@ -58,6 +68,13 @@ export default class UserService {
   }
 
   private checkIdentifications(identifications: IIdentification[]) {
+    identifications.forEach((idetf) => {
+      if (idetf.idNumber.length !== 10)
+        throw new FormFieldError('ID number is not correct', [
+          { field: 'idNumber', errorMessage: 'Failed' },
+        ]);
+    });
+    /*
     const formFieldError = new FormFieldError(
       'Id Number(s) is/are invalid',
       [],
@@ -76,7 +93,7 @@ export default class UserService {
 
     if (formFieldError.fields.length === 0) {
       throw formFieldError;
-    }
+    }*/
   }
 
   private async cryptor(
@@ -84,7 +101,7 @@ export default class UserService {
     mode: 'encrypt' | 'decrypt' = 'encrypt',
   ): Promise<string> {
     const jwt = await import('jsonwebtoken');
-    const secretKey = process.env['SECRET_HASH_KEY'];
+    const secretKey = process.env['JWT_PRIVATE_KEY'];
 
     if (mode === 'encrypt') {
       return jwt.sign(value, secretKey, {
@@ -95,7 +112,7 @@ export default class UserService {
     return jwt.verify(value, secretKey, { ignoreExpiration: true }) as string;
   }
 
-  private createCookieData(user: BaseUser) {
+  public createCookieData(user: BaseUser): [string, string] {
     const token = JwtService.tokenizeData(user);
     const refreshToken = JwtService.tokenizeData(user, { expiresIn: '2d' });
 
@@ -106,14 +123,23 @@ export default class UserService {
     userParams: FindOptionsWhere<RoleEntity<T>>,
     role: T,
   ): Promise<RoleEntity<T>> {
-    const daoRole = {
-      Admin: this.adminDao.getAdmin,
-      Authority: this.authorityDao.getAuthority,
-      User: this.userDao.getUser,
-      Child: this.childDao.getChild,
-    };
+    if (role === Role.Admin) throw new Error();
 
-    const user = await daoRole[role](userParams);
+    let user: unknown;
+
+    switch (role) {
+      case Role.Authority:
+        user = await this.authorityDao.getAuthority(userParams);
+        break;
+      case Role.Child:
+        user = await this.childDao.getChild(userParams);
+        break;
+      case Role.User:
+        user = await this.userDao.getUser(userParams);
+        break;
+      default:
+        throw new Error('MİNİ TERORİSTA');
+    }
 
     return user as unknown as RoleEntity<T>;
   }
@@ -123,7 +149,7 @@ export default class UserService {
     role: T,
   ) {
     const user = await this.getUser(
-      { email, password } as FindOptionsWhere<RoleEntity<T>>,
+      { email } as FindOptionsWhere<RoleEntity<T>>,
       role,
     );
 
@@ -141,7 +167,31 @@ export default class UserService {
       ]);
     }
 
-    return this.createCookieData(user);
+    return user;
+  }
+
+  public async createIdentificationFiles(
+    identifications: IIdentification[],
+    user: User,
+  ) {
+    identifications.forEach((identification) => {
+      identification.files.frontId.forEach((front) =>
+        this.fileService.saveFile(
+          front,
+          'identification',
+          user,
+          'ID_FRONT_PAGE.jpg',
+        ),
+      );
+      identification.files.backId.forEach((back) =>
+        this.fileService.saveFile(
+          back,
+          'identification',
+          user,
+          'ID_BACK_PAGE.jpg',
+        ),
+      );
+    });
   }
 
   public async register({ identifications, ...rest }: IRegisterUser) {
@@ -152,12 +202,16 @@ export default class UserService {
 
     this.checkIdentifications(identifications);
 
-    const createdUser = await this.userDao.createUser(rest);
+    const user = await this.userDao.createUser(rest);
+    this.createIdentificationFiles(identifications, user);
+    const userRequest = await this.userRequestDao.createLoginRequest({ user });
 
-    // create login request
+    user.loginRequests = [userRequest];
 
-    return createdUser;
+    return user;
   }
 
-  public async resetPassword(email: string) {}
+  public async resetPassword(email: string) {
+    console.log(email);
+  }
 }
