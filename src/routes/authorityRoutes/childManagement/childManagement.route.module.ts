@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import ChildModule from 'src/modules/userModule/childModule/child.module';
+import { Module, forwardRef } from '@nestjs/common';
+import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import ChildManagementRouteController from 'src/routes/authorityRoutes/childManagement/childManagement.route.controller';
 import ChildManagementRouteService from 'src/routes/authorityRoutes/childManagement/childManagement.route.service';
 
 @Module({
-  imports: [ChildModule],
+  imports: [forwardRef(() => BusinnessLogicModule)],
   controllers: [ChildManagementRouteController],
   providers: [ChildManagementRouteService],
 })

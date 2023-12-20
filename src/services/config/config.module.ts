@@ -8,4 +8,4 @@ import { GlobalConfigService } from './config.service';
   providers: [GlobalConfigService],
   exports: [GlobalConfigService],
 })
-export class GlobalConfigModule {}
+export default class GlobalConfigModule {}

@@ -6,20 +6,21 @@ import {
   NotFound,
   ServerError,
 } from 'src/utils/error';
-import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
-import ChildDao from 'src/database/user/child/child.dao';
-import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
 import {
   DeepPartialNeedGroup,
   NeedGroupWithNeedsWithTotalDonation,
 } from 'src/database/donation/needGroup/needGroup.dao.interface';
-import { Status } from 'src/database/user';
+import { ChildNeedGroupStatus } from 'src/database/donation';
+import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import ChildDao from 'src/database/user/child/child.dao';
+import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
+
+import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 
 @Injectable()
 export default class NeedGroupDao {
   constructor(
-    @Injector(ChildNeedGroup)
+    @Injector(NeedGroup)
     private childNeedGroupRepository: Repository<ChildNeedGroup>,
     private childDao: ChildDao,
     private childNeedDao: ChildNeedDao,
@@ -54,6 +55,8 @@ export default class NeedGroupDao {
     const activeNeedGroup = (await this.getActiveNeedGroups(
       childId,
     )) as NeedGroupWithNeedsWithTotalDonation;
+
+    console.log('Active Need Groups', activeNeedGroup);
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
       this.childNeedDao.getNeedWithTotalDonation(needId),

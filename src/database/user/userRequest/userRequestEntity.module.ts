@@ -2,12 +2,12 @@ import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
-import EntityModule from 'src/database/main/entity.module';
+import DatabaseModule from 'src/database/main/entity.module';
 
 const UserRequestProvider = createRepositoryProvider(UserRequest);
 
 @Module({
-  imports: [forwardRef(() => EntityModule)],
+  imports: [forwardRef(() => DatabaseModule)],
   providers: [UserRequestProvider, UserRequestDao],
   exports: [UserRequestDao],
 })

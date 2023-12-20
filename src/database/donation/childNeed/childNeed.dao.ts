@@ -2,14 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NotFound } from 'src/utils/error';
 import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
+import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.dao.interface';
 import {
   DonateToNeed,
   ListChildWithNeeds,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import UserDao from 'src/database/user/user/user.dao';
-import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
-import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.dao.interface';
 
 @Injectable()
 export default class ChildNeedDao {

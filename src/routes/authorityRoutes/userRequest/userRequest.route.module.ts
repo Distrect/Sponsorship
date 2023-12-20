@@ -1,12 +1,17 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  forwardRef,
+} from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { CookieMiddlewareMixin } from 'src/middlewares/cookie/cookie.middleware';
-import UserRequestModule from 'src/modules/userModule/userRequest/userRequest.module';
+import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import UserRequestController from 'src/routes/authorityRoutes/userRequest/userRequest.controller';
 import UserRequestRouteService from 'src/routes/authorityRoutes/userRequest/userRequest.route.service';
 
 @Module({
-  imports: [UserRequestModule],
+  imports: [forwardRef(() => BusinnessLogicModule)],
   providers: [UserRequestRouteService],
   controllers: [UserRequestController],
 })

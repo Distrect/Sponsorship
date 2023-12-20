@@ -6,4 +6,4 @@ import { databaseProviders } from './database.provider';
   providers: [...databaseProviders],
   exports: [...databaseProviders],
 })
-export default class DatabaseModule {}
+export default class MySQLConnectorModule {}

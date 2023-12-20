@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { GlobalConfigModule } from '../config/config.module';
+import GlobalConfigModule from '../config/config.module';
 import MailService from './mail.service';
 
 @Module({

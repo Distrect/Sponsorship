@@ -12,14 +12,16 @@ import DonationDao from 'src/database/donation/donation/donation.dao';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
 import NeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 
 @Injectable()
 export default class ChildNeedService {
-  private childRepository: ChildDao;
-  private childNeedDao: ChildNeedDao;
-  private needGroupDao: NeedGroupDao;
-  private donationDao: DonationDao;
-  private safeService: SafeService;
+  constructor(
+    private childDao: ChildDao,
+    private childNeedDao: ChildNeedDao,
+    private needGroupDao: NeedGroupDao,
+    private donationDao: DonationDao, // private safeService: SafeService,
+  ) {}
 
   private compareNeed(
     { totalDonation }: INeedWithTotal,
@@ -41,7 +43,7 @@ export default class ChildNeedService {
     authority: IUserCookie,
     { needs, needExplanation, title }: CreateNeedDTO,
   ) {
-    const child = await this.childRepository.getChild({ userId: childId });
+    const child = await this.childDao.getChild({ userId: childId });
 
     const createdNeedGroup = await this.needGroupDao.createChildNeedGroup(
       childId,
@@ -78,7 +80,7 @@ export default class ChildNeedService {
 
     const [activeNeedGroup, child] = await Promise.all([
       this.needGroupDao.getActiveNeedGroups(needGroupId),
-      this.childRepository.getChild({ userId: childId }),
+      this.childDao.getChild({ userId: childId }),
     ]).then((res) => res);
 
     if (!activeNeedGroup) throw new IsNotActiveGroup();
@@ -109,11 +111,11 @@ export default class ChildNeedService {
         continue;
       }
 
-      await this.safeService.depositMoneyToChild(
+      /*  await this.safeService.depositMoneyToChild(
         need.needId,
         child.userId,
         restMoney,
-      );
+      );*/
 
       promiseUpdateNeeds.push(this.childNeedDao.updateNeed(updatedNeed));
     }
@@ -126,21 +128,23 @@ export default class ChildNeedService {
   public async deleteNeed(needId: number, childId: number) {
     const [need, child] = await Promise.all([
       this.childNeedDao.getNeedWithTotalDonation(needId),
-      this.childRepository.getChild({ userId: childId }),
+      this.childDao.getChild({ userId: childId }),
     ]);
 
     await this.childNeedDao.deleteNeed(need.needId);
-
+    /*
     await this.safeService.depositMoneyToChild(
       need.needId,
       child.userId,
       need.totalDonation,
-    );
+    );*/
 
     return need;
   }
 
   public async getChildNeedsData(authority: IUserCookie, childId: number) {
+    console.log('THİS', this.childNeedDao);
+
     const needData =
       await this.needGroupDao.getActiveNeedGroupWithNeeds(childId);
 

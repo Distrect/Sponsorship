@@ -1,10 +1,15 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import ChildNeedModule from 'src/modules/donationModule/childNeed/childNeed.module';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  forwardRef,
+} from '@nestjs/common';
+import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import NeedManagmentRouteController from 'src/routes/authorityRoutes/needManagement/needManagement.route.controller';
 import NeedManagementRouteService from 'src/routes/authorityRoutes/needManagement/needManagement.route.service';
 
 @Module({
-  imports: [ChildNeedModule],
+  imports: [forwardRef(() => BusinnessLogicModule)],
   providers: [NeedManagementRouteService],
   controllers: [NeedManagmentRouteController],
 })
