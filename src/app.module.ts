@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { GlobalConfigModule } from './services/config/config.module';
@@ -9,17 +9,20 @@ import ChildRoutesModule from 'src/routes/childRoutes/childRoutes.module';
 import UserRequestRouteModule from 'src/routes/authorityRoutes/userRequest/userRequest.route.module';
 import FileModule from 'src/services/file/file.module';
 import { UserRouteModule } from 'src/routes/userRoutes/user.route.module';
+import EntityModule from 'src/database/main/entity.module';
+import AuthorityAccountRouteModule from 'src/routes/authorityRoutes/account/auhority.account.route.module';
 
 @Module({
   imports: [
     FileModule,
     GlobalConfigModule,
     MailModule,
-    UserModule,
+    EntityModule,
+    /* UserModule,
     AuthorityRouteModule,
     UserRouteModule,
     ChildRoutesModule,
-    // AuthorityAccountRouteModule,
+    AuthorityAccountRouteModule,*/
   ],
   controllers: [AppController],
   providers: [AppService],

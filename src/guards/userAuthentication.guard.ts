@@ -11,27 +11,35 @@ export class RoleGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request: Request = context.switchToHttp().getRequest();
-    const cookies = request.cookies;
+    try {
+      const request: Request = context.switchToHttp().getRequest();
+      const cookies = request.cookies;
 
-    let authCookie: IUserCookie;
+      let authCookie: IUserCookie;
 
-    if (Array.isArray(this.roles)) {
-      for (const role of this.roles) {
-        const cookieProperty = role + 'Authorization';
-        if (cookies[cookieProperty]) {
-          authCookie = cookies[cookieProperty];
-          break;
+      if (Array.isArray(this.roles)) {
+        for (const role of this.roles) {
+          const cookieProperty = role + 'Authorization';
+          if (cookies[cookieProperty]) {
+            authCookie = cookies[cookieProperty];
+            break;
+          }
         }
+      } else {
+        authCookie = cookies[this.roles + 'Authorization'];
       }
-    } else {
-      authCookie = cookies[this.roles + 'Authorization'];
-    }
 
-    if (!authCookie) throw new AuthorizationError();
-    if (!this.roles.includes(authCookie.role) || authCookie.role !== this.roles)
+      if (!authCookie) throw new AuthorizationError();
+      if (
+        !this.roles.includes(authCookie.role) ||
+        authCookie.role !== this.roles
+      )
+        return false;
+
+      return true;
+    } catch (error) {
+      console.log(error);
       return false;
-
-    return true;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import FixNeedEntityModule from 'src/database/sponsor/fixNeed/fixNeedEntity.module';
 import SponsorshipEntityModule from 'src/database/sponsor/sponsorship/sponsorshipEntity.module';
 import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';

@@ -11,14 +11,13 @@ import ChildDao from 'src/database/user/child/child.dao';
 import DonationDao from 'src/database/donation/donation/donation.dao';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
-import ChildNeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
 import NeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
 
 @Injectable()
 export default class ChildNeedService {
   private childRepository: ChildDao;
   private childNeedDao: ChildNeedDao;
-  private needGroupDao: ChildNeedGroupDao;
+  private needGroupDao: NeedGroupDao;
   private donationDao: DonationDao;
   private safeService: SafeService;
 
@@ -77,12 +76,12 @@ export default class ChildNeedService {
   ) {
     const needMap = new Map<number, EditNeed>();
 
-    const [isActiveGroup, child] = await Promise.all([
-      this.needGroupDao.checkIfNeedGroupIsActive(needGroupId),
+    const [activeNeedGroup, child] = await Promise.all([
+      this.needGroupDao.getActiveNeedGroups(needGroupId),
       this.childRepository.getChild({ userId: childId }),
     ]).then((res) => res);
 
-    if (!isActiveGroup) throw new IsNotActiveGroup();
+    if (!activeNeedGroup) throw new IsNotActiveGroup();
 
     const promiseNeeds = editedNeeds.map((needParam) => {
       needMap.set(needParam.needId, needParam);

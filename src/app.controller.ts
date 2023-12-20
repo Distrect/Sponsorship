@@ -8,6 +8,7 @@ export class AppController {
 
   @Post('/')
   async getHello(@Body() body: LoginDto) {
+    const deneme = await this.appService.getHello();
     return { ok: true };
   }
 }

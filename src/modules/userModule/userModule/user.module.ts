@@ -10,7 +10,6 @@ import UserService from 'src/modules/userModule/userModule/user.service';
 @Global()
 @Module({
   imports: [
-    DatabaseModule,
     UserEntityModule,
     ChildEntityModule,
     AuthorityEntityModule,

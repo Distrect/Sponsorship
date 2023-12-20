@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import DatabaseModule from 'src/database/main/database.module';
 import SponsorshipDao from 'src/database/sponsor/sponsorship/sponsorShip.dao';
@@ -9,7 +9,11 @@ import ChildEntityModule from 'src/database/user/child/child.module';
 const SponsorshipProvider = createRepositoryProvider(Sponsorship);
 
 @Module({
-  imports: [DatabaseModule, UserEntityModule, ChildEntityModule],
+  imports: [
+    DatabaseModule,
+    forwardRef(() => UserEntityModule),
+    ChildEntityModule,
+  ],
   providers: [SponsorshipProvider, SponsorshipDao],
   exports: [SponsorshipDao],
 })

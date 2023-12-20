@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
@@ -16,19 +17,23 @@ import {
   EditNeedDTO,
   CreateNeedDTO,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
-import ChildNeedService from 'src/modules/donationModule/childNeed/childNeed.service';
+import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
+import NeedManagementRouteService from 'src/routes/authorityRoutes/needManagement/needManagement.route.service';
 
-@UseGuards(new RoleGuard(Role.Authority))
+@UseInterceptors(new CookieInterceptor(Role.Authority))
+// @UseGuards(new RoleGuard(Role.Authority))
 @Controller('authority/needManagement')
 export default class NeedManagmentRouteController {
-  private childNeedService: ChildNeedService;
+  constructor(
+    private childManagementRouteService: NeedManagementRouteService,
+  ) {}
 
   @Get('/getNeedGroup/:childId')
   public async GetNeedGroup(
     @Param('childId', ParseIntPipe) childId: number,
     @User(Role.Authority) authority: IUserCookie,
   ) {
-    const data = await this.childNeedService.getChildNeedsData(
+    const data = await this.childManagementRouteService.getChildNeedsData(
       authority,
       childId,
     );
@@ -42,7 +47,7 @@ export default class NeedManagmentRouteController {
     @User(Role.Authority) user: IUserCookie,
     requestBody: CreateNeedDTO,
   ) {
-    const result = await this.childNeedService.createNeeds(
+    const result = await this.childManagementRouteService.createNeeds(
       childId,
       user,
       requestBody,
@@ -61,7 +66,7 @@ export default class NeedManagmentRouteController {
     @Param('childId', ParseIntPipe) childId: number,
     requestBody: EditNeedDTO,
   ) {
-    const updatedNeeds = await this.childNeedService.editNeed(
+    const updatedNeeds = await this.childManagementRouteService.editNeed(
       needGroupId,
       requestBody.editedNeeds,
       childId,
@@ -79,7 +84,7 @@ export default class NeedManagmentRouteController {
     @Param('needId', ParseIntPipe) childNeedId: number,
     @Param('childId', ParseIntPipe) childId: number,
   ) {
-    const deletedNeed = await this.childNeedService.deleteNeed(
+    const deletedNeed = await this.childManagementRouteService.deleteNeed(
       childNeedId,
       childId,
     );
