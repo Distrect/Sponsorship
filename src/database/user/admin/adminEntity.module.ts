@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
-import DatabaseModule from 'src/database/main/database.module';
 import AdminDao from 'src/database/user/admin/admin.dao';
 import Admin from 'src/database/user/admin/admin.entity';
+import EntityModule from 'src/database/main/entity.module';
 
 const AdminProvider = createRepositoryProvider(Admin);
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [forwardRef(() => EntityModule)],
   providers: [AdminProvider, AdminDao],
   exports: [AdminDao],
 })

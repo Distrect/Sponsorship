@@ -1,9 +1,10 @@
 import { DataSource } from 'typeorm';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import Child from 'src/database/user/child/child.entity';
 import ChildDao from 'src/database/user/child/child.dao';
 import DatabaseModule from 'src/database/main/database.module';
+import EntityModule from 'src/database/main/entity.module';
 /*
 const ChildProvider = {
   provide: 'CHILD_REPOSITORY',
@@ -14,7 +15,7 @@ const ChildProvider = {
 const ChildProvider = createRepositoryProvider(Child);
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [forwardRef(() => EntityModule) /*DatabaseModule*/],
   providers: [ChildProvider, ChildDao],
   exports: [ChildDao],
 })

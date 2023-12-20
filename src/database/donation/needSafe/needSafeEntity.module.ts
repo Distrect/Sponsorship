@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
-import DatabaseModule from 'src/database/main/database.module';
 import NeedSafeDao from 'src/database/donation/needSafe/needSafe.dao';
+import EntityModule from 'src/database/main/entity.module';
 
 const NeedSafeProvider = createRepositoryProvider(NeedSafe);
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [forwardRef(() => EntityModule)],
   providers: [NeedSafeProvider, NeedSafeDao],
   exports: [NeedSafeDao],
 })

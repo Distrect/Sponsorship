@@ -7,7 +7,10 @@ export class AppController {
   constructor(private appService: AppService) {}
 
   @Post('/')
-  async getHello(@Body() body: LoginDto) {
+  async getHello() {
+    console.log(
+      'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    );
     const deneme = await this.appService.getHello();
     return { ok: true };
   }

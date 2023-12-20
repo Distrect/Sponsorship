@@ -1,10 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
-import NeedSafeEntityModule from 'src/database/donation/needSafe/needSafeEntity.module';
-import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
+import EntityModule from 'src/database/main/entity.module';
 
 @Module({
-  imports: [NeedSafeEntityModule, SafeEntityModule],
+  imports: [forwardRef(() => EntityModule)],
   providers: [SafeService],
   exports: [SafeService],
 })

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import Donation from 'src/database/donation/donation/donation.entity';
 import DonationDao from 'src/database/donation/donation/donation.dao';
@@ -6,15 +6,17 @@ import DatabaseModule from 'src/database/main/database.module';
 import UserEntityModule from 'src/database/user/user/userEntity.module';
 import ChildEntityModule from 'src/database/user/child/child.module';
 import ChildNeedEntityModule from 'src/database/donation/childNeed/childNeedEntity.module';
+import EntityModule from 'src/database/main/entity.module';
 
-export const DonationProvider = createRepositoryProvider(Donation);
+const DonationProvider = createRepositoryProvider(Donation);
 
 @Module({
   imports: [
-    DatabaseModule,
+    forwardRef(() => EntityModule),
+    /*DatabaseModule,
     UserEntityModule,
     ChildEntityModule,
-    ChildNeedEntityModule,
+    ChildNeedEntityModule,*/
   ],
   providers: [DonationProvider, DonationDao],
   exports: [DonationDao],
