@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Delete,
   Patch,
   Param,
@@ -18,9 +19,22 @@ import {
 import ChildNeedService from 'src/modules/donationModule/childNeed/childNeed.service';
 
 @UseGuards(new RoleGuard(Role.Authority))
-@Controller('childNeed')
+@Controller('authority/needManagement')
 export default class NeedManagmentRouteController {
   private childNeedService: ChildNeedService;
+
+  @Get('/getNeedGroup/:childId')
+  public async GetNeedGroup(
+    @Param('childId', ParseIntPipe) childId: number,
+    @User(Role.Authority) authority: IUserCookie,
+  ) {
+    const data = await this.childNeedService.getChildNeedsData(
+      authority,
+      childId,
+    );
+
+    return { ok: true, result: data };
+  }
 
   @Post('createNeed/:childId')
   public async CreateNeed(

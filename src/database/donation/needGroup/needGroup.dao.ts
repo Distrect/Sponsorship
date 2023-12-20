@@ -10,8 +10,11 @@ import { ChildNeedGroupStatus } from 'src/database/donation';
 import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import ChildDao from 'src/database/user/child/child.dao';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
-import { NeedGroupWithNeedsWithTotalDonation } from 'src/database/donation/needGroup/needGroup.dao.interface';
-ChildNeedGroup;
+import {
+  DeepPartialNeedGroup,
+  NeedGroupWithNeedsWithTotalDonation,
+} from 'src/database/donation/needGroup/needGroup.dao.interface';
+import { Status } from 'src/database/user';
 
 @Injectable()
 export default class NeedGroupDao {
@@ -25,13 +28,31 @@ export default class NeedGroupDao {
   public async saveNeedGroupEntity(entity: ChildNeedGroup) {
     return await this.childNeedGroupRepository.save(entity);
   }
+  private async getActiveOrCreate(childId: number) {
+    try {
+      const activeGroup = await this.getActiveGroupOfChild(childId);
+    } catch (error) {
+      const newActiveGroup = await this.createChildNeedGroup(childId, {
+        explanation: 'Untitled',
+        title: 'Untitle',
+      });
+    }
+  }
+  public async getActiveGroupOfChild(childId: number) {
+    const activeGroups = await this.childNeedGroupRepository.find({
+      where: { status: ChildNeedGroupStatus.OPEN },
+    });
+
+    if (activeGroups.length > 1) throw new HasActiveNeedGroupError();
+
+    return activeGroups[0];
+  }
 
   public async getActiveNeedGroupWithNeeds(
     childId: number,
   ): Promise<NeedGroupWithNeedsWithTotalDonation> {
-    const child = await this.childDao.getChild({ userId: childId });
     const activeNeedGroup = (await this.getActiveNeedGroups(
-      child.userId,
+      childId,
     )) as NeedGroupWithNeedsWithTotalDonation;
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
@@ -43,7 +64,6 @@ export default class NeedGroupDao {
     );
 
     activeNeedGroup.needs = childNeeds;
-    activeNeedGroup.child = child;
 
     return activeNeedGroup;
   }
@@ -56,7 +76,7 @@ export default class NeedGroupDao {
       select: { needs: { needId: true } },
     });
 
-    if (activeGroups.length > 1)
+    if (activeGroups.length > 1 || !activeGroups.every((group) => !!group))
       throw new ServerError('Active needs should not be more than one.');
 
     return activeGroups[0];
@@ -64,7 +84,7 @@ export default class NeedGroupDao {
 
   public async createChildNeedGroup(
     userId: number,
-    explanation: string,
+    needGroupParams: DeepPartialNeedGroup,
     active: ChildNeedGroupStatus = ChildNeedGroupStatus.OPEN,
   ) {
     const child = await this.childDao.getChild({ userId });
@@ -74,7 +94,8 @@ export default class NeedGroupDao {
     if (activeNeeds) throw new HasActiveNeedGroupError();
 
     const needGroupInstance = this.childNeedGroupRepository.create({
-      explanation,
+      ...needGroupParams,
+      child: { userId },
       status: active,
     });
 

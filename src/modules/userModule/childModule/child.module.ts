@@ -9,4 +9,4 @@ import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
   providers: [ChildService],
   exports: [ChildService],
 })
-export class ChildModule {}
+export default class ChildModule {}

@@ -27,7 +27,7 @@ export default class Identification {
   actorType: ActorType;
 
   @IsUrl()
-  @Column('varchar')
+  @Column('varchar', { default: 'www.x.com' })
   path: string;
 
   @ManyToOne(() => User, (user) => user.identifications)

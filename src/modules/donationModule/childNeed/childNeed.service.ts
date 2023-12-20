@@ -12,6 +12,7 @@ import DonationDao from 'src/database/donation/donation/donation.dao';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
 import ChildNeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
+import NeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
 
 @Injectable()
 export default class ChildNeedService {
@@ -39,13 +40,13 @@ export default class ChildNeedService {
   public async createNeeds(
     childId: number,
     authority: IUserCookie,
-    { needs, needExplanation }: CreateNeedDTO,
+    { needs, needExplanation, title }: CreateNeedDTO,
   ) {
     const child = await this.childRepository.getChild({ userId: childId });
 
     const createdNeedGroup = await this.needGroupDao.createChildNeedGroup(
       childId,
-      needExplanation,
+      { explanation: needExplanation, title },
     );
 
     const needPromises = needs.map((need) =>

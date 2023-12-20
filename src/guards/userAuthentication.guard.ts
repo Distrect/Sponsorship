@@ -12,7 +12,7 @@ export class RoleGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const cookies = request.cookies();
+    const cookies = request.cookies;
 
     let authCookie: IUserCookie;
 

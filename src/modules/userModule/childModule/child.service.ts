@@ -42,4 +42,8 @@ export default class ChildService {
 
     return child;
   }
+
+  public async getChildCard(childId: number) {
+    return await this.childDao.getChildCard(childId);
+  }
 }

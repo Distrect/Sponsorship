@@ -1,28 +1,9 @@
 import { GlobalConfigService } from 'src/services/config/config.service';
 import { DataSource } from 'typeorm';
-import {
-  generateMockAuthority,
-  generateMockData,
-  generateMockIdentification,
-  generateMockSponsorship,
-  generateNeedGroup,
-} from 'src/database/main/mockData';
-import User from 'src/database/user/user/user.entity';
-import Child from 'src/database/user/child/child.entity';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
-import Identification from 'src/database/user/identification/identification.entity';
 import Authority from 'src/database/user/authority/authority.entity';
+import MockDataGenerator from 'src/database/main/mock.data';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
-
-export interface DatabaseOption {
-  dialect: string;
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-}
 
 export const databaseProviders = [
   {
@@ -39,30 +20,32 @@ export const databaseProviders = [
         subscribers: [__dirname + '/../**/*.listener.{js,ts}'],
       });
       console.log('DEV MODE WARNING');
+
       const InitializedDatabase = await Database.initialize();
+
+      const mockDataGenerator = new MockDataGenerator(InitializedDatabase);
+
+      const create = InitializedDatabase.manager.create;
 
       const managerSave = <T>(entity: T): Promise<T> =>
         InitializedDatabase.manager.save(entity);
 
       const devOps = async () => {
         const authority = await managerSave(
-          InitializedDatabase.manager.create(
-            Authority,
-            generateMockAuthority(),
-          ),
+          mockDataGenerator.generateMockAuthority(),
         );
 
         const childs = await managerSave(
-          InitializedDatabase.manager.create(
-            Child,
-            generateMockData(20, 'Child'),
+          mockDataGenerator.multiplier(
+            () => mockDataGenerator.generateMockChild(),
+            { count: 20 },
           ),
         );
 
         const users = await managerSave(
-          InitializedDatabase.manager.create(
-            User,
-            generateMockData(20, 'User'),
+          mockDataGenerator.multiplier(
+            () => mockDataGenerator.generateMockUser(),
+            { count: 20 },
           ),
         );
 
@@ -78,25 +61,36 @@ export const databaseProviders = [
 
         await managerSave(userRequestsData);
 
-        await managerSave(
-          InitializedDatabase.manager.create(
-            Sponsorship,
-            generateMockSponsorship(userIds, childIds),
-          ),
+        const identifications = await managerSave(
+          users.map((user) => {
+            const identification =
+              mockDataGenerator.generateMockIdentification();
+
+            user.identifications = [identification];
+            return identification;
+          }),
         );
 
-        await managerSave(
-          InitializedDatabase.manager.create(
-            Identification,
-            generateMockIdentification(userIds),
-          ),
-        );
+        const needGroups: NeedGroup[] = [];
 
-        const childsNeedGroupsfaker = await managerSave(
-          generateNeedGroup(childIds).map((needGroup) =>
-            InitializedDatabase.manager.create(NeedGroup, needGroup),
-          ),
-        );
+        for (const child of childs) {
+          const needGroup = mockDataGenerator.generateNeedGroup();
+          const childNeeds = await managerSave(
+            mockDataGenerator.multiplier(
+              () => mockDataGenerator.generateChildNeed(),
+              { count: 20 },
+            ),
+          );
+          needGroup.needs = [...childNeeds];
+          needGroup.child = child;
+          const newInstnace = InitializedDatabase.manager.create(
+            NeedGroup,
+            needGroup,
+          );
+          needGroups.push(newInstnace);
+        }
+
+        const createdNeedGroups = await managerSave(needGroups);
       };
 
       isDevMode && (await devOps());

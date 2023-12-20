@@ -85,6 +85,11 @@ export default class ChildDao {
 
     return await this.updateChildEntity(child, body);
   }
+  public async getChildCard(childId: number) {
+    const child = await this.getChild({ userId: childId });
+
+    return child;
+  }
 
   /*Buna Kesinlikel el at El At*/
   public async listChilds({
