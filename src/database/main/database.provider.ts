@@ -1,9 +1,10 @@
 import { GlobalConfigService } from 'src/services/config/config.service';
-import { DataSource } from 'typeorm';
-import Authority from 'src/database/user/authority/authority.entity';
+import { DataSource, DeepPartial } from 'typeorm';
 import MockDataGenerator from 'src/database/main/mock.data';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import { SponsorshipStatus } from 'src/database/sponsor';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 
 export const databaseProviders = [
   {
@@ -31,23 +32,21 @@ export const databaseProviders = [
         InitializedDatabase.manager.save(entity);
 
       const devOps = async () => {
-        const authority = await managerSave(
-          mockDataGenerator.generateMockAuthority(),
-        );
-
-        const childs = await managerSave(
-          mockDataGenerator.multiplier(
-            () => mockDataGenerator.generateMockChild(),
-            { count: 20 },
+        const [authority, childs, users] = await Promise.all([
+          managerSave(mockDataGenerator.generateMockAuthority()),
+          managerSave(
+            mockDataGenerator.multiplier(
+              () => mockDataGenerator.generateMockChild(),
+              { count: 100 },
+            ),
           ),
-        );
-
-        const users = await managerSave(
-          mockDataGenerator.multiplier(
-            () => mockDataGenerator.generateMockUser(),
-            { count: 20 },
+          managerSave(
+            mockDataGenerator.multiplier(
+              () => mockDataGenerator.generateMockUser(),
+              { count: 20 },
+            ),
           ),
-        );
+        ]);
 
         const userIds = users.map(({ userId }) => userId);
         const childIds = childs.map(({ userId }) => userId);
@@ -72,15 +71,44 @@ export const databaseProviders = [
         );
 
         const needGroups: NeedGroup[] = [];
+        const sposnsoships: DeepPartial<Sponsorship>[] = [];
+
+        let i = 0;
 
         for (const child of childs) {
-          const needGroup = mockDataGenerator.generateNeedGroup();
+          const user = users[i];
+
+          const needGroup = await managerSave(
+            mockDataGenerator.generateNeedGroup(),
+          );
           const childNeeds = await managerSave(
-            mockDataGenerator.multiplier(
-              () => mockDataGenerator.generateChildNeed(),
-              { count: 20 },
+            mockDataGenerator.generator(20, 'ChildNeed', { group: needGroup }),
+          );
+
+          const fixNeeds = await managerSave(
+            mockDataGenerator.generator(5, 'FixNeed', { child }),
+          );
+
+          sposnsoships.push(
+            ...fixNeeds.map((fixNeed, i) =>
+              mockDataGenerator.generateSponsorship({
+                fixNeed,
+                user: users[i],
+                status: SponsorshipStatus.APPROVED,
+              }),
             ),
           );
+
+          /*const sponsorship = await managerSave(
+            mockDataGenerator.generateSponsorship({
+              fixNeed: fixNeeds[0],
+              status: SponsorshipStatus.APPROVED,
+              user,
+            }),
+          );*/
+
+          child.fixNeeds = [...fixNeeds];
+
           needGroup.needs = [...childNeeds];
           needGroup.child = child;
           const newInstnace = InitializedDatabase.manager.create(
@@ -88,9 +116,13 @@ export const databaseProviders = [
             needGroup,
           );
           needGroups.push(newInstnace);
+          i++;
         }
 
-        const createdNeedGroups = await managerSave(needGroups);
+        const x = await Promise.all([
+          managerSave(needGroups),
+          managerSave(sposnsoships),
+        ]);
       };
 
       isDevMode && (await devOps());

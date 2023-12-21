@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { NotFound } from 'src/utils/error';
-import { FixNeedStatus } from 'src/database/sponsor';
+import { EmptyData, NotFound } from 'src/utils/error';
+import { FixNeedStatus, SponsorshipStatus } from 'src/database/sponsor';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import ChildDao from 'src/database/user/child/child.dao';
+import { IGetFixNeedFilter } from 'src/database/sponsor/fixNeed/fixNeed.interface';
 
 @Injectable()
 export default class FixNeedDao {
-  @Injector(FixNeed) private fixNeedRepository: Repository<FixNeed>;
-  private childDao: ChildDao;
+  constructor(
+    @Injector(FixNeed) private fixNeedRepository: Repository<FixNeed>,
+    private childDao: ChildDao,
+  ) {}
 
   private async saveFixNeedEntity(entity: FixNeed) {
     return await this.fixNeedRepository.save(entity);
@@ -19,9 +22,11 @@ export default class FixNeedDao {
     entity: FixNeed,
     updateParams: DeepPartial<FixNeed>,
   ) {
+    if (!entity.fixNeedId) throw new Error('There should be fixNeedId');
+
     return await this.fixNeedRepository.save({
-      ...updateParams,
       ...entity,
+      ...updateParams,
       fixNeedId: entity.fixNeedId,
     });
   }
@@ -37,16 +42,57 @@ export default class FixNeedDao {
     return entity;
   }
 
-  public async getChildFixNeeds(chldId: number) {
+  public async getFixNeedWithSponsorship(fixNeedId: number) {
+    const fixNeed = await this.fixNeedRepository
+      .createQueryBuilder('fix_need')
+      .leftJoinAndSelect('fix_need.sponsorship', 'sponsorship')
+      .where('fix_need.fixNeedId = :fixNeedId', { fixNeedId })
+      .getOne();
+
+    if (!fixNeed) throw new NotFound('Fix Need Does Not Found');
+
+    return fixNeed;
+  }
+
+  public async getChildFixNeeds(
+    chldId: number,
+    filterParams?: IGetFixNeedFilter,
+  ) {
     const child = await this.childDao.getChild({ userId: chldId });
 
-    const childFixNeeds = await this.fixNeedRepository
+    let childFixNeeds = this.fixNeedRepository
       .createQueryBuilder('fix_need')
+      .leftJoinAndSelect('fix_need.sponsorship', 'sponsorship')
       .leftJoin('fix_need.child', 'child')
-      .where('child.userId = :userId', { userId: child.userId })
-      .getMany();
+      .where('child.userId = :userId', { userId: child.userId });
 
-    return childFixNeeds;
+    let result: FixNeed[];
+
+    if (filterParams) {
+      if (filterParams.status === 'ALL') {
+      } else if (filterParams.status === 'Active')
+        childFixNeeds = childFixNeeds.andWhere(
+          'fix_need.isDeleted = :isDeleted',
+          { isDeleted: false },
+        );
+      else if (filterParams.status === 'Inactive') {
+        childFixNeeds = childFixNeeds.andWhere(
+          'fix_need.isDeleted = :isDeleted',
+          { isDeleted: true },
+        );
+      } else {
+        childFixNeeds = childFixNeeds.andWhere('sponsorship.status = :status', {
+          status: SponsorshipStatus.WAITING_FOR_PAYMENT,
+        });
+      }
+
+      result = await childFixNeeds.getMany();
+    }
+
+    if (result.length === 0)
+      throw new EmptyData('The Child Fix Needs is Empty');
+
+    return result;
   }
 
   public async getDen(childId: number) {
@@ -106,8 +152,16 @@ export default class FixNeedDao {
     return fixNeed;
   }
 
-  public async createFixNeed(fixNeedParams: DeepPartial<FixNeed>) {
-    const fixNeedInstance = this.fixNeedRepository.create({ ...fixNeedParams });
+  public async createFixNeed(
+    childId: number,
+    fixNeedParams: DeepPartial<FixNeed>,
+  ) {
+    const child = await this.childDao.getChild({ userId: childId });
+
+    const fixNeedInstance = this.fixNeedRepository.create({
+      ...fixNeedParams,
+      child,
+    });
     return await this.saveFixNeedEntity(fixNeedInstance);
   }
 
@@ -123,12 +177,14 @@ export default class FixNeedDao {
     fixNeedId: number,
     updateParams: DeepPartial<FixNeed>,
   ) {
+    console.log('Update Params', updateParams);
     const fixNeed = await this.getFixNeed({ fixNeedId });
+    const updatedFixNeed = await this.updateFixNeedEntity(
+      fixNeed,
+      updateParams,
+    );
 
-    return await this.updateFixNeedEntity(fixNeed, updateParams);
-
-    // return await this.saveFixNeedEntity(
-    //   this.updateClassInstance(fixNeed, updateParams),
-    // );
+    console.log('Update Params', updatedFixNeed);
+    return updatedFixNeed;
   }
 }

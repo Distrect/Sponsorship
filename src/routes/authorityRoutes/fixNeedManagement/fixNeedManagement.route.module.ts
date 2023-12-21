@@ -17,6 +17,6 @@ import FixNeedManagementRouteService from 'src/routes/authorityRoutes/fixNeedMan
 })
 export default class FixNeedManagementRouteModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CookieMiddlewareMixin(Role.Authority)).forRoutes('*');
+    // consumer.apply(CookieMiddlewareMixin(Role.Authority)).forRoutes('*');
   }
 }

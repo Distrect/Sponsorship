@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import Answer from 'src/database/user/answer/answer.entity';
 import AnswerDao from 'src/database/user/answer/answer.dao';
-import DatabaseModule from 'src/database/main/databasew.module';
+import DatabaseModule from 'src/database/main/database.module';
 
 const AnswerProvider = createRepositoryProvider(Answer);
 

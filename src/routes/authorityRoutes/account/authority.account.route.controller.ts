@@ -25,7 +25,10 @@ export default class AuthorityAccountController extends AuthorityRouteGlobal {
   private readonly refreshTokenName: string = this.role + 'Refresh';
 
   @Post('/login')
-  public async Login(@Res() response: Response, @Body() requestBody: LoginDto) {
+  public async Login(
+    @Res({ passthrough: true }) response: Response,
+    @Body() requestBody: LoginDto,
+  ) {
     const authority = await this.authorityRouteService.login(requestBody);
 
     const token = JwtService.tokenizeData(authority);
@@ -41,8 +44,8 @@ export default class AuthorityAccountController extends AuthorityRouteGlobal {
       httpOnly: false,
       maxAge: this.cookieAge * 2,
     });
-    response.json({ ok: true, message: 'You are Authorized', authority });
-    return;
+
+    return { ok: true, message: 'You are Authorized', authority };
   }
 
   @All('/logout')

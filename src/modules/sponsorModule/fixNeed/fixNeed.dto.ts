@@ -13,8 +13,5 @@ export class CreateFixNeedDTO {
   title: string;
 
   @IsNotEmpty()
-  explanation: string;
-
-  @IsNotEmpty()
   amount: number;
 }

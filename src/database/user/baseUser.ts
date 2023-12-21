@@ -1,6 +1,12 @@
 import { IsEmail } from 'class-validator';
 import { CityEnum, Role } from 'src/database/user';
-import { Index, Column, BeforeInsert, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Index,
+  Column,
+  BeforeInsert,
+  BeforeUpdate,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export default abstract class BaseUser {
   @Index()
@@ -33,6 +39,7 @@ export default abstract class BaseUser {
   @Column('enum', { enum: CityEnum })
   city: CityEnum;
 
+  @BeforeUpdate()
   @BeforeInsert()
   private setFullName() {
     this.fullName = this.name + ' ' + this.lastname;

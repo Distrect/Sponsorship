@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DeepPartial } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { ActorType, CityEnum, NationalityEnum, Role } from 'src/database/user';
 import { IOptions, Multiplier } from 'src/database/main/mockData.interface';
@@ -18,96 +18,77 @@ import User from 'src/database/user/user/user.entity';
 import BaseUser from 'src/database/user/baseUser';
 import Authority from 'src/database/user/authority/authority.entity';
 import Identification from 'src/database/user/identification/identification.entity';
+import { FixNeedStatus } from 'src/database/sponsor';
+import { NeedUrgency, Status } from 'src/database/donation';
 
 interface IMockDataGenerator {
   multiplier: Multiplier;
 }
 
-export default class MockDataGenerator implements IMockDataGenerator {
-  EntityObject: EntitiyMapType<keyof TypeofEntityMap> = {
-    Child: this.generateMockUser,
-    User: this.generateMockUser,
-    ChildNeed: function (): ChildNeed {
-      throw new Error('Function not implemented.');
-    },
-    NeedGroup: function (): NeedGroup {
-      throw new Error('Function not implemented.');
-    },
-    NeedSafe: function (): NeedSafe {
-      throw new Error('Function not implemented.');
-    },
-    Safe: function (): Safe {
-      throw new Error('Function not implemented.');
-    },
-    FixNeed: function ():
-      | ChildNeed
-      | NeedGroup
-      | NeedSafe
-      | FixNeed
-      | Sponsorship
-      | Authority
-      | BaseUser
-      | Child
-      | User
-      | UserRequest {
-      throw new Error('Function not implemented.');
-    },
-    Sponsorship: function ():
-      | ChildNeed
-      | NeedGroup
-      | NeedSafe
-      | FixNeed
-      | Sponsorship
-      | Authority
-      | BaseUser
-      | Child
-      | User
-      | UserRequest {
-      throw new Error('Function not implemented.');
-    },
-    Authority: function ():
-      | ChildNeed
-      | NeedGroup
-      | NeedSafe
-      | FixNeed
-      | Sponsorship
-      | Authority
-      | BaseUser
-      | Child
-      | User
-      | UserRequest {
-      throw new Error('Function not implemented.');
-    },
-    BaseUser: function ():
-      | ChildNeed
-      | NeedGroup
-      | NeedSafe
-      | FixNeed
-      | Sponsorship
-      | Authority
-      | BaseUser
-      | Child
-      | User
-      | UserRequest {
-      throw new Error('Function not implemented.');
-    },
-    UserRequest: function ():
-      | ChildNeed
-      | NeedGroup
-      | NeedSafe
-      | FixNeed
-      | Sponsorship
-      | Authority
-      | BaseUser
-      | Child
-      | User
-      | UserRequest {
-      throw new Error('Function not implemented.');
-    },
-    Identification: this.generateMockIdentification,
-  };
+type DeepPartialChildNeed = DeepPartial<ChildNeed>;
 
-  constructor(private dataSource: DataSource) {}
+export default class MockDataGenerator implements IMockDataGenerator {
+  EntityObject: EntitiyMapType<keyof TypeofEntityMap>;
+  constructor(private dataSource: DataSource) {
+    if (!dataSource) throw new Error('bABA Hata');
+
+    this.EntityObject = {
+      Child: this.generateMockUser,
+      User: this.generateMockUser,
+      ChildNeed: this.generateChildNeed,
+      FixNeed: this.generateFixNeed,
+      Sponsorship: this.generateSponsorship,
+      NeedGroup: function (): NeedGroup {
+        throw new Error('Function not implemented.');
+      },
+      NeedSafe: function (): NeedSafe {
+        throw new Error('Function not implemented.');
+      },
+      Safe: function (): Safe {
+        throw new Error('Function not implemented.');
+      },
+      Authority: function ():
+        | ChildNeed
+        | NeedGroup
+        | NeedSafe
+        | FixNeed
+        | Sponsorship
+        | Authority
+        | BaseUser
+        | Child
+        | User
+        | UserRequest {
+        throw new Error('Function not implemented.');
+      },
+      BaseUser: function ():
+        | ChildNeed
+        | NeedGroup
+        | NeedSafe
+        | FixNeed
+        | Sponsorship
+        | Authority
+        | BaseUser
+        | Child
+        | User
+        | UserRequest {
+        throw new Error('Function not implemented.');
+      },
+      UserRequest: function ():
+        | ChildNeed
+        | NeedGroup
+        | NeedSafe
+        | FixNeed
+        | Sponsorship
+        | Authority
+        | BaseUser
+        | Child
+        | User
+        | UserRequest {
+        throw new Error('Function not implemented.');
+      },
+      Identification: this.generateMockIdentification,
+    };
+  }
 
   private countChecker(count: number) {
     if (count <= 0) throw new Error('Thats the wrong Number');
@@ -118,13 +99,13 @@ export default class MockDataGenerator implements IMockDataGenerator {
   public generator<T extends keyof TypeofEntityMap>(
     count: number,
     Entity: T,
+    ...params: Parameters<EntitiyMapType<T>[T]>
   ): Array<TypeofEntityMap[T]> {
     this.countChecker(count);
-    const method = () => this.EntityObject[Entity]();
+    const method = this.EntityObject[Entity].bind(this);
+    const multiplied = this.multiplier(() => method(...params), { count });
 
-    const multiplied = this.multiplier(method, { count });
-
-    return multiplied as unknown as Array<TypeofEntityMap[T]>;
+    return multiplied as unknown as TypeofEntityMap[T][];
   }
 
   public multiplier<Entity>(
@@ -135,12 +116,13 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return faker.helpers.multiple((...param: any[]) => method(param), options);
   }
 
-  public generateMockChild(): Child {
+  public generateMockChild(childParams: DeepPartial<Child> = {}): Child {
     return this.dataSource.manager.create(Child, {
       ...this.generateMockBaseUser(),
       role: Role.Child,
       story: faker.person.bio(),
       dateOfBirth: faker.date.birthdate(),
+      ...childParams,
     });
   }
 
@@ -156,7 +138,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
     };
   }
 
-  public generateMockUser(): User {
+  public generateMockUser(userParams?: DeepPartial<User>): User {
     const mockBaseUser = this.generateMockBaseUser();
 
     return this.dataSource.manager.create(User, {
@@ -188,12 +170,15 @@ export default class MockDataGenerator implements IMockDataGenerator {
     });
   }
 
-  public generateChildNeed(): ChildNeed {
+  public generateChildNeed(
+    childNeedParams: DeepPartial<ChildNeed> = {},
+  ): ChildNeed {
     return this.dataSource.manager.create(ChildNeed, {
       amount: faker.number.int({ min: 50, max: 650 }),
       title: faker.person.zodiacSign(),
       price: faker.number.float({ min: 50, max: 500, precision: 2 }),
       isDeleted: false,
+      ...childNeedParams,
     });
   }
 
@@ -201,6 +186,45 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return this.dataSource.manager.create(NeedGroup, {
       explanation: faker.person.jobDescriptor(),
       title: faker.person.jobArea(),
+    });
+  }
+
+  public generateFixNeed(
+    fixNeedParams: DeepPartial<FixNeed> = {},
+  ): DeepPartial<FixNeed> {
+    return this.dataSource.manager.create(FixNeed, {
+      title: faker.commerce.productName(),
+      explanation: faker.commerce.productDescription(),
+      amount: faker.number.int({ min: 50, max: 200 }),
+      status: FixNeedStatus.ACTIVE,
+      isDeleted: false,
+      ...fixNeedParams,
+    });
+  }
+
+  public genreateChildNeed(
+    childNeedParams: DeepPartial<ChildNeed>,
+  ): DeepPartialChildNeed {
+    const amount = faker.number.int({ min: 50, max: 100 });
+    return this.dataSource.manager.create(ChildNeed, {
+      amount,
+      isDeleted: false,
+      price: faker.number.float({ min: 50, max: 75, precision: 2 }),
+      startAmount: amount,
+      status: Status.ACTIVE,
+      title: faker.commerce.product(),
+      urgency: NeedUrgency.NORMAL,
+      ...childNeedParams,
+    });
+  }
+
+  public generateSponsorship(
+    sponsorshipParams: DeepPartial<Sponsorship>,
+  ): DeepPartial<Sponsorship> {
+    if (!sponsorshipParams) throw new Error('Cannot be empty');
+
+    return this.dataSource.manager.create(Sponsorship, {
+      ...sponsorshipParams,
     });
   }
 }

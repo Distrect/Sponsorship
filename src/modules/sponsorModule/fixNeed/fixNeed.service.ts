@@ -1,25 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
-import { CreateFixNeedDTO } from 'src/modules/sponsorModule/fixNeed/fixNeed.dto';
 import FixNeedDao from 'src/database/sponsor/fixNeed/fixNeed.dao';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
+import {
+  CreateFixNeedDTO,
+  GetFixNeedsDTO,
+} from 'src/routes/authorityRoutes/fixNeedManagement/fixNeedManagamenet.interface';
 
 @Injectable()
 export default class FixNeedService {
   constructor(private fixNeedDao: FixNeedDao) {}
 
-  public async gtFixNeedsOfChild(childId: number) {
-    return await this.fixNeedDao.getChildFixNeeds(childId);
+  public async gtFixNeedsOfChild(childId: number, body: GetFixNeedsDTO) {
+    return await this.fixNeedDao.getChildFixNeeds(childId, body);
   }
 
   public async createFixNeed(body: CreateFixNeedDTO, childId: number) {
-    const newFixNeed = await this.fixNeedDao.createFixNeed({
+    const newFixNeed = await this.fixNeedDao.createFixNeed(childId, {
       ...body,
-      child: { userId: childId },
     });
 
-    return newFixNeed;
+    const fixNeed = await this.fixNeedDao.getFixNeedWithSponsorship(
+      newFixNeed.fixNeedId,
+    );
+
+    return fixNeed;
   }
 
   public async disableFixNeed(fixNeedId: number) {
@@ -40,6 +46,12 @@ export default class FixNeedService {
       updateParams,
     );
 
-    return updatedFixNeed;
+    console.log('Updated Fix Need', updatedFixNeed);
+
+    const fixNeedWithSponsorship =
+      await this.fixNeedDao.getFixNeedWithSponsorship(updatedFixNeed.fixNeedId);
+    console.log('Updated Fix Need', fixNeedWithSponsorship);
+
+    return fixNeedWithSponsorship;
   }
 }

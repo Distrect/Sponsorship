@@ -1,4 +1,4 @@
-import { type Entity, EntityTarget } from 'typeorm';
+import { type Entity, EntityTarget, DeepPartial } from 'typeorm';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
@@ -11,6 +11,21 @@ import Child from 'src/database/user/child/child.entity';
 import User from 'src/database/user/user/user.entity';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
+
+interface EntyityRecord {
+  ChildNeed: ChildNeed;
+  NeedGroup: NeedGroup;
+  NeedSafe: NeedSafe;
+  Safe: Safe;
+  FixNeed: FixNeed;
+  Sponsorship: Sponsorship;
+  Authority: Authority;
+  BaseUser: BaseUser;
+  Child: Child;
+  User: User;
+  UserRequest: UserRequest;
+  Identification: Identification;
+}
 
 type Entities<T> = T extends 'ChildNeed'
   ? ChildNeed
@@ -50,8 +65,8 @@ const EntityMap = {
   UserRequest: UserRequest,
   Identification: Identification,
 };
-export type TypeofEntityMap = typeof EntityMap;
-export type EntitiyMapType<T extends keyof Partial<typeof EntityMap>> = Record<
+export type TypeofEntityMap = EntyityRecord;
+export type EntitiyMapType<T extends keyof Partial<EntyityRecord>> = Record<
   T,
-  () => Entities<T>
+  (...entityParams: DeepPartial<Entities<T>>[]) => DeepPartial<Entities<T>>
 >;

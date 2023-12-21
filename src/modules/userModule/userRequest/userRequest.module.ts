@@ -1,5 +1,5 @@
 import { Module, Global, forwardRef } from '@nestjs/common';
-import DatabaseModule from 'src/database/main/databasew.module';
+import DatabaseModule from 'src/database/main/database.module';
 import UserEntityModule from 'src/database/user/user/userEntity.module';
 import UserRequestEntityModule from 'src/database/user/userRequest/userRequestEntity.module';
 import UserRequestService from 'src/modules/userModule/userRequest/userRequest.service';

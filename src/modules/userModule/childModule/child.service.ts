@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { ICreateChild } from 'src/modules/userModule/childModule/child.module.interface';
 import type { IUserCookie } from 'src/shared/types';
 import type { ChildWhere } from 'src/database/user/child/child.dao.interface';
+import { EditChildDTO } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
 import Child from 'src/database/user/child/child.entity';
 import ChildDao from 'src/database/user/child/child.dao';
 import ChildStatusDao from 'src/database/user/childStatus/childStatus.dao';
@@ -45,5 +46,17 @@ export default class ChildService {
 
   public async getChildCard(childId: number) {
     return await this.childDao.getChildCard(childId);
+  }
+
+  public async deleteChild(childId: number, authority: IUserCookie) {
+    const deletedChild = await this.childDao.deleteChild(childId);
+
+    return deletedChild;
+  }
+
+  public async editChild(childId: number, body: EditChildDTO) {
+    const editedChild = await this.childDao.updateChild(childId, body);
+
+    return editedChild;
   }
 }

@@ -36,14 +36,16 @@ export default class ChildDao {
     entity: Child,
     updatedChildData: DeepPartial<Child>,
   ) {
-    return await this.childRepository.save(
+    if (!entity.userId) throw Error('Entity id is not provided');
+
+    return (await this.childRepository.save(
       {
         ...entity,
         ...updatedChildData,
         userId: entity.userId,
       },
       { reload: true },
-    );
+    )) as Child;
   }
 
   private async saveChildEntity(entity: Child) {
@@ -86,6 +88,7 @@ export default class ChildDao {
 
     return await this.updateChildEntity(child, body);
   }
+
   public async getChildCard(childId: number) {
     const child = await this.getChild({ userId: childId });
 
