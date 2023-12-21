@@ -9,10 +9,9 @@ import {
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import ChildDao from 'src/database/user/child/child.dao';
 import DonationDao from 'src/database/donation/donation/donation.dao';
-import SafeService from 'src/modules/donationModule/safe/safe.service';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
 import NeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
-import { CLIENT_RENEG_LIMIT } from 'tls';
+import SafeDao from 'src/database/donation/safe/safe.dao';
 
 @Injectable()
 export default class ChildNeedService {
@@ -20,7 +19,8 @@ export default class ChildNeedService {
     private childDao: ChildDao,
     private childNeedDao: ChildNeedDao,
     private needGroupDao: NeedGroupDao,
-    private donationDao: DonationDao, // private safeService: SafeService,
+    private donationDao: DonationDao,
+    private safeDao: SafeDao,
   ) {}
 
   private compareNeed(
@@ -41,18 +41,18 @@ export default class ChildNeedService {
   public async createNeeds(
     childId: number,
     authority: IUserCookie,
-    { needs, needExplanation, title }: CreateNeedDTO,
+    { needs }: CreateNeedDTO,
   ) {
     const child = await this.childDao.getChild({ userId: childId });
 
-    const createdNeedGroup = await this.needGroupDao.createChildNeedGroup(
-      childId,
-      { explanation: needExplanation, title },
-    );
+    const createdNeedGroup =
+      await this.needGroupDao.getActiveGroupOfChild(childId);
 
     const needPromises = needs.map((need) =>
       this.childNeedDao.createNeed(need),
     );
+
+    console.log('LFŞSDLŞFGLDSŞİLFŞİDSF', createdNeedGroup);
 
     const createdNeeds = await Promise.all(needPromises)
       .then((res) => res)
@@ -61,7 +61,7 @@ export default class ChildNeedService {
         throw new ServerError();
       });
 
-    createdNeedGroup.needs = createdNeeds;
+    createdNeedGroup.needs = [...createdNeeds];
 
     await this.needGroupDao.saveNeedGroupEntity(createdNeedGroup);
 
@@ -111,7 +111,7 @@ export default class ChildNeedService {
         continue;
       }
 
-      /*  await this.safeService.depositMoneyToChild(
+      /* await this.safeDao.depositMoneyToChild(
         need.needId,
         child.userId,
         restMoney,

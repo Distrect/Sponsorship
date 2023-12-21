@@ -5,6 +5,7 @@ import {
   Delete,
   Patch,
   Param,
+  Body,
   UseGuards,
   ParseIntPipe,
   UseInterceptors,
@@ -44,12 +45,13 @@ export default class NeedManagmentRouteController {
   @Post('createNeed/:childId')
   public async CreateNeed(
     @Param('childId', ParseIntPipe) childId: number,
-    @User(Role.Authority) user: IUserCookie,
-    requestBody: CreateNeedDTO,
+    @User(Role.Authority) authotiy: IUserCookie,
+    @Body() requestBody: CreateNeedDTO,
   ) {
+    console.log(requestBody);
     const result = await this.childManagementRouteService.createNeeds(
       childId,
-      user,
+      authotiy,
       requestBody,
     );
 

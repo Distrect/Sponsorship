@@ -7,7 +7,11 @@ import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 
 @Injectable()
 export default class FixNeedService {
-  private fixNeedDao: FixNeedDao;
+  constructor(private fixNeedDao: FixNeedDao) {}
+
+  public async gtFixNeedsOfChild(childId: number) {
+    return await this.fixNeedDao.getChildFixNeeds(childId);
+  }
 
   public async createFixNeed(body: CreateFixNeedDTO, childId: number) {
     const newFixNeed = await this.fixNeedDao.createFixNeed({

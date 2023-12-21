@@ -53,6 +53,7 @@ export default class ChildDao {
   public async getChild(childAttributes: ChildWhere) {
     const child = await this.childRepository.findOne({
       where: { ...childAttributes },
+      relations: { safe: true },
     });
 
     if (!child) throw new NotFound('Child is not Found');

@@ -40,8 +40,10 @@ export default class NeedGroupDao {
   }
   public async getActiveGroupOfChild(childId: number) {
     const activeGroups = await this.needGroupRepository.find({
-      where: { status: ChildNeedGroupStatus.OPEN },
+      where: { status: ChildNeedGroupStatus.OPEN, child: { userId: childId } },
     });
+
+    console.log('Active groups', activeGroups);
 
     if (activeGroups.length > 1) throw new HasActiveNeedGroupError();
 
@@ -96,8 +98,7 @@ export default class NeedGroupDao {
 
   public async createChildNeedGroup(
     userId: number,
-    needGroupParams: DeepPartialNeedGroup,
-    active: ChildNeedGroupStatus = ChildNeedGroupStatus.OPEN,
+    needGroupParams?: DeepPartialNeedGroup,
   ) {
     const child = await this.childDao.getChild({ userId });
 
@@ -108,7 +109,6 @@ export default class NeedGroupDao {
     const needGroupInstance = this.needGroupRepository.create({
       ...needGroupParams,
       child: { userId },
-      status: active,
     });
 
     return await this.saveNeedGroupEntity(needGroupInstance);

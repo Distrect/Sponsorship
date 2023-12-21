@@ -37,6 +37,18 @@ export default class FixNeedDao {
     return entity;
   }
 
+  public async getChildFixNeeds(chldId: number) {
+    const child = await this.childDao.getChild({ userId: chldId });
+
+    const childFixNeeds = await this.fixNeedRepository
+      .createQueryBuilder('fix_need')
+      .leftJoin('fix_need.child', 'child')
+      .where('child.userId = :userId', { userId: child.userId })
+      .getMany();
+
+    return childFixNeeds;
+  }
+
   public async getDen(childId: number) {
     const child = await this.childDao.getChild({ userId: childId });
 
@@ -56,7 +68,7 @@ export default class FixNeedDao {
     const fixNeeds = this.fixNeedRepository
       .createQueryBuilder('fix_need')
       .leftJoin('fix_need.sponsorship', 'sponsorship')
-      .addSelect(['sponsorship.status'])
+      // .addSelect(['sponsorship.status'])
       .where('sponsorship.user = :userId', { userId })
       .andWhere('fix_need.child = :childId', { childId });
 

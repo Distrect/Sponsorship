@@ -7,7 +7,7 @@ export default class Donation {
   @PrimaryGeneratedColumn()
   donationId: number;
 
-  @Column('double')
+  @Column('double', { default: 0 })
   amount: number;
 
   @ManyToOne(() => ChildNeed, (childNeed) => childNeed.donations)

@@ -1,8 +1,9 @@
 import { IsNotEmpty, Min } from 'class-validator';
 import { NeedUrgency } from 'src/database/donation';
 import { CityEnum } from 'src/database/user';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 
-class Need {
+class Need implements Partial<ChildNeed> {
   @IsNotEmpty()
   title: string;
 
@@ -13,21 +14,18 @@ class Need {
   amount: number;
 
   @IsNotEmpty()
-  categoryId: number;
+  urgency: NeedUrgency;
 }
 
 export class CreateNeedDTO {
   @IsNotEmpty()
-  public needs: Need[];
+  needs: Need[];
 
-  @IsNotEmpty()
-  needExplanation: string;
-
-  @IsNotEmpty()
-  title: string;
+  // @IsNotEmpty()
+  // title: string;
 }
 
-export class EditNeed {
+export class EditNeed implements Partial<ChildNeed> {
   @IsNotEmpty()
   needId: number;
 

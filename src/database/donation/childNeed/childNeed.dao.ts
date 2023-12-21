@@ -61,8 +61,14 @@ export default class ChildNeedDao {
     const needWithTotal = (await this.childNeedRepository
       .createQueryBuilder('child_need')
       .leftJoinAndSelect('child_need.donations', 'donation')
-      .select(['child_need.*', 'SUM(donation.amount) as totalDonation'])
-      .where('child_need.needId  = :needId', { needId })
+      .select([
+        'child_need.*',
+        'SUM(IFNULL("donation.amount",0)) as totalDonation',
+      ])
+      .where('child_need.needId  = :needId AND child_need = :isDeleted', {
+        needId,
+        idDeleted: false,
+      })
       .getRawOne()) as INeedWithTotal;
 
     if (!needWithTotal) throw new NotFound();

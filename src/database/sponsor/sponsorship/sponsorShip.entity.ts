@@ -6,13 +6,12 @@ import {
   OneToOne,
   OneToMany,
   ManyToOne,
-  // Column,
+  Column,
 } from 'typeorm';
 import User from 'src/database/user/user/user.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import SponsorShipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
-// import { SponsorshipStatus } from './../index';
-// import Child from 'src/database/user/child/child.entity';
+import { SponsorshipStatus } from 'src/database/sponsor';
 
 @Entity()
 export default class Sponsorship {
@@ -20,11 +19,11 @@ export default class Sponsorship {
   @PrimaryGeneratedColumn()
   sponsorShipId: number;
 
-  // @Column('enum', {
-  //   default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
-  //   enum: SponsorshipStatus,
-  // })
-  // status: SponsorshipStatus;
+  @Column('enum', {
+    default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
+    enum: SponsorshipStatus,
+  })
+  status: SponsorshipStatus;
 
   // @ManyToOne(() => Child, (child) => child.sponsors)
   // child: Child;
