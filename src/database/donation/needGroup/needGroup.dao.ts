@@ -11,7 +11,6 @@ import {
   NeedGroupWithNeedsWithTotalDonation,
 } from 'src/database/donation/needGroup/needGroup.dao.interface';
 import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import ChildDao from 'src/database/user/child/child.dao';
 import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
 
@@ -21,13 +20,13 @@ import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 export default class NeedGroupDao {
   constructor(
     @Injector(NeedGroup)
-    private childNeedGroupRepository: Repository<ChildNeedGroup>,
+    private needGroupRepository: Repository<NeedGroup>,
     private childDao: ChildDao,
     private childNeedDao: ChildNeedDao,
   ) {}
 
-  public async saveNeedGroupEntity(entity: ChildNeedGroup) {
-    return await this.childNeedGroupRepository.save(entity);
+  public async saveNeedGroupEntity(entity: NeedGroup) {
+    return await this.needGroupRepository.save(entity);
   }
   private async getActiveOrCreate(childId: number) {
     try {
@@ -40,7 +39,7 @@ export default class NeedGroupDao {
     }
   }
   public async getActiveGroupOfChild(childId: number) {
-    const activeGroups = await this.childNeedGroupRepository.find({
+    const activeGroups = await this.needGroupRepository.find({
       where: { status: ChildNeedGroupStatus.OPEN },
     });
 
@@ -74,11 +73,21 @@ export default class NeedGroupDao {
   public async getActiveNeedGroups(userId: number) {
     const child = await this.childDao.getChild({ userId });
 
-    const activeGroups = await this.childNeedGroupRepository.find({
+    const activeGroups = await this.needGroupRepository
+      .createQueryBuilder('need_group')
+      .leftJoinAndSelect('need_group.needs', 'child_need')
+      .leftJoin('need_group.child', 'child')
+      .where('child.userId = :userId', { userId })
+      .andWhere('need_group.status = :status', {
+        status: ChildNeedGroupStatus.OPEN,
+      })
+      .getMany();
+    /*
+    const activeGroups = await this.needGroupRepository.find({
       where: { status: ChildNeedGroupStatus.OPEN, child: { userId } },
-      select: { needs: { needId: true } },
+      select: { needs: true },
     });
-
+*/
     if (activeGroups.length > 1 || !activeGroups.every((group) => !!group))
       throw new ServerError('Active needs should not be more than one.');
 
@@ -96,7 +105,7 @@ export default class NeedGroupDao {
 
     if (activeNeeds) throw new HasActiveNeedGroupError();
 
-    const needGroupInstance = this.childNeedGroupRepository.create({
+    const needGroupInstance = this.needGroupRepository.create({
       ...needGroupParams,
       child: { userId },
       status: active,
@@ -106,7 +115,7 @@ export default class NeedGroupDao {
   }
 
   public async checkIfNeedGroupIsActive(needGroupId: number) {
-    const needGroup = await this.childNeedGroupRepository.findOne({
+    const needGroup = await this.needGroupRepository.findOne({
       where: { needGroupId },
     });
 

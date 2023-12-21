@@ -5,7 +5,7 @@ import DonationEntityModule from 'src/database/donation/donation/donationEntityM
 import NeedGroupEntityModule from 'src/database/donation/needGroup/needGroupEntity.module';
 import NeedSafeEntityModule from 'src/database/donation/needSafe/needSafeEntity.module';
 import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
-import MySQLConnectorModule from 'src/database/main/database.module';
+import MySQLConnectorModule from 'src/database/main/mysql.connector.module';
 import FixNeedEntityModule from 'src/database/sponsor/fixNeed/fixNeedEntity.module';
 import SponsorshipEntityModule from 'src/database/sponsor/sponsorship/sponsorshipEntity.module';
 import SponsorshipPaymentEntityModule from 'src/database/sponsor/sponsorshipPayment/sponsorshipPaymentEntity.module';

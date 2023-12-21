@@ -10,7 +10,7 @@ import { NeedUrgency, Status } from 'src/database/donation';
 import Category from 'src/database/donation/category/category.entity';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
-import ChildNeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 
 @Entity()
 export default class ChildNeed {
@@ -47,8 +47,8 @@ export default class ChildNeed {
   // @ManyToOne(() => Category, (category) => category.needs)
   // category: Category;
 
-  @ManyToOne(() => ChildNeedGroup, (childNeedGroup) => childNeedGroup.needs)
-  group: ChildNeedGroup;
+  @ManyToOne(() => NeedGroup, (needGroup) => needGroup.needs)
+  group: NeedGroup;
 
   @BeforeInsert()
   private async setStartAmount() {

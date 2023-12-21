@@ -3,10 +3,10 @@ import ChildStatusEntityModule from 'src/database/user/childStatus/childStatusEn
 import ChildEntityModule from 'src/database/user/child/child.module';
 import ChildService from 'src/modules/userModule/childModule/child.service';
 import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
-import EntityModule from 'src/database/main/entity.module';
+import DatabaseModule from 'src/database/main/databasew.module';
 
 @Module({
-  imports: [forwardRef(() => EntityModule)],
+  imports: [forwardRef(() => DatabaseModule)],
   providers: [ChildService],
   exports: [ChildService],
 })

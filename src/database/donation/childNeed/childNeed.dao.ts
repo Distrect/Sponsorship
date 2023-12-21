@@ -78,11 +78,6 @@ export default class ChildNeedDao {
     const updatedNeed = await this.saveChildNeed(
       this.updateInstance(need, rest),
     );
-    // const updatedNeed = await this.childNeedRepository.save(need);
-    // const updatedNeed = await this.childNeedRepository.save({
-    //   needId,
-    //   ...rest,
-    // });
 
     return updatedNeed;
   }
@@ -92,6 +87,11 @@ export default class ChildNeedDao {
 
     return deletedNeed;
   }
+
+  public async donateToChild({ needId, cost }: DonateToNeed) {
+    const needWithTotalDonation = await this.getNeedWithTotalDonation(needId);
+  }
+
   /*
   public async listNeedsWithChild(
     userId: number,
@@ -134,7 +134,4 @@ export default class ChildNeedDao {
     return await needListWİthChild.getMany();
   }
 */
-  public async donateToChild({ needId, cost }: DonateToNeed) {
-    const needWithTotalDonation = await this.getNeedWithTotalDonation(needId);
-  }
 }

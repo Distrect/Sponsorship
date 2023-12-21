@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import SafeService from 'src/modules/donationModule/safe/safe.service';
-import DatabaseModule from 'src/database/main/entity.module';
+import DatabaseModule from 'src/database/main/databasew.module';
 
 @Module({
   imports: [forwardRef(() => DatabaseModule)],

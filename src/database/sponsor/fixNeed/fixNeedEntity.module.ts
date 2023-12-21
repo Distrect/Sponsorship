@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { createRepositoryProvider } from 'src/database/utils/repositoryProvider';
 import FixNeedDao from 'src/database/sponsor/fixNeed/fixNeed.dao';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
-import DatabaseModule from 'src/database/main/entity.module';
+import DatabaseModule from 'src/database/main/databasew.module';
 
 const FixNeedProvder = createRepositoryProvider(FixNeed);
 

@@ -148,6 +148,8 @@ export default class ChildNeedService {
     const needData =
       await this.needGroupDao.getActiveNeedGroupWithNeeds(childId);
 
+    console.log('1', needData);
+
     return needData;
   }
   /*

@@ -1,12 +1,12 @@
 import { Module, Global, forwardRef } from '@nestjs/common';
-import EntityModule from 'src/database/main/entity.module';
+import DatabaseModule from 'src/database/main/databasew.module';
 import UserEntityModule from 'src/database/user/user/userEntity.module';
 import UserRequestEntityModule from 'src/database/user/userRequest/userRequestEntity.module';
 import UserRequestService from 'src/modules/userModule/userRequest/userRequest.service';
 
 @Global()
 @Module({
-  imports: [forwardRef(() => EntityModule)],
+  imports: [forwardRef(() => DatabaseModule)],
   providers: [UserRequestService],
   exports: [UserRequestService],
 })
