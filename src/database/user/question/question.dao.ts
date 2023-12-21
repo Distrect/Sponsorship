@@ -5,7 +5,7 @@ import { NotFound } from 'src/utils/error';
 import Question from 'src/database/user/question/question.entity';
 
 @Injectable()
-export default class QuestionDao {
+export default class QuestionDAO {
   @Injector(Question) private questionRepository: Repository<Question>;
 
   public async getQuestion(questionParams: FindOptionsWhere<Question>) {

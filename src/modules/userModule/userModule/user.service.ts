@@ -10,25 +10,25 @@ import {
   IIdentification,
   IRegisterUser,
 } from 'src/modules/userModule/userModule/types';
-import AuthorityDao from 'src/database/user/authority/authority.dao';
-import ChildDao from 'src/database/user/child/child.dao';
-import UserDao from 'src/database/user/user/user.dao';
+import AuthorityDAO from 'src/database/user/authority/authority.DAO';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import UserDAO from 'src/database/user/user/user.DAO';
 import JwtService from 'src/services/jwt/jwt.service';
 import BaseUser from 'src/database/user/baseUser';
 import moment from 'moment';
 import User from 'src/database/user/user/user.entity';
-import IdentificationDao from 'src/database/user/identification/identification.dao';
+import IdentificationDAO from 'src/database/user/identification/identification.DAO';
 import FileService from 'src/services/file/file.service';
-import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
+import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 
 @Injectable()
 export default class UserService {
   constructor(
-    private authorityDao: AuthorityDao,
-    private userDao: UserDao,
-    private childDao: ChildDao,
-    private userRequestDao: UserRequestDao,
-    private identificationDao: IdentificationDao,
+    private authorityDAO: AuthorityDAO,
+    private userDAO: UserDAO,
+    private childDAO: ChildDAO,
+    private userRequestDAO: UserRequestDAO,
+    private identificationDAO: IdentificationDAO,
     private fileService: FileService,
   ) {}
 
@@ -129,13 +129,13 @@ export default class UserService {
 
     switch (role) {
       case Role.Authority:
-        user = await this.authorityDao.getAuthority(userParams);
+        user = await this.authorityDAO.getAuthority(userParams);
         break;
       case Role.Child:
-        user = await this.childDao.getChild(userParams);
+        user = await this.childDAO.getChild(userParams);
         break;
       case Role.User:
-        user = await this.userDao.getUser(userParams);
+        user = await this.userDAO.getUser(userParams);
         break;
       default:
         throw new Error('MİNİ TERORİSTA');
@@ -202,9 +202,9 @@ export default class UserService {
 
     this.checkIdentifications(identifications);
 
-    const user = await this.userDao.createUser(rest);
+    const user = await this.userDAO.createUser(rest);
     this.createIdentificationFiles(identifications, user);
-    const userRequest = await this.userRequestDao.createLoginRequest({ user });
+    const userRequest = await this.userRequestDAO.createLoginRequest({ user });
 
     user.loginRequests = [userRequest];
 

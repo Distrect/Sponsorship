@@ -10,7 +10,7 @@ interface INeedSafeTotal {
 }
 
 @Injectable()
-export default class NeedSafeDao {
+export default class NeedSafeDAO {
   @Injector(NeedSafe) private needSafeRepository: Repository<NeedSafe>;
 
   private async saveNeedSafeEntity(entity: NeedSafe) {

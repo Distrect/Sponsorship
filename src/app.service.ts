@@ -1,62 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import CategoryDao from 'src/database/donation/category/category.dao';
-import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
-import DonationDao from 'src/database/donation/donation/donation.dao';
-import NeedGroupDao from 'src/database/donation/needGroup/needGroup.dao';
-import NeedSafeDao from 'src/database/donation/needSafe/needSafe.dao';
-import SafeDao from 'src/database/donation/safe/safe.dao';
-import FixNeedDao from 'src/database/sponsor/fixNeed/fixNeed.dao';
-import SponsorshipDao from 'src/database/sponsor/sponsorship/sponsorShip.dao';
-import AdminDao from 'src/database/user/admin/admin.dao';
-import AnswerDao from 'src/database/user/answer/answer.dao';
-import AuthorityDao from 'src/database/user/authority/authority.dao';
-import ChildDao from 'src/database/user/child/child.dao';
-import ChildStatusDao from 'src/database/user/childStatus/childStatus.dao';
-import IdentificationDao from 'src/database/user/identification/identification.dao';
-import QuestionDao from 'src/database/user/question/question.dao';
-import UserDao from 'src/database/user/user/user.dao';
-import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
+import CategoryDAO from 'src/database/donation/category/category.DAO';
+import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
+import DonationDAO from 'src/database/donation/donation/donation.DAO';
+import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
+import NeedSafeDAO from 'src/database/donation/needSafe/needSafe.DAO';
+import SafeDAO from 'src/database/donation/safe/safe.DAO';
+import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorShip.DAO';
+import AdminDAO from 'src/database/user/admin/admin.DAO';
+import AnswerDAO from 'src/database/user/answer/answer.DAO';
+import AuthorityDAO from 'src/database/user/authority/authority.DAO';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import ChildStatusDAO from 'src/database/user/childStatus/childStatus.DAO';
+import IdentificationDAO from 'src/database/user/identification/identification.DAO';
+import QuestionDAO from 'src/database/user/question/question.DAO';
+import UserDAO from 'src/database/user/user/user.DAO';
+import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 
 @Injectable()
 export class AppService {
   constructor(
-    // private sponsorshipPaymentDao: SponsorshipPaymentDao,
-    private userRequestDao: UserRequestDao,
-    private userDao: UserDao,
-    private childDao: ChildDao,
-    private authorityDao: AuthorityDao,
-    private needGroupDao: NeedGroupDao,
-    private childNeedDao: ChildNeedDao,
-    private sponsorshipDao: SponsorshipDao,
-    private categoryDao: CategoryDao,
-    private donationDao: DonationDao,
-    private needSafeDao: NeedSafeDao,
-    private safeDao: SafeDao,
-    private fixNeedDao: FixNeedDao,
-    private adminDao: AdminDao,
-    private answerDao: AnswerDao,
-    private childStatusDao: ChildStatusDao,
-    private identificationDao: IdentificationDao,
-    private questionDao: QuestionDao,
+    // private sponsorshipPaymentDAO: SponsorshipPaymentDAO,
+    private userRequestDAO: UserRequestDAO,
+    private userDAO: UserDAO,
+    private childDAO: ChildDAO,
+    private authorityDAO: AuthorityDAO,
+    private needGroupDAO: NeedGroupDAO,
+    private childNeedDAO: ChildNeedDAO,
+    private sponsorshipDAO: SponsorshipDAO,
+    private categoryDAO: CategoryDAO,
+    private donationDAO: DonationDAO,
+    private needSafeDAO: NeedSafeDAO,
+    private safeDAO: SafeDAO,
+    private fixNeedDAO: FixNeedDAO,
+    private adminDAO: AdminDAO,
+    private answerDAO: AnswerDAO,
+    private childStatusDAO: ChildStatusDAO,
+    private identificationDAO: IdentificationDAO,
+    private questionDAO: QuestionDAO,
   ) {}
   async getHello() {
-    await console.log(this.userRequestDao);
-    await console.log(this.userDao);
-    await console.log(this.childDao);
-    await console.log(this.authorityDao);
-    await console.log(this.needGroupDao);
-    await console.log(this.childNeedDao);
-    await console.log(this.sponsorshipDao);
-    await console.log(this.categoryDao);
-    await console.log(this.donationDao);
-    await console.log(this.needSafeDao);
-    await console.log(this.safeDao);
-    await console.log(this.fixNeedDao);
-    await console.log(this.adminDao);
-    await console.log(this.answerDao);
-    await console.log(this.childStatusDao);
-    await console.log(this.identificationDao);
-    await console.log(this.questionDao);
-    await this.needGroupDao.getActiveGroupOfChild(1);
+    await console.log(this.userRequestDAO);
+    await console.log(this.userDAO);
+    await console.log(this.childDAO);
+    await console.log(this.authorityDAO);
+    await console.log(this.needGroupDAO);
+    await console.log(this.childNeedDAO);
+    await console.log(this.sponsorshipDAO);
+    await console.log(this.categoryDAO);
+    await console.log(this.donationDAO);
+    await console.log(this.needSafeDAO);
+    await console.log(this.safeDAO);
+    await console.log(this.fixNeedDAO);
+    await console.log(this.adminDAO);
+    await console.log(this.answerDAO);
+    await console.log(this.childStatusDAO);
+    await console.log(this.identificationDAO);
+    await console.log(this.questionDAO);
+    await this.needGroupDAO.getActiveGroupOfChild(1);
   }
 }

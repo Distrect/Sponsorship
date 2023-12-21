@@ -5,12 +5,12 @@ import {
   ChildStatusWhere,
   DeepPartialChildStatus,
   SearchChildStatusParams,
-} from 'src/database/user/childStatus/childStatus.dao.interface';
+} from 'src/database/user/childStatus/childStatus.DAO.interface';
 import ChildStatus from 'src/database/user/childStatus/childStatus.entity';
 import { NotFound } from 'src/utils/error';
 
 @Injectable()
-export default class ChildStatusDao {
+export default class ChildStatusDAO {
   constructor(
     @Injector(ChildStatus)
     private childStatusRepoistory: Repository<ChildStatus>,

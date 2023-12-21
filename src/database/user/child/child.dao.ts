@@ -9,7 +9,11 @@ import type { DeepPartial } from 'typeorm';
 import {
   ChildWhere,
   DeepPartialChild,
-} from 'src/database/user/child/child.dao.interface';
+} from 'src/database/user/child/child.DAO.interface';
+import {
+  IFilterChilds,
+  ISortChilds,
+} from 'src/modules/userModule/childModule/child.module.interface';
 
 export interface IChildListMethod {
   childs: IChildList[];
@@ -25,7 +29,7 @@ interface IChildList {
 }
 
 @Injectable()
-export default class ChildDao {
+export default class ChildDAO {
   constructor(@Injector(Child) private childRepository: Repository<Child>) {}
 
   private async promiseAll(...args: Promise<any>[]) {
@@ -89,13 +93,44 @@ export default class ChildDao {
     return await this.updateChildEntity(child, body);
   }
 
+  public async listChilds(
+    { age, idNumber, lastname, name }: IFilterChilds,
+    sort: ISortChilds,
+  ) {
+    let querry = this.childRepository
+      .createQueryBuilder('child')
+      .leftJoinAndSelect('child.identifications', 'identification')
+      .select([
+        'child.name',
+        'child.lastname',
+        'child.city',
+        'FLOOR(DATEDIFF(child.birthDate,NOW()) / 365)  AS age',
+        'identificatioin.idNumber as idNumber',
+      ]);
+
+      if(name){
+        
+      }
+
+
+      if(age){
+        querry = querry.andWhere("age = :age",{age})
+      }
+
+      if(idNumber){
+        querry = querry = querry.andWhere("idNumber like :idNumber",{idNumber})
+      }
+
+
+  }
+
   public async getChildCard(childId: number) {
     const child = await this.getChild({ userId: childId });
 
     return child;
   }
 
-  /*Buna Kesinlikel el at El At*/
+  /*
   public async listChilds({
     // age,
     fullNameLike,
@@ -126,5 +161,5 @@ export default class ChildDao {
     return await this.promiseAll(querry.getRawMany(), totalChildCount).then(
       ([childs, count]) => ({ childs, count }),
     );
-  }
+  }*/
 }

@@ -5,7 +5,7 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import Admin from 'src/database/user/admin/admin.entity';
 
 @Injectable()
-export default class AdminDao {
+export default class AdminDAO {
   @Injector(Admin) private adminRepository: Repository<Admin>;
 
   private async saveAdminEntity(entity: Admin) {

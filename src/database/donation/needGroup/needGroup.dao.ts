@@ -9,20 +9,20 @@ import {
 import {
   DeepPartialNeedGroup,
   NeedGroupWithNeedsWithTotalDonation,
-} from 'src/database/donation/needGroup/needGroup.dao.interface';
+} from 'src/database/donation/needGroup/needGroup.DAO.interface';
 import { ChildNeedGroupStatus } from 'src/database/donation';
-import ChildDao from 'src/database/user/child/child.dao';
-import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 
 @Injectable()
-export default class NeedGroupDao {
+export default class NeedGroupDAO {
   constructor(
     @Injector(NeedGroup)
     private needGroupRepository: Repository<NeedGroup>,
-    private childDao: ChildDao,
-    private childNeedDao: ChildNeedDao,
+    private childDAO: ChildDAO,
+    private childNeedDAO: ChildNeedDAO,
   ) {}
 
   public async saveNeedGroupEntity(entity: NeedGroup) {
@@ -60,7 +60,7 @@ export default class NeedGroupDao {
     console.log('Active Need Groups', activeNeedGroup);
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
-      this.childNeedDao.getNeedWithTotalDonation(needId),
+      this.childNeedDAO.getNeedWithTotalDonation(needId),
     );
 
     const childNeeds = await Promise.all([...promiseChildNeeds]).then(
@@ -73,7 +73,7 @@ export default class NeedGroupDao {
   }
 
   public async getActiveNeedGroups(userId: number) {
-    const child = await this.childDao.getChild({ userId });
+    const child = await this.childDAO.getChild({ userId });
 
     const activeGroups = await this.needGroupRepository
       .createQueryBuilder('need_group')
@@ -100,7 +100,7 @@ export default class NeedGroupDao {
     userId: number,
     needGroupParams?: DeepPartialNeedGroup,
   ) {
-    const child = await this.childDao.getChild({ userId });
+    const child = await this.childDAO.getChild({ userId });
 
     const activeNeeds = await this.getActiveNeedGroups(child.userId);
 

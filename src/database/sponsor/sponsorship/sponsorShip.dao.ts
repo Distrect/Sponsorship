@@ -3,16 +3,16 @@ import { Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import User from 'src/database/user/user/user.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
-import ChildDao from 'src/database/user/child/child.dao';
-import UserDao from 'src/database/user/user/user.dao';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import UserDAO from 'src/database/user/user/user.DAO';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
 // import Child from 'src/database/user/child/child.entity';
 
 @Injectable()
-export default class SponsorshipDao {
+export default class SponsorshipDAO {
   @Injector(Sponsorship) private sponsorshipRepository: Repository<Sponsorship>;
-  private userDao: UserDao;
-  private childDao: ChildDao;
+  private userDAO: UserDAO;
+  private childDAO: ChildDAO;
 
   public async isSponsorToNeed(fixNeedId: number) {
     const sponsorship = await this.sponsorshipRepository.findOne({

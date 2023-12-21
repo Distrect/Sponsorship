@@ -17,27 +17,27 @@ export interface ILogInCredentials {
   password: string;
 }
 
-type AdminDao<T> = {
+type AdminDAO<T> = {
   getAdmin: (args: T) => Promise<Admin>; // Replace `Admin` with the actual type of your admin entity.
 };
 
-type AuthorityDao = {
+type AuthorityDAO = {
   getAuthority: () => Promise<Authority>; // Replace `Authority` with the actual type of your authority entity.
 };
 
-type UserDao = {
+type UserDAO = {
   getUser: () => Promise<User>; // Replace `User` with the actual type of your user entity.
 };
 
-type ChildDao = {
+type ChildDAO = {
   getChild: () => Promise<Child>; // Replace `Child` with the actual type of your child entity.
 };
 
-export type DaoRole<T> = {
-  Admin: AdminDao<T>['getAdmin'];
-  Authority: AuthorityDao['getAuthority'];
-  User: UserDao['getUser'];
-  Child: ChildDao['getChild'];
+export type DAORole<T> = {
+  Admin: AdminDAO<T>['getAdmin'];
+  Authority: AuthorityDAO['getAuthority'];
+  User: UserDAO['getUser'];
+  Child: ChildDAO['getChild'];
 };
 
-// Now you can use ReturnType to infer the type of daoRole["Admin"]:
+// Now you can use ReturnType to infer the type of DAORole["Admin"]:

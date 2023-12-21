@@ -8,4 +8,4 @@ const DonationModules = [ChildNeedModule, SafeModule];
   imports: DonationModules,
   exports: DonationModules,
 })
-export class DonationMainModule {}
+export default class DonationMainModule {}

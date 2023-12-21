@@ -5,7 +5,7 @@ import { NotFound } from 'src/utils/error';
 import Safe from 'src/database/donation/safe/safe.entity';
 
 @Injectable()
-export default class SafeDao {
+export default class SafeDAO {
   @Injector(Safe) private safeRepository: Repository<Safe>;
 
   private async saveSafeEntity(entity: Safe) {

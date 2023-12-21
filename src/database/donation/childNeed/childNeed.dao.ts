@@ -2,18 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NotFound } from 'src/utils/error';
 import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
-import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.dao.interface';
+import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import {
   DonateToNeed,
   ListChildWithNeeds,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
-import UserDao from 'src/database/user/user/user.dao';
+import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 
 @Injectable()
-export default class ChildNeedDao {
+export default class ChildNeedDAO {
   @Injector(ChildNeed) private childNeedRepository: Repository<ChildNeed>;
-  private userDao: UserDao;
+  private userDAO: UserDAO;
 
   private updateInstance(
     needEntity: ChildNeed,
@@ -103,7 +103,7 @@ export default class ChildNeedDao {
     userId: number,
     { age, city, urgency }: ListChildWithNeeds,
   ) {
-    await this.userDao.getUser({ userId });
+    await this.userDAO.getUser({ userId });
 
     let needListWİthChild = this.needGroupRepository
       .createQueryBuilder('need_group')

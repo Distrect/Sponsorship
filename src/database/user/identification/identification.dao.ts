@@ -6,7 +6,7 @@ import BaseUser from 'src/database/user/baseUser';
 import Identification from 'src/database/user/identification/identification.entity';
 
 @Injectable()
-export default class IdentificationDao {
+export default class IdentificationDAO {
   constructor(
     @Injector(Identification)
     private identificationRepository: Repository<Identification>,

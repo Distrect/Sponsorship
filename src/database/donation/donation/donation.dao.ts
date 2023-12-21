@@ -4,17 +4,17 @@ import { Injector } from 'src/database/utils/repositoryProvider';
 import { Role } from 'src/database/user';
 import { DonationHistoryParams } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import Donation from 'src/database/donation/donation/donation.entity';
-import UserDao from 'src/database/user/user/user.dao';
-import ChildNeedDao from 'src/database/donation/childNeed/childNeed.dao';
+import UserDAO from 'src/database/user/user/user.DAO';
+import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
-import ChildDao from 'src/database/user/child/child.dao';
+import ChildDAO from 'src/database/user/child/child.DAO';
 
 @Injectable()
-export default class DonationDao {
+export default class DonationDAO {
   @Injector(Donation) private donationRepository: Repository<Donation>;
-  private userDao: UserDao;
-  private childDao: ChildDao;
-  private cildNeedDao: ChildNeedDao;
+  private userDAO: UserDAO;
+  private childDAO: ChildDAO;
+  private cildNeedDAO: ChildNeedDAO;
 
   private async saveDonationEntity(entity: Donation) {
     return await this.donationRepository.save(entity);
@@ -22,8 +22,8 @@ export default class DonationDao {
 
   public async createDonation(userId: number, needId: number, cost: number) {
     let [user, childNeed] = await Promise.all([
-      this.userDao.getUser({ userId }),
-      this.cildNeedDao.getNeed({ needId }),
+      this.userDAO.getUser({ userId }),
+      this.cildNeedDAO.getNeed({ needId }),
     ]);
 
     childNeed = childNeed as ChildNeed;
@@ -47,7 +47,7 @@ export default class DonationDao {
 
     const userParam = { userId };
 
-    const user = await this.userDao.getUser(userParam);
+    const user = await this.userDAO.getUser(userParam);
 
     let donationHistory = this.donationRepository
       .createQueryBuilder('donation')

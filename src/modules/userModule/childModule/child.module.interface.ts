@@ -6,3 +6,14 @@ export interface ICreateChild {
   dateOfBirth: Date;
   story: string;
 }
+
+export interface IFilterChilds {
+  name?: string;
+  lastname?: string;
+  idNumber?: number;
+  age?: number;
+}
+
+export interface ISortChilds {
+  sortBy: keyof IFilterChilds;
+}

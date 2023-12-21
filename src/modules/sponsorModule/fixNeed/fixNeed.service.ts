@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
-import FixNeedDao from 'src/database/sponsor/fixNeed/fixNeed.dao';
+import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import {
   CreateFixNeedDTO,
@@ -10,18 +10,18 @@ import {
 
 @Injectable()
 export default class FixNeedService {
-  constructor(private fixNeedDao: FixNeedDao) {}
+  constructor(private fixNeedDAO: FixNeedDAO) {}
 
   public async gtFixNeedsOfChild(childId: number, body: GetFixNeedsDTO) {
-    return await this.fixNeedDao.getChildFixNeeds(childId, body);
+    return await this.fixNeedDAO.getChildFixNeeds(childId, body);
   }
 
   public async createFixNeed(body: CreateFixNeedDTO, childId: number) {
-    const newFixNeed = await this.fixNeedDao.createFixNeed(childId, {
+    const newFixNeed = await this.fixNeedDAO.createFixNeed(childId, {
       ...body,
     });
 
-    const fixNeed = await this.fixNeedDao.getFixNeedWithSponsorship(
+    const fixNeed = await this.fixNeedDAO.getFixNeedWithSponsorship(
       newFixNeed.fixNeedId,
     );
 
@@ -29,7 +29,7 @@ export default class FixNeedService {
   }
 
   public async disableFixNeed(fixNeedId: number) {
-    const disabledFixNeed = await this.fixNeedDao.changeFixNeedStatus(
+    const disabledFixNeed = await this.fixNeedDAO.changeFixNeedStatus(
       fixNeedId,
       FixNeedStatus.DEACTIVE,
     );
@@ -41,7 +41,7 @@ export default class FixNeedService {
     fixNeedId: number,
     updateParams: DeepPartial<FixNeed>,
   ) {
-    const updatedFixNeed = await this.fixNeedDao.updateFixNeed(
+    const updatedFixNeed = await this.fixNeedDAO.updateFixNeed(
       fixNeedId,
       updateParams,
     );
@@ -49,7 +49,7 @@ export default class FixNeedService {
     console.log('Updated Fix Need', updatedFixNeed);
 
     const fixNeedWithSponsorship =
-      await this.fixNeedDao.getFixNeedWithSponsorship(updatedFixNeed.fixNeedId);
+      await this.fixNeedDAO.getFixNeedWithSponsorship(updatedFixNeed.fixNeedId);
     console.log('Updated Fix Need', fixNeedWithSponsorship);
 
     return fixNeedWithSponsorship;

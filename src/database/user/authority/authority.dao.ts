@@ -5,7 +5,7 @@ import Authority from './authority.entity';
 import { NotFound } from 'src/utils/error';
 
 @Injectable()
-export default class AuthorityDao {
+export default class AuthorityDAO {
   @Injector(Authority)
   private authorityRepository: Repository<Authority>;
 

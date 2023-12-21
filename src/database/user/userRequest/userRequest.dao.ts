@@ -6,7 +6,7 @@ import { CityEnum, Status } from 'src/database/user';
 import { NotFound } from 'src/utils/error';
 
 @Injectable()
-export default class UserRequestDao {
+export default class UserRequestDAO {
   constructor(
     @Injector(UserRequest)
     private userRequestRepository: Repository<UserRequest>,

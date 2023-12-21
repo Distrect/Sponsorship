@@ -4,14 +4,14 @@ import { Injector } from 'src/database/utils/repositoryProvider';
 import { EmptyData, NotFound } from 'src/utils/error';
 import { FixNeedStatus, SponsorshipStatus } from 'src/database/sponsor';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
-import ChildDao from 'src/database/user/child/child.dao';
+import ChildDAO from 'src/database/user/child/child.DAO';
 import { IGetFixNeedFilter } from 'src/database/sponsor/fixNeed/fixNeed.interface';
 
 @Injectable()
-export default class FixNeedDao {
+export default class FixNeedDAO {
   constructor(
     @Injector(FixNeed) private fixNeedRepository: Repository<FixNeed>,
-    private childDao: ChildDao,
+    private childDAO: ChildDAO,
   ) {}
 
   private async saveFixNeedEntity(entity: FixNeed) {
@@ -58,7 +58,7 @@ export default class FixNeedDao {
     chldId: number,
     filterParams?: IGetFixNeedFilter,
   ) {
-    const child = await this.childDao.getChild({ userId: chldId });
+    const child = await this.childDAO.getChild({ userId: chldId });
 
     let childFixNeeds = this.fixNeedRepository
       .createQueryBuilder('fix_need')
@@ -96,7 +96,7 @@ export default class FixNeedDao {
   }
 
   public async getDen(childId: number) {
-    const child = await this.childDao.getChild({ userId: childId });
+    const child = await this.childDAO.getChild({ userId: childId });
 
     const fixNeeds = await this.fixNeedRepository
       .createQueryBuilder('fix_need')
@@ -122,7 +122,7 @@ export default class FixNeedDao {
   }
 
   public async getAvailableFixNeeds(childId: number, userId: number) {
-    const child = await this.childDao.getChild({ userId: childId });
+    const child = await this.childDAO.getChild({ userId: childId });
 
     const fixNeeds = this.fixNeedRepository
       .createQueryBuilder('fix_need')
@@ -156,7 +156,7 @@ export default class FixNeedDao {
     childId: number,
     fixNeedParams: DeepPartial<FixNeed>,
   ) {
-    const child = await this.childDao.getChild({ userId: childId });
+    const child = await this.childDAO.getChild({ userId: childId });
 
     const fixNeedInstance = this.fixNeedRepository.create({
       ...fixNeedParams,

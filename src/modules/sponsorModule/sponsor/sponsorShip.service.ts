@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { AlreadyHave } from 'src/utils/error';
-import UserDao from 'src/database/user/user/user.dao';
-import ChildDao from 'src/database/user/child/child.dao';
-import FixNeedDao from 'src/database/sponsor/fixNeed/fixNeed.dao';
-import SponsorshipDao from 'src/database/sponsor/sponsorship/sponsorShip.dao';
+import UserDAO from 'src/database/user/user/user.DAO';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorShip.DAO';
 
 @Injectable()
 export default class SponsorshipService {
-  private sponsorshipDao: SponsorshipDao;
-  private userDao: UserDao;
-  private childDao: ChildDao;
-  private fixNeedDao: FixNeedDao;
+  private sponsorshipDAO: SponsorshipDAO;
+  private userDAO: UserDAO;
+  private childDAO: ChildDAO;
+  private fixNeedDAO: FixNeedDAO;
 
   public async getSponsorableFixNeeds(childId: number, userId: number) {
-    const availableFixNeeds = await this.fixNeedDao.getAvailableFixNeeds(
+    const availableFixNeeds = await this.fixNeedDAO.getAvailableFixNeeds(
       childId,
       userId,
     );
@@ -23,19 +23,19 @@ export default class SponsorshipService {
 
   public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
     if (user === 'Child')
-      return await this.sponsorshipDao.getChildSponsors(userId);
+      return await this.sponsorshipDAO.getChildSponsors(userId);
 
-    return await this.sponsorshipDao.getUserSponsors(userId);
+    return await this.sponsorshipDAO.getUserSponsors(userId);
   }
 
   public async sponsorToChild(userId: number, fixNeedId: number) {
     const isFixNeedSponsored =
-      await this.sponsorshipDao.isSponsorToNeed(fixNeedId);
+      await this.sponsorshipDAO.isSponsorToNeed(fixNeedId);
 
     if (isFixNeedSponsored)
       throw new AlreadyHave('This Fix Need Already Sponsored');
 
-    const sponsorship = await this.sponsorshipDao.createSponsorship(
+    const sponsorship = await this.sponsorshipDAO.createSponsorship(
       userId,
       fixNeedId,
     );
@@ -53,12 +53,12 @@ async function sponsorToChild(
   fixNeedId: number,
 ) {
   const [user, child, fixNeed] = await Promise.all([
-    this.userDao.getUser({ userId }),
-    this.childDao.getChild({ userId: childId }),
-    this.fixNeedDao.getFixNeed({ fixNeedId }),
+    this.userDAO.getUser({ userId }),
+    this.childDAO.getChild({ userId: childId }),
+    this.fixNeedDAO.getFixNeed({ fixNeedId }),
   ]);
 
-  const sponsorship = await this.sponsorshipDao.createSponsorship(
+  const sponsorship = await this.sponsorshipDAO.createSponsorship(
     user,
     child,
     fixNeed,

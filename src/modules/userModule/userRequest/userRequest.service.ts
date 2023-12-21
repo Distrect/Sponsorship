@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CityEnum, Status } from 'src/database/user';
-import UserDao from 'src/database/user/user/user.dao';
+import UserDAO from 'src/database/user/user/user.DAO';
 import User from 'src/database/user/user/user.entity';
-import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
+import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 import FileService, { IIDFile } from 'src/services/file/file.service';
 
 export interface UserWithIDImages extends User {
@@ -12,8 +12,8 @@ export interface UserWithIDImages extends User {
 @Injectable()
 export default class UserRequestService {
   constructor(
-    private userRequestDao: UserRequestDao,
-    private userDao: UserDao,
+    private userRequestDAO: UserRequestDAO,
+    private userDAO: UserDAO,
     private fileService: FileService,
   ) {}
 
@@ -34,7 +34,7 @@ export default class UserRequestService {
   }
 
   public async getAwaitingUsers(city: CityEnum, page: number) {
-    const requests = await this.userDao.getUserswithRequests(
+    const requests = await this.userDAO.getUserswithRequests(
       Status.WAITING,
       {
         page,
@@ -52,7 +52,7 @@ export default class UserRequestService {
     requestId: number,
     answer: Status.APPROVED | Status.DENIED,
   ) {
-    const request = await this.userRequestDao.answerUserRequest(
+    const request = await this.userRequestDAO.answerUserRequest(
       requestId,
       answer,
     );

@@ -6,15 +6,15 @@ import { EmptyData, UserNotFoundError } from 'src/utils/error';
 import {
   ISkipTake,
   IUserRequestFilters,
-} from 'src/database/user/user/user.dao.types';
+} from 'src/database/user/user/user.DAO.types';
 import User from 'src/database/user/user/user.entity';
-import UserRequestDao from 'src/database/user/userRequest/userRequest.dao';
+import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 
 @Injectable()
-export default class UserDao {
+export default class UserDAO {
   constructor(
     @Injector(User) private userRepository: Repository<User>,
-    private userRequestDao: UserRequestDao,
+    private userRequestDAO: UserRequestDAO,
   ) {}
 
   private async saveUserEntity(entity: User) {

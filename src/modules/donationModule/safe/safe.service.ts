@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { NeedSafeType } from 'src/database/donation';
-import NeedSafeDao from 'src/database/donation/needSafe/needSafe.dao';
-import SafeDao from 'src/database/donation/safe/safe.dao';
+import NeedSafeDAO from 'src/database/donation/needSafe/needSafe.DAO';
+import SafeDAO from 'src/database/donation/safe/safe.DAO';
 
 @Injectable()
 export default class SafeService {
-  private needSafeDao: NeedSafeDao;
-  private childSafeDao: SafeDao;
+  private needSafeDAO: NeedSafeDAO;
+  private childSafeDAO: SafeDAO;
 
   public async depositMoneyToChild(
     needId: number,
     childId: number,
     money: number,
   ) {
-    const needSafeRecord = await this.needSafeDao.createRecordForNeedSafe(
+    const needSafeRecord = await this.needSafeDAO.createRecordForNeedSafe(
       {
         amount: money,
         childNeed: { needId },
@@ -21,12 +21,12 @@ export default class SafeService {
       NeedSafeType.INCOME,
     );
 
-    const totalMoney = await this.needSafeDao.getTotalOfNeedSafe(
+    const totalMoney = await this.needSafeDAO.getTotalOfNeedSafe(
       NeedSafeType.INCOME,
       { childNeed: { needId } },
     );
 
-    await this.childSafeDao.setTotalMoney(totalMoney, childId);
+    await this.childSafeDAO.setTotalMoney(totalMoney, childId);
 
     return needSafeRecord;
   }

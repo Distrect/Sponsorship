@@ -4,7 +4,7 @@ import { Injector } from 'src/database/utils/repositoryProvider';
 import Category from 'src/database/donation/category/category.entity';
 
 @Injectable()
-export default class CategoryDao {
+export default class CategoryDAO {
   @Injector(Category) private categoryRepository: Repository<Category>;
 
   private async saveCategoryEntity(entity: Category) {
