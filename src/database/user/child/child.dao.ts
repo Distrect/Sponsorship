@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { ChildPagination } from 'src/old.dto';
+import { Repository } from 'typeorm';
 import { NotFound, UserNotFoundError } from 'src/utils/error';
 import { CityEnum, Role } from 'src/database/user';
-import Child from 'src/database/user/child/child.entity';
 import type { DeepPartial } from 'typeorm';
 import {
   ChildWhere,
   DeepPartialChild,
+  IListedChild,
 } from 'src/database/user/child/child.DAO.interface';
 import {
   IFilterChilds,
   ISortChilds,
 } from 'src/modules/userModule/childModule/child.module.interface';
+import Child from 'src/database/user/child/child.entity';
+import { IPaginationData } from 'src/shared/types';
 
 export interface IChildListMethod {
   childs: IChildList[];
@@ -94,34 +95,55 @@ export default class ChildDAO {
   }
 
   public async listChilds(
-    { age, idNumber, lastname, name }: IFilterChilds,
-    sort: ISortChilds,
-  ) {
+    { age, idNumber, lastname, name }: IFilterChilds = {},
+    sort: ISortChilds = {},
+    page: number = 0,
+  ): Promise<IPaginationData<IListedChild>> {
     let querry = this.childRepository
       .createQueryBuilder('child')
       .leftJoinAndSelect('child.identifications', 'identification')
       .select([
-        'child.name',
-        'child.lastname',
-        'child.city',
-        'FLOOR(DATEDIFF(child.birthDate,NOW()) / 365)  AS age',
-        'identificatioin.idNumber as idNumber',
-      ]);
+        'child.name as name',
+        'child.lastname as lastname',
+        'child.city as city',
+        'FLOOR(DATEDIFF(child.dateOfBirth,NOW()) / 365)  AS age',
+        'identification.idNumber as idNumber',
+      ])
+      .skip(page * 10)
+      .take(10);
 
-      if(name){
-        
-      }
+    if (name) {
+      querry = querry.andWhere('child.name like :name', {
+        name: '%' + name + '%',
+      });
+    }
 
+    if (lastname) {
+      querry = querry.andWhere('child.lastname like :lastname', {
+        lastname: '%' + lastname + '%',
+      });
+    }
 
-      if(age){
-        querry = querry.andWhere("age = :age",{age})
-      }
+    if (age) {
+      querry = querry.andWhere('age = :age', { age });
+    }
 
-      if(idNumber){
-        querry = querry = querry.andWhere("idNumber like :idNumber",{idNumber})
-      }
+    if (idNumber) {
+      querry = querry = querry.andWhere('idNumber like :idNumber', {
+        idNumber,
+      });
+    }
 
+    if (sort.sortBy) {
+      querry = querry.orderBy(sort.sortBy, sort.way || 'ASC');
+    }
 
+    const [count, result] = await Promise.all([
+      querry.getCount(),
+      querry.getRawMany(),
+    ]);
+
+    return { count, result };
   }
 
   public async getChildCard(childId: number) {

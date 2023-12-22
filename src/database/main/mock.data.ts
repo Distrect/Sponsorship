@@ -227,4 +227,10 @@ export default class MockDataGenerator implements IMockDataGenerator {
       ...sponsorshipParams,
     });
   }
+
+  public generateIdentification(
+    identificationParams: DeepPartial<Identification>,
+  ): DeepPartial<Identification> {
+    return this.dataSource.manager.create(Identification, {});
+  }
 }

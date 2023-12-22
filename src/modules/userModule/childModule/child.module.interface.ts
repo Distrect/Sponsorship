@@ -15,5 +15,6 @@ export interface IFilterChilds {
 }
 
 export interface ISortChilds {
-  sortBy: keyof IFilterChilds;
+  sortBy?: keyof IFilterChilds;
+  way?: 'ASC' | 'DESC';
 }

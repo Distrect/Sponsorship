@@ -11,7 +11,10 @@ import {
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { Role } from 'src/database/user';
 import { IUserCookie } from 'src/shared/types';
-import { EditChildDTO } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
+import {
+  EditChildDTO,
+  ListChildDTO,
+} from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import ChildManagementRouteService from 'src/routes/authorityRoutes/childManagement/childManagement.route.service';
 
@@ -55,5 +58,24 @@ export default class ChildManagementRouteController {
     );
 
     return { ok: true, message: 'Child is deleted', deletedChild };
+  }
+
+  @Post('listChilds/:page')
+  public async ListChilds(
+    @Param('page', ParseIntPipe) page: number,
+    @User(Role.Authority) authority: IUserCookie,
+    @Body() requestBody: ListChildDTO,
+  ) {
+    const result = await this.childManagementRouteService.listChilds(
+      requestBody,
+      page,
+      authority,
+    );
+
+    return {
+      ok: true,
+      message: 'Childs Are Retrieved',
+      result,
+    };
   }
 }

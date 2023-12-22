@@ -28,7 +28,11 @@ export default class Identification {
 
   @IsUrl()
   @Column('varchar', { default: 'www.x.com' })
-  path: string;
+  frontPath: string;
+
+  @IsUrl()
+  @Column('varchar', { default: 'www.x.com' })
+  backPath: string;
 
   @ManyToOne(() => User, (user) => user.identifications)
   user: User;

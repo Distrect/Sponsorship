@@ -14,3 +14,8 @@ export interface IUserCookie {
 export interface ExtendedRequest extends Request {
   user?: IUserCookie;
 }
+
+export interface IPaginationData<ResultType> {
+  result: ResultType[];
+  count: number;
+}

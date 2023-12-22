@@ -68,7 +68,10 @@ export default class ChildService {
     authority: IUserCookie,
     filters: IFilterChilds,
     sort: ISortChilds,
+    page: number,
   ) {
-    const listedChilds = await this.childDAO.listChilds();
+    const listedChilds = await this.childDAO.listChilds(filters, sort, page);
+
+    return listedChilds;
   }
 }
