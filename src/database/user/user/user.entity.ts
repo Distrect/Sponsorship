@@ -3,7 +3,7 @@ import { CityEnum } from 'src/database/user';
 import BaseUser from 'src/database/user/baseUser';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import Answer from 'src/database/user/answer/answer.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 

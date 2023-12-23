@@ -1,8 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import User from 'src/database/user/user/user.entity';
 
-@Entity()
+@Entity({ name: 'donation' })
 export default class Donation {
   @PrimaryGeneratedColumn()
   donationId: number;
@@ -11,6 +17,7 @@ export default class Donation {
   amount: number;
 
   @ManyToOne(() => ChildNeed, (childNeed) => childNeed.donations)
+  @JoinColumn({ name: 'childNeed' })
   childNeed: ChildNeed;
 
   @ManyToOne(() => User, (user) => user.donations)

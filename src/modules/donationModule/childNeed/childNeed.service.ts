@@ -152,7 +152,27 @@ export default class ChildNeedService {
 
     return needData;
   }
-  /*
+
+  public async listSponsorableNeeds() {
+    return await this.childNeedDAO.listSponosrableNeeds();
+  }
+
+  public async donationHistory(
+    userId: number,
+    page: number,
+    donationHistoryParams: DonationHistoryParams,
+  ) {
+    const donationHistory = await this.donationDAO.getDonationHistory(
+      userId,
+      donationHistoryParams,
+      page,
+    );
+
+    return donationHistory;
+  }
+}
+
+/*
   public async listChildWithNeeds(
     user: IUserCookie,
     page: number,
@@ -199,18 +219,3 @@ export default class ChildNeedService {
     return await Promise.all(donationPromises);
   }
 */
-
-  public async donationHistory(
-    userId: number,
-    page: number,
-    donationHistoryParams: DonationHistoryParams,
-  ) {
-    const donationHistory = await this.donationDAO.getDonationHistory(
-      userId,
-      donationHistoryParams,
-      page,
-    );
-
-    return donationHistory;
-  }
-}

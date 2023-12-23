@@ -5,6 +5,8 @@ import { AuthorizationError, ServerError } from 'src/utils/error';
 
 export const User = createParamDecorator(
   (role: Role, ctx: ExecutionContext) => {
+    if (!role) throw new Error('Yok Ayılma Payı Bana Yok Ayılma Payı');
+
     const { user } = ctx.switchToHttp().getRequest();
 
     console.log('USER', user);

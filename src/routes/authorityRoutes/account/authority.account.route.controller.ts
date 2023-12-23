@@ -48,7 +48,7 @@ export default class AuthorityAccountController extends AuthorityRouteGlobal {
     return { ok: true, message: 'You are Authorized', authority };
   }
 
-  @All('/logout')
+  @Post('/logout')
   @UseInterceptors(new CookieInterceptor(Role.Authority))
   public async Logout(@Res({ passthrough: true }) res: Response) {
     console.log('LogoutXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');

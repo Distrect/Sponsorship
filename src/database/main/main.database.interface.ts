@@ -4,7 +4,7 @@ import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import Safe from 'src/database/donation/safe/safe.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import Authority from 'src/database/user/authority/authority.entity';
 import BaseUser from 'src/database/user/baseUser';
 import Child from 'src/database/user/child/child.entity';

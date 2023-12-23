@@ -8,6 +8,7 @@ import {
 } from 'src/utils/error';
 import {
   DeepPartialNeedGroup,
+  IFilterNeedGroup,
   NeedGroupWithNeedsWithTotalDonation,
 } from 'src/database/donation/needGroup/needGroup.DAO.interface';
 import { ChildNeedGroupStatus } from 'src/database/donation';
@@ -15,6 +16,7 @@ import ChildDAO from 'src/database/user/child/child.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
+import { IPaginationData } from 'src/shared/types';
 
 @Injectable()
 export default class NeedGroupDAO {
@@ -28,16 +30,7 @@ export default class NeedGroupDAO {
   public async saveNeedGroupEntity(entity: NeedGroup) {
     return await this.needGroupRepository.save(entity);
   }
-  private async getActiveOrCreate(childId: number) {
-    try {
-      const activeGroup = await this.getActiveGroupOfChild(childId);
-    } catch (error) {
-      const newActiveGroup = await this.createChildNeedGroup(childId, {
-        explanation: 'Untitled',
-        title: 'Untitle',
-      });
-    }
-  }
+
   public async getActiveGroupOfChild(childId: number) {
     const activeGroups = await this.needGroupRepository.find({
       where: { status: ChildNeedGroupStatus.OPEN, child: { userId: childId } },
@@ -122,5 +115,25 @@ export default class NeedGroupDAO {
     if (!needGroup) throw new NotFound();
 
     return needGroup.status === ChildNeedGroupStatus.OPEN;
+  }
+
+  public async listSponsorableNeeds(
+    { city, urgency }: IFilterNeedGroup,
+    page: number = 0,
+  ): Promise<IPaginationData<NeedGroup>> {
+    const query = this.needGroupRepository
+      .createQueryBuilder('need_group')
+      .leftJoinAndSelect('need_group.child', 'child')
+      .leftJoinAndSelect('need_group.needs', 'child_need')
+      .where('child_need.isDeleted = false');
+
+    if (city) query.andWhere('child.city = :city', { city });
+    if (urgency) query.andWhere('child_need.urgency = :urgency', { urgency });
+
+    query.limit(10).offset(page * 10);
+
+    return await query
+      .getManyAndCount()
+      .then(([result, count]) => ({ count, result }));
   }
 }

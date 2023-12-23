@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
 import Child from 'src/database/user/child/child.entity';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
 class FixNeedRelations {
   @OneToOne(() => Sponsorship, (sponsorship) => sponsorship.fixNeed)

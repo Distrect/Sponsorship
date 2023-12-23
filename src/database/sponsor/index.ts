@@ -1,9 +1,9 @@
 export enum SponsorshipStatus {
-  APPROVED = 'Approved',
   DENIED = 'Denied',
+  BLOCKED = 'Blocked',
+  APPROVED = 'Approved',
   WAITING_FOR_PAYMENT = 'Waiting for Payment',
   WAITING_FOR_AUTHORIZATION = 'Waiting for Authorization',
-  BLOCKED = 'Blocked',
 }
 
 export enum SpStatus {

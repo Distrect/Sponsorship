@@ -4,7 +4,11 @@ import MockDataGenerator from 'src/database/main/mock.data';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import { SponsorshipStatus } from 'src/database/sponsor';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
+import Identification from 'src/database/user/identification/identification.entity';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import { CLIENT_RENEG_LIMIT } from 'tls';
+import Donation from 'src/database/donation/donation/donation.entity';
 
 export const databaseProviders = [
   {
@@ -46,32 +50,17 @@ export const databaseProviders = [
               { count: 20 },
             ),
           ),
+          managerSave(
+            mockDataGenerator.generateMockUser({ email: 'Xyz@gmail.com' }),
+          ),
         ]);
 
         const userIds = users.map(({ userId }) => userId);
         const childIds = childs.map(({ userId }) => userId);
 
-        const userRequestsData = userIds.map((userId) =>
-          InitializedDatabase.manager.create(UserRequest, {
-            user: { userId },
-            authority: { userId: authority.userId },
-          }),
-        );
-
-        await managerSave(userRequestsData);
-
-        const identifications = await managerSave(
-          users.map((user) => {
-            const identification =
-              mockDataGenerator.generateMockIdentification();
-
-            user.identifications = [identification];
-            return identification;
-          }),
-        );
-
         const needGroups: NeedGroup[] = [];
         const sposnsoships: DeepPartial<Sponsorship>[] = [];
+        const identifications: Identification[] = [];
 
         let i = 0;
 
@@ -89,6 +78,11 @@ export const databaseProviders = [
             mockDataGenerator.generator(5, 'FixNeed', { child }),
           );
 
+          const identificationOfChild =
+            mockDataGenerator.generateMockIdentification({ child });
+
+          identifications.push(identificationOfChild);
+
           sposnsoships.push(
             ...fixNeeds.map((fixNeed, i) =>
               mockDataGenerator.generateSponsorship({
@@ -99,18 +93,10 @@ export const databaseProviders = [
             ),
           );
 
-          /*const sponsorship = await managerSave(
-            mockDataGenerator.generateSponsorship({
-              fixNeed: fixNeeds[0],
-              status: SponsorshipStatus.APPROVED,
-              user,
-            }),
-          );*/
-
           child.fixNeeds = [...fixNeeds];
-
           needGroup.needs = [...childNeeds];
-          needGroup.child = child;
+          child.needGroups = [needGroup];
+
           const newInstnace = InitializedDatabase.manager.create(
             NeedGroup,
             needGroup,
@@ -119,10 +105,44 @@ export const databaseProviders = [
           i++;
         }
 
+        const toDonateChildNeed = childs[0].needGroups[0].needs[0];
+
+        const donations: Donation[] = [];
+
+        for (const user of users) {
+          const donation = mockDataGenerator.generateMockDonation({
+            amount: 5,
+            childNeed: toDonateChildNeed,
+            user,
+          });
+          donations.push(donation);
+        }
+
         const x = await Promise.all([
           managerSave(needGroups),
           managerSave(sposnsoships),
+          managerSave(identifications),
+          managerSave(donations),
         ]);
+
+        const childNeedRepository =
+          InitializedDatabase.getRepository(ChildNeed);
+        /*
+        const z = await childNeedRepository
+          .createQueryBuilder('child_need')
+          .leftJoinAndSelect('child_need.donations', 'donation')
+          .addSelect("SUM(IFNULL('donation.amount',0))", 'totals')
+          .where('child_need.needId = 1')
+          .getOne();
+          console.log(z);
+          */
+
+        console.log(
+          await childNeedRepository
+            .createQueryBuilder('child_need')
+            .where('child_need.needId = 1')
+            .getOne(),
+        );
       };
 
       isDevMode && (await devOps());

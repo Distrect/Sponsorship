@@ -4,7 +4,7 @@ import MailModule from './services/mail/mail.module';
 import FileModule from 'src/services/file/file.module';
 import DatabaseModule from 'src/database/main/database.module';
 import BusinnessLogicModule from 'src/modules/businnes.logic.module';
-import BusinnessRouteModule from 'src/routes/businness.main.route.module';
+import BusinnessRouteModule from 'src/routes/businness.route.module';
 
 @Module({
   imports: [

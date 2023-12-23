@@ -1,4 +1,4 @@
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()

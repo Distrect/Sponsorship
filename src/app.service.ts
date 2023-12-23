@@ -6,7 +6,7 @@ import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import NeedSafeDAO from 'src/database/donation/needSafe/needSafe.DAO';
 import SafeDAO from 'src/database/donation/safe/safe.DAO';
 import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
-import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorShip.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import AdminDAO from 'src/database/user/admin/admin.DAO';
 import AnswerDAO from 'src/database/user/answer/answer.DAO';
 import AuthorityDAO from 'src/database/user/authority/authority.DAO';

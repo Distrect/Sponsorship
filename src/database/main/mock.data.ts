@@ -11,7 +11,7 @@ import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorShip.entity';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import Safe from 'src/database/donation/safe/safe.entity';
 import User from 'src/database/user/user/user.entity';
@@ -20,12 +20,29 @@ import Authority from 'src/database/user/authority/authority.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 import { FixNeedStatus } from 'src/database/sponsor';
 import { NeedUrgency, Status } from 'src/database/donation';
+import jwt from 'jsonwebtoken';
+import Donation from 'src/database/donation/donation/donation.entity';
 
 interface IMockDataGenerator {
   multiplier: Multiplier;
 }
 
 type DeepPartialChildNeed = DeepPartial<ChildNeed>;
+
+function cryptor(
+  value: string,
+  mode: 'encrypt' | 'decrypt' = 'encrypt',
+): string {
+  const secretKey = process.env['JWT_PRIVATE_KEY'];
+
+  if (mode === 'encrypt') {
+    return jwt.sign(value, secretKey, {
+      // expiresIn: 150 * 365 * 24 * 60 * 60 * 1000,
+    });
+  }
+
+  return jwt.verify(value, secretKey, { ignoreExpiration: true }) as string;
+}
 
 export default class MockDataGenerator implements IMockDataGenerator {
   EntityObject: EntitiyMapType<keyof TypeofEntityMap>;
@@ -133,7 +150,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
       email: faker.internet.email(),
       name: faker.person.firstName(),
       lastname: faker.person.lastName(),
-      password: faker.internet.password(),
+      password: cryptor('Xyzyt.12345', 'encrypt'),
       // city: faker.helpers.enumValue(CityEnum),
     };
   }
@@ -146,6 +163,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
       role: Role.User,
       canLogin: true,
       dateOfBirth: faker.date.birthdate(),
+      ...userParams,
     });
   }
 
@@ -162,12 +180,16 @@ export default class MockDataGenerator implements IMockDataGenerator {
     });
   }
 
-  public generateMockIdentification(): Identification {
+  public generateMockIdentification(
+    identificationParams: DeepPartial<Identification> = {},
+  ): Identification {
     return this.dataSource.manager.create(Identification, {
-      actorType: ActorType.USER,
-      idNumber: faker.string.numeric({ length: 10 }),
       nationality: NationalityEnum.KKTC,
-    });
+      idNumber: faker.string.numeric({ length: 10 }),
+      frontPath: 'C:/Users/myfor/sponsorship/src/shared/ID_FRONT_PAGE.jpg',
+      backPath: 'C:/Users/myfor/sponsorship/src/shared/ID_BACK_PAGE.jpg',
+      ...identificationParams,
+    }) as Identification;
   }
 
   public generateChildNeed(
@@ -209,7 +231,8 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return this.dataSource.manager.create(ChildNeed, {
       amount,
       isDeleted: false,
-      price: faker.number.float({ min: 50, max: 75, precision: 2 }),
+      price: 100,
+      // price: faker.number.float({ min: 50, max: 75, precision: 2 }),
       startAmount: amount,
       status: Status.ACTIVE,
       title: faker.commerce.product(),
@@ -231,6 +254,18 @@ export default class MockDataGenerator implements IMockDataGenerator {
   public generateIdentification(
     identificationParams: DeepPartial<Identification>,
   ): DeepPartial<Identification> {
-    return this.dataSource.manager.create(Identification, {});
+    return this.dataSource.manager.create(Identification, {
+      nationality: NationalityEnum.KKTC,
+      idNumber: faker.string.numeric({ length: 10 }),
+      frontPath: 'C:/Users/myfor/sponsorship/src/shared/ID_FRONT_PAGE.jpg',
+      backPath: 'C:/Users/myfor/sponsorship/src/shared/ID_BACK_PAGE.jpg',
+      ...identificationParams,
+    });
+  }
+
+  public generateMockDonation(donationParams: DeepPartial<Donation>): Donation {
+    return this.dataSource.manager.create(Donation, {
+      ...donationParams,
+    }) as Donation;
   }
 }

@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  // OneToMany,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import User from '../user/user.entity';
 import { ActorType, NationalityEnum } from 'src/database/user';
 // import UserCredentialDocuments from './userCredentialDocs.entity';

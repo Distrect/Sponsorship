@@ -20,6 +20,7 @@ import User from 'src/database/user/user/user.entity';
 import IdentificationDAO from 'src/database/user/identification/identification.DAO';
 import FileService from 'src/services/file/file.service';
 import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export default class UserService {
@@ -96,11 +97,10 @@ export default class UserService {
     }*/
   }
 
-  private async cryptor(
+  private cryptor(
     value: string,
     mode: 'encrypt' | 'decrypt' = 'encrypt',
-  ): Promise<string> {
-    const jwt = await import('jsonwebtoken');
+  ): string {
     const secretKey = process.env['JWT_PRIVATE_KEY'];
 
     if (mode === 'encrypt') {

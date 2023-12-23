@@ -19,3 +19,9 @@ export interface IPaginationData<ResultType> {
   result: ResultType[];
   count: number;
 }
+
+export interface IPaginate<FilterType, SortType> {
+  filters: FilterType;
+  sortBy: SortType;
+  page: number;
+}

@@ -13,11 +13,11 @@ export default class SponsorshipPaymnetDAO {
   }
 
   public async createPaymentRecord(
-    sponsorShipId: number,
+    sponsorshipId: number,
     paymentAmount: number,
   ) {
     const payment = this.sponsorshipPaymentRepository.create({
-      sponsorship: { sponsorShipId },
+      sponsorship: { sponsorshipId },
       paymentAmount,
     });
 

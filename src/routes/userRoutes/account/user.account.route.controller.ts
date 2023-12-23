@@ -4,19 +4,29 @@ import {
   Controller,
   UploadedFiles,
   UseInterceptors,
+  Res,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import { Role } from 'src/database/user';
 import {
   UserIDImages,
   UserRegisterDTO,
 } from 'src/routes/userRoutes/account/user.account.route.dto';
 import UserAccountRouteService from 'src/routes/userRoutes/account/user.account.route.service';
+import JwtService from 'src/services/jwt/jwt.service';
+import { LoginDto } from 'src/shared/dtos';
 
 @Controller('user/account')
 export default class UserAccountRouteController {
+  private readonly cookieAge: number = 1 * 24 * 60 * 60;
+  private readonly tokenName: string = Role.User + 'Authorization';
+  private readonly refreshTokenName: string = Role.User + 'Refresh';
+
   constructor(
     private readonly userAccountRouteService: UserAccountRouteService,
   ) {}
+
   @Post('/register')
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -37,5 +47,29 @@ export default class UserAccountRouteController {
       message:
         'Your regiester request has ben created. When accepted, mail will be send to your email',
     };
+  }
+
+  @Post('login')
+  public async Login(
+    @Body() requestBody: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const user = await this.userAccountRouteService.login(requestBody);
+
+    const token = JwtService.tokenizeData(user);
+    const refreshToken = JwtService.tokenizeData(user, {
+      expiresIn: '2d',
+    });
+
+    response.cookie(this.tokenName, token, {
+      httpOnly: false,
+      maxAge: this.cookieAge,
+    });
+    response.cookie(this.refreshTokenName, refreshToken, {
+      httpOnly: false,
+      maxAge: this.cookieAge * 2,
+    });
+
+    return { ok: true, message: 'Login Succed', user };
   }
 }

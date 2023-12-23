@@ -1,16 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { AlreadyHave } from 'src/utils/error';
-import UserDAO from 'src/database/user/user/user.DAO';
-import ChildDAO from 'src/database/user/child/child.DAO';
 import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
-import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorShip.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
+import UserDAO from 'src/database/user/user/user.DAO';
 
 @Injectable()
 export default class SponsorshipService {
-  private sponsorshipDAO: SponsorshipDAO;
-  private userDAO: UserDAO;
-  private childDAO: ChildDAO;
-  private fixNeedDAO: FixNeedDAO;
+  constructor(
+    private sponsorshipDAO: SponsorshipDAO,
+    private fixNeedDAO: FixNeedDAO,
+    private userDAO: UserDAO,
+  ) {}
+
+  public async blockSponsorship(sponosrshipId: number) {
+    return await this.sponsorshipDAO.blockSponsorship(sponosrshipId);
+  }
+
+  public async getSponsorship(sponsorshipId: number) {
+    const sponsorship = await this.sponsorshipDAO.getSponsorship({
+      sponsorshipId,
+    });
+
+    return sponsorship;
+  }
 
   public async getSponsorableFixNeeds(childId: number, userId: number) {
     const availableFixNeeds = await this.fixNeedDAO.getAvailableFixNeeds(
@@ -21,12 +33,12 @@ export default class SponsorshipService {
     return availableFixNeeds;
   }
 
-  public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
-    if (user === 'Child')
-      return await this.sponsorshipDAO.getChildSponsors(userId);
+  // public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
+  //   if (user === 'Child')
+  //     return await this.sponsorshipDAO.getChildSponsors(userId);
 
-    return await this.sponsorshipDAO.getUserSponsors(userId);
-  }
+  //   return await this.sponsorshipDAO.getUserSponsors(userId);
+  // }
 
   public async sponsorToChild(userId: number, fixNeedId: number) {
     const isFixNeedSponsored =
@@ -43,9 +55,12 @@ export default class SponsorshipService {
     return sponsorship;
   }
 
-  // public async paySponsorship(userId: number) {}
+  public async getUserSponsoredChilds(userId: number) {
+    return await this.sponsorshipDAO.getUserSponsoredChilds(userId);
+  }
 }
 
+// public async paySponsorship(userId: number) {}
 /*
 async function sponsorToChild(
   userId: number,

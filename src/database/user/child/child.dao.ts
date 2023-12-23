@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { Repository } from 'typeorm';
 import { NotFound, UserNotFoundError } from 'src/utils/error';
-import { CityEnum, Role } from 'src/database/user';
+import { Role } from 'src/database/user';
 import type { DeepPartial } from 'typeorm';
 import {
   ChildWhere,
@@ -13,29 +13,12 @@ import {
   IFilterChilds,
   ISortChilds,
 } from 'src/modules/userModule/childModule/child.module.interface';
-import Child from 'src/database/user/child/child.entity';
 import { IPaginationData } from 'src/shared/types';
-
-export interface IChildListMethod {
-  childs: IChildList[];
-  count: number;
-}
-
-interface IChildList {
-  name: string;
-  lastname: string;
-  city: CityEnum;
-  age: number;
-  count: number;
-}
+import Child from 'src/database/user/child/child.entity';
 
 @Injectable()
 export default class ChildDAO {
   constructor(@Injector(Child) private childRepository: Repository<Child>) {}
-
-  private async promiseAll(...args: Promise<any>[]) {
-    return await Promise.all(args);
-  }
 
   private async updateChildEntity(
     entity: Child,
@@ -99,6 +82,7 @@ export default class ChildDAO {
     sort: ISortChilds = {},
     page: number = 0,
   ): Promise<IPaginationData<IListedChild>> {
+    console.log`Page:${page},name:${name}`;
     let querry = this.childRepository
       .createQueryBuilder('child')
       .leftJoinAndSelect('child.identifications', 'identification')
@@ -109,11 +93,11 @@ export default class ChildDAO {
         'FLOOR(DATEDIFF(child.dateOfBirth,NOW()) / 365)  AS age',
         'identification.idNumber as idNumber',
       ])
-      .skip(page * 10)
-      .take(10);
+      .offset(page * 10)
+      .limit(10);
 
     if (name) {
-      querry = querry.andWhere('child.name like :name', {
+      querry = querry.andWhere('name like :name', {
         name: '%' + name + '%',
       });
     }
@@ -152,36 +136,15 @@ export default class ChildDAO {
     return child;
   }
 
-  /*
-  public async listChilds({
-    // age,
-    fullNameLike,
-    page,
-    resultsPerPage,
-  }: ChildPagination): Promise<IChildListMethod> {
-    let querry = this.childRepository
+  public async getChildsOfSponosredUser(userId: number) {
+    const query = this.childRepository
       .createQueryBuilder('child')
-      .select([
-        'child.name',
-        'child.lastname',
-        'child.city',
-        'FLOOR(DATEDIFF(child.birthDate,NOW()) / 365)  AS age',
-      ]);
+      .leftJoinAndSelect('child.fixNeeds', 'fix_need')
+      .leftJoinAndSelect('fix_need.sponsorship', 'sponsorship')
+      .where('sponsorship.user = :userId', { userId });
 
-    const totalChildCount = querry.getCount();
+    const childs = await query.getMany();
 
-    querry = querry
-      .skip(page * resultsPerPage || page * 10)
-      .take(resultsPerPage);
-
-    if (fullNameLike) {
-      querry = querry.where('child.fullName like :fullNameLike', {
-        fullNameLike: `%${fullNameLike}%`,
-      });
-    }
-
-    return await this.promiseAll(querry.getRawMany(), totalChildCount).then(
-      ([childs, count]) => ({ childs, count }),
-    );
-  }*/
+    return childs;
+  }
 }
