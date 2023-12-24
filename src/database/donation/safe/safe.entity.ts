@@ -1,8 +1,15 @@
 import Child from 'src/database/user/child/child.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  Index,
+} from 'typeorm';
 
 @Entity()
 export default class Safe {
+  @Index()
   @PrimaryGeneratedColumn()
   safeId: number;
 

@@ -4,7 +4,4 @@ import { IFilterNeedGroup } from 'src/database/donation/needGroup/needGroup.DAO.
 export class ListChildwithNeedsDTO {
   @IsOptional()
   filters: IFilterNeedGroup;
-
-  @IsNotEmpty()
-  page: number;
 }

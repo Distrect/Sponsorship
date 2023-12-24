@@ -6,8 +6,8 @@ import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 export default class NeedGroupService {
   constructor(private needGroupDAO: NeedGroupDAO) {}
 
-  public async listChildwtihNeeds(filters: IFilterNeedGroup) {
-    const result = await this.needGroupDAO.listSponsorableNeeds(filters);
+  public async listChildwtihNeeds(filters: IFilterNeedGroup, page: number) {
+    const result = await this.needGroupDAO.listSponsorableNeeds(filters, page);
 
     return result;
   }

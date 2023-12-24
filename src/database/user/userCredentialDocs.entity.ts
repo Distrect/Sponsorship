@@ -4,6 +4,7 @@ import {
   Column,
   // ManyToOne,
   BeforeInsert,
+  Index,
 } from 'typeorm';
 import { existsSync } from 'fs';
 // import Identification from './identification.entity';
@@ -12,6 +13,7 @@ import { ServerError } from 'src/utils/error';
 
 @Entity()
 export default class UserCredentialDocuments {
+  @Index()
   @PrimaryGeneratedColumn()
   credentialId: number;
 

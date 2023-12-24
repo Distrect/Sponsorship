@@ -68,7 +68,7 @@ export const databaseProviders = [
           const user = users[i];
 
           const needGroup = await managerSave(
-            mockDataGenerator.generateNeedGroup(),
+            mockDataGenerator.generateNeedGroup({ child }),
           );
           const childNeeds = await managerSave(
             mockDataGenerator.generator(20, 'ChildNeed', { group: needGroup }),

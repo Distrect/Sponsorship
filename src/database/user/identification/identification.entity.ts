@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Index,
+} from 'typeorm';
 import User from '../user/user.entity';
 import { ActorType, NationalityEnum } from 'src/database/user';
 // import UserCredentialDocuments from './userCredentialDocs.entity';
@@ -7,6 +13,7 @@ import Child from 'src/database/user/child/child.entity';
 
 @Entity()
 export default class Identification {
+  @Index()
   @PrimaryGeneratedColumn()
   identificationId: number;
 

@@ -6,9 +6,9 @@ import {
   OneToMany,
   BeforeInsert,
   VirtualColumn,
+  Index,
 } from 'typeorm';
 import { NeedUrgency, Status } from 'src/database/donation';
-import Category from 'src/database/donation/category/category.entity';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
@@ -29,6 +29,7 @@ abstract class ChildNeedRelations {
 
 @Entity()
 export default class ChildNeed extends ChildNeedRelations {
+  @Index()
   @PrimaryGeneratedColumn()
   needId: number;
 
@@ -53,11 +54,10 @@ export default class ChildNeed extends ChildNeedRelations {
   @Column('enum', { default: NeedUrgency.NORMAL, enum: NeedUrgency })
   urgency: NeedUrgency;
 
-  // `SELECT COUNT("name") FROM "employees" WHERE "companyName" = ${alias}.name`
   @VirtualColumn({
-    type: 'varchar',
+    type: 'integer',
     query: (alias: string) =>
-      'SELECT SUM(IFNULL(amount,0)) FROM donation WHERE childNeed = ' +
+      'SELECT SUM(IFNULL(NULLIF(amount,""),0)) FROM donation WHERE childNeed = ' +
       `${alias}.needId`,
   })
   totals: string;

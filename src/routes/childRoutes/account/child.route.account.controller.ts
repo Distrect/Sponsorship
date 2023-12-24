@@ -4,7 +4,7 @@ import { Response } from 'express';
 import ChildAccountRouteService from 'src/routes/childRoutes/account/child.route.account.service';
 import { LoginDto } from 'src/shared/dtos';
 
-@Controller('childAccount')
+@Controller('child/account')
 export default class ChildAccountRouteController {
   constructor(private childAccountService: ChildAccountRouteService) {}
 

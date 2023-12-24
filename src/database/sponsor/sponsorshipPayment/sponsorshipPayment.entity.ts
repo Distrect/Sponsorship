@@ -1,8 +1,15 @@
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Index,
+} from 'typeorm';
 
 @Entity()
 export default class SponsorShipPayment {
+  @Index()
   @PrimaryGeneratedColumn()
   paymentId: number;
 

@@ -1,8 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Index,
+} from 'typeorm';
 import Child from '../child/child.entity';
 
 @Entity()
 export default class ChildStatus {
+  @Index()
   @PrimaryGeneratedColumn()
   statusId: number;
 

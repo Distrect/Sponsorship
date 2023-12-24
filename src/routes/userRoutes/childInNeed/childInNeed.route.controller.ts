@@ -1,16 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ListChildwithNeedsDTO } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
 import ChildInNeedRouteService from 'src/routes/userRoutes/childInNeed/childInNeed.route.service';
 
-@Controller('child/chilInNeed')
+@Controller('user/childsInNeed')
 export default class ChildInNeedRouteController {
   constructor(private childInNeedRouteService: ChildInNeedRouteService) {}
 
-  @Post('listChildWithNeeds')
-  public async ListChildWithNeeds(@Body() requestBody: ListChildwithNeedsDTO) {
+  @Post('listChildsWithNeeds/:page')
+  public async ListChildWithNeeds(
+    @Param('page', ParseIntPipe) page: number,
+    @Body() requestBody: ListChildwithNeedsDTO,
+  ) {
     const result =
       await this.childInNeedRouteService.listDonatableChildwithNeeds(
         requestBody,
+        page,
       );
+
+    return { ok: true, result };
   }
 }

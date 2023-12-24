@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToOne,
+  Index,
 } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
 import Child from 'src/database/user/child/child.entity';
@@ -19,6 +20,7 @@ class FixNeedRelations {
 
 @Entity()
 export default class FixNeed extends FixNeedRelations {
+  @Index()
   @PrimaryGeneratedColumn()
   fixNeedId: number;
 

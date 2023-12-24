@@ -4,12 +4,14 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import User from 'src/database/user/user/user.entity';
 
 @Entity({ name: 'donation' })
 export default class Donation {
+  @Index()
   @PrimaryGeneratedColumn()
   donationId: number;
 

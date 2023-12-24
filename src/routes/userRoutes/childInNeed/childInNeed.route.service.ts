@@ -6,7 +6,10 @@ import NeedGroupService from 'src/modules/donationModule/needGroup/needGroup.ser
 export default class ChildInNeedRouteService {
   constructor(private needGroupService: NeedGroupService) {}
 
-  public async listDonatableChildwithNeeds(body: ListChildwithNeedsDTO) {
-    return await this.needGroupService.listChildwtihNeeds(body.filters);
+  public async listDonatableChildwithNeeds(
+    body: ListChildwithNeedsDTO,
+    page: number,
+  ) {
+    return await this.needGroupService.listChildwtihNeeds(body.filters, page);
   }
 }

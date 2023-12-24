@@ -118,7 +118,7 @@ export default class NeedGroupDAO {
   }
 
   public async listSponsorableNeeds(
-    { city, urgency }: IFilterNeedGroup,
+    { city, urgency }: IFilterNeedGroup = {},
     page: number = 0,
   ): Promise<IPaginationData<NeedGroup>> {
     const query = this.needGroupRepository
@@ -130,7 +130,7 @@ export default class NeedGroupDAO {
     if (city) query.andWhere('child.city = :city', { city });
     if (urgency) query.andWhere('child_need.urgency = :urgency', { urgency });
 
-    query.limit(10).offset(page * 10);
+    // query.limit(10).offset(page * 10);
 
     return await query
       .getManyAndCount()

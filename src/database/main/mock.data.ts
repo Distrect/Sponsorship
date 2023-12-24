@@ -44,6 +44,8 @@ function cryptor(
   return jwt.verify(value, secretKey, { ignoreExpiration: true }) as string;
 }
 
+const x: string = '1';
+
 export default class MockDataGenerator implements IMockDataGenerator {
   EntityObject: EntitiyMapType<keyof TypeofEntityMap>;
   constructor(private dataSource: DataSource) {
@@ -204,11 +206,12 @@ export default class MockDataGenerator implements IMockDataGenerator {
     });
   }
 
-  public generateNeedGroup() {
+  public generateNeedGroup(needGroupParams: DeepPartial<NeedGroup>): NeedGroup {
     return this.dataSource.manager.create(NeedGroup, {
       explanation: faker.person.jobDescriptor(),
       title: faker.person.jobArea(),
-    });
+      ...needGroupParams,
+    }) as NeedGroup;
   }
 
   public generateFixNeed(
