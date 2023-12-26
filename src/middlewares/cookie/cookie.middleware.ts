@@ -18,7 +18,8 @@ export class CookieInterceptor implements NestInterceptor {
   constructor(private role: Role) {}
 
   private isEmpty(user: IUserCookie) {
-    return !Object.values(user).every((val) => !!val);
+    console.log('User:', user);
+    return _.isEmpty(user);
   }
 
   public intercept(
@@ -27,6 +28,7 @@ export class CookieInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest() as ExtendedRequest;
     const res = context.switchToHttp().getResponse() as Response;
+    console.log('Reqq', req);
 
     const token = req.cookies[this.role + 'Authorization'];
     const refreshToken = req.cookies[this.role + 'Refresh'];
@@ -51,7 +53,6 @@ export class CookieInterceptor implements NestInterceptor {
       res.cookie(this.role + tokenType, data);
       userData = data;
     }
-
     if (this.isEmpty(userData)) throw new AuthorizationError();
 
     req.user = userData;

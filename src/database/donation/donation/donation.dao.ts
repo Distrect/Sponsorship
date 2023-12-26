@@ -1,40 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { Role } from 'src/database/user';
+import { IDonateNeed } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import { DonationHistoryParams } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import Donation from 'src/database/donation/donation/donation.entity';
-import UserDAO from 'src/database/user/user/user.DAO';
-import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import UserDAO from 'src/database/user/user/user.DAO';
 import ChildDAO from 'src/database/user/child/child.DAO';
+import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 
 @Injectable()
 export default class DonationDAO {
-  @Injector(Donation) private donationRepository: Repository<Donation>;
-  private userDAO: UserDAO;
-  private childDAO: ChildDAO;
-  private cildNeedDAO: ChildNeedDAO;
+  constructor(
+    @Injector(Donation) private donationRepository: Repository<Donation>,
+    private userDAO: UserDAO,
+    private childDAO: ChildDAO,
+    private childNeedDAO: ChildNeedDAO,
+  ) {}
 
   private async saveDonationEntity(entity: Donation) {
     return await this.donationRepository.save(entity);
   }
 
-  public async createDonation(userId: number, needId: number, cost: number) {
-    let [user, childNeed] = await Promise.all([
-      this.userDAO.getUser({ userId }),
-      this.cildNeedDAO.getNeed({ needId }),
-    ]);
-
-    childNeed = childNeed as ChildNeed;
-
-    const donationRecord = this.donationRepository.create({
-      amount: cost,
-      childNeed,
-      user,
+  public async createDonation(donationParams: DeepPartial<Donation>) {
+    const donationInstance = this.donationRepository.create({
+      ...donationParams,
     });
 
-    return await this.saveDonationEntity(donationRecord);
+    return await this.saveDonationEntity(donationInstance);
+  }
+
+  public async donateToNeed(userId: number, { amount, needId }: IDonateNeed) {
+    const [user, childNeed] = await Promise.all([
+      this.userDAO.getUser({ userId }),
+      this.childNeedDAO.getNeed({ needId }) as Promise<ChildNeed>,
+    ]);
+
+    const childNeedPrice = childNeed.amount * childNeed.price;
+    const left = childNeedPrice - childNeed.totals;
+
+    if (amount > left) throw new Error('Dayı olmaz');
+
+    const donation = await this.createDonation({ amount, childNeed, user });
+    console.log('Donatioın:', donation);
+
+    return donation;
   }
 
   /* Patlayabilir*/

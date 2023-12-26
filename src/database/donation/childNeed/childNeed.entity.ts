@@ -27,7 +27,7 @@ abstract class ChildNeedRelations {
   group: NeedGroup;
 }
 
-@Entity()
+@Entity({ orderBy: { needId: 'ASC' } })
 export default class ChildNeed extends ChildNeedRelations {
   @Index()
   @PrimaryGeneratedColumn()
@@ -57,10 +57,10 @@ export default class ChildNeed extends ChildNeedRelations {
   @VirtualColumn({
     type: 'integer',
     query: (alias: string) =>
-      'SELECT SUM(IFNULL(NULLIF(amount,""),0)) FROM donation WHERE childNeed = ' +
+      'SELECT IFNULL(SUM(IFNULL(NULLIF(amount,""),0)),0) FROM donation WHERE childNeed = ' +
       `${alias}.needId`,
   })
-  totals: string;
+  totals: number;
 
   @BeforeInsert()
   private async setStartAmount() {

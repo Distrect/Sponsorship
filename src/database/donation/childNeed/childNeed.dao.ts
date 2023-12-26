@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { NotFound } from 'src/utils/error';
-import { Repository, DeepPartial, FindOptionsWhere } from 'typeorm';
-import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
+import { Repository, DeepPartial, FindOptionsWhere, In } from 'typeorm';
+import {
+  IDonateNeed,
+  INeedWithTotal,
+} from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import { DonateToNeed } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
@@ -88,17 +91,24 @@ export default class ChildNeedDAO {
     return updatedNeed;
   }
 
+  public async getNeedsWithIds(ids: number[]) {
+    const childNeeds = await this.childNeedRepository.find({
+      where: { needId: In(ids) },
+    });
+
+    if (childNeeds.includes(null)) throw new NotFound();
+
+    return childNeeds;
+  }
+
   public async deleteNeed(needId: number) {
     const deletedNeed = await this.updateNeed({ needId, isDeleted: true });
 
     return deletedNeed;
   }
+}
 
-  public async donateToChild({ needId, cost }: DonateToNeed) {
-    const needWithTotalDonation = await this.getNeedWithTotalDonation(needId);
-  }
-
-  /*
+/*
   public async listNeedsWithChild(
     userId: number,
     { age, city, urgency }: ListChildWithNeeds,
@@ -140,4 +150,3 @@ export default class ChildNeedDAO {
     return await needListWİthChild.getMany();
   }
 */
-}

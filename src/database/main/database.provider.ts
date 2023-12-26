@@ -28,6 +28,10 @@ export const databaseProviders = [
 
       const InitializedDatabase = await Database.initialize();
 
+      console.log(
+        'data tables:',
+        InitializedDatabase.entityMetadatas.map((metada) => metada.tableName),
+      );
       const mockDataGenerator = new MockDataGenerator(InitializedDatabase);
 
       const create = InitializedDatabase.manager.create;
@@ -140,7 +144,7 @@ export const databaseProviders = [
         console.log(
           await childNeedRepository
             .createQueryBuilder('child_need')
-            .where('child_need.needId = 1')
+            .where('child_need.needId = 2')
             .getOne(),
         );
       };

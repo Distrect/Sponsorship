@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
+import { IPaginationData } from 'src/shared/types';
+import { ChildNeedGroupStatus } from 'src/database/donation';
 import {
   HasActiveNeedGroupError,
   NotFound,
@@ -11,12 +13,10 @@ import {
   IFilterNeedGroup,
   NeedGroupWithNeedsWithTotalDonation,
 } from 'src/database/donation/needGroup/needGroup.DAO.interface';
-import { ChildNeedGroupStatus } from 'src/database/donation';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
-
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
-import { IPaginationData } from 'src/shared/types';
+import { InjectEntityManager } from '@nestjs/typeorm';
 
 @Injectable()
 export default class NeedGroupDAO {
@@ -29,6 +29,24 @@ export default class NeedGroupDAO {
 
   public async saveNeedGroupEntity(entity: NeedGroup) {
     return await this.needGroupRepository.save(entity);
+  }
+
+  public async checkIfNeedsBelongsToNeedGroup(
+    needGroupId: number,
+    needIds: number[],
+  ) {
+    const needGroupWithNeeds = await this.needGroupRepository.findOne({
+      where: { needGroupId },
+      relations: { needs: true },
+    });
+    const needs = await this.childNeedDAO.getNeedsWithIds(needIds);
+
+    if (!needGroupWithNeeds) throw new ServerError();
+
+    const groupNeedsIds = needGroupWithNeeds.needs.map(({ needId }) => needId);
+    const childNeedIds = needs.map(({ needId }) => needId);
+
+    return childNeedIds.every((needId) => groupNeedsIds.includes(needId));
   }
 
   public async getActiveGroupOfChild(childId: number) {
@@ -125,12 +143,15 @@ export default class NeedGroupDAO {
       .createQueryBuilder('need_group')
       .leftJoinAndSelect('need_group.child', 'child')
       .leftJoinAndSelect('need_group.needs', 'child_need')
-      .where('child_need.isDeleted = false');
+      .skip(page * 10)
+      .take(10)
+      .where('child_need.isDeleted = false')
+      .andWhere('need_group.status = :status', {
+        status: ChildNeedGroupStatus.OPEN,
+      });
 
     if (city) query.andWhere('child.city = :city', { city });
     if (urgency) query.andWhere('child_need.urgency = :urgency', { urgency });
-
-    // query.limit(10).offset(page * 10);
 
     return await query
       .getManyAndCount()

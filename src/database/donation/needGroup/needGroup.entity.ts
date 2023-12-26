@@ -19,7 +19,10 @@ export default class NeedGroup {
   @Column('varchar')
   title: string;
 
-  @Column('enum', { enum: ChildNeedGroupStatus })
+  @Column('enum', {
+    enum: ChildNeedGroupStatus,
+    default: ChildNeedGroupStatus.OPEN,
+  })
   status: ChildNeedGroupStatus;
 
   @Column('text')

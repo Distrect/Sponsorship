@@ -7,6 +7,7 @@ import NeedSafeEntityModule from 'src/database/donation/needSafe/needSafeEntity.
 import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
 import MySQLConnectorModule from 'src/database/main/mysql.connector.module';
 import FixNeedEntityModule from 'src/database/sponsor/fixNeed/fixNeedEntity.module';
+import { MessageEntityModule } from 'src/database/sponsor/message/messageEntity.module';
 import SponsorshipEntityModule from 'src/database/sponsor/sponsorship/sponsorshipEntity.module';
 import SponsorshipPaymentEntityModule from 'src/database/sponsor/sponsorshipPayment/sponsorshipPaymentEntity.module';
 import AdminEntityModule from 'src/database/user/admin/adminEntity.module';
@@ -20,19 +21,19 @@ import UserEntityModule from 'src/database/user/user/userEntity.module';
 import UserRequestEntityModule from 'src/database/user/userRequest/userRequestEntity.module';
 
 const AllModules = [
+  SafeEntityModule,
   MySQLConnectorModule,
-  UserRequestEntityModule,
   UserEntityModule,
   ChildEntityModule,
   AuthorityEntityModule,
   ChildEntityModule,
   NeedGroupEntityModule,
   ChildNeedEntityModule,
+  UserRequestEntityModule,
   SponsorshipEntityModule,
   CategoryEntityModule,
   DonationEntityModule,
   NeedSafeEntityModule,
-  SafeEntityModule,
   FixNeedEntityModule,
   SponsorshipPaymentEntityModule,
   AdminEntityModule,
@@ -40,6 +41,7 @@ const AllModules = [
   ChildStatusEntityModule,
   IdentificationEntityModule,
   QuestionEntityModule,
+  MessageEntityModule,
 ];
 
 @Module({

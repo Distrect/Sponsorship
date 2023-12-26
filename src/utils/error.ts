@@ -20,6 +20,15 @@ export class AuthorizationError extends HttpException {
       'You sir, are unauthorized. Please leave or face the consequences',
       HttpStatus.UNAUTHORIZED,
     );
+
+    console.log('Cause:', this.cause);
+    console.log('Response:', this.getResponse());
+    console.log('Status:', this.getStatus());
+    console.log('initCause:', this.initCause());
+    console.log('initMessage:', this.initMessage());
+    console.log('message:', this.message);
+    console.log('name:', this.name);
+    console.log('stack:', this.stack);
   }
 }
 
@@ -64,5 +73,11 @@ export class EmptyData extends HttpException {
 export class AlreadyHave extends HttpException {
   constructor(message: string) {
     super(message, HttpStatus.CONFLICT);
+  }
+}
+
+export class BadRequestError extends HttpException {
+  constructor(message: string = 'Invalid Request Data') {
+    super(message, HttpStatus.BAD_REQUEST);
   }
 }

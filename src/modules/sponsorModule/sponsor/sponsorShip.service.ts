@@ -41,6 +41,8 @@ export default class SponsorshipService {
   // }
 
   public async sponsorToChild(userId: number, fixNeedId: number) {
+    const sponsorshipInstance = await this.fixNeedDAO.getFixNeed({ fixNeedId });
+
     const isFixNeedSponsored =
       await this.sponsorshipDAO.isSponsorToNeed(fixNeedId);
 

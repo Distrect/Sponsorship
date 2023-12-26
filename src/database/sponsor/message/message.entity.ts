@@ -1,12 +1,32 @@
-// import { DataTypes } from 'sequelize';
-// import { Column, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { Role } from 'src/database/user';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
-// @Table({ timestamps: true })
-// export class Message {
-//   @PrimaryKey
-//   @Column(DataTypes.INTEGER)
-//   messageId: number;
+abstract class MessageEntityRelations {
+  @ManyToOne(() => Sponsorship, (sponsorship) => sponsorship.messages)
+  sponsorship: Sponsorship;
+}
 
-//   @Column(DataTypes.TEXT)
-//   message: string;
-// }
+@Entity()
+export default class Message extends MessageEntityRelations {
+  @PrimaryGeneratedColumn()
+  messageId: number;
+
+  @Column('enum', { enum: Role })
+  from: Role;
+
+  @Column('enum', { enum: Role })
+  to: Role;
+
+  @Column('text')
+  message: string;
+
+  @CreateDateColumn()
+  date: Date;
+}

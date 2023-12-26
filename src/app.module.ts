@@ -5,6 +5,7 @@ import FileModule from 'src/services/file/file.module';
 import DatabaseModule from 'src/database/main/database.module';
 import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import BusinnessRouteModule from 'src/routes/businness.route.module';
+import MessageGatewayModule from 'src/websocket/messageGateway/message.gateway.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import BusinnessRouteModule from 'src/routes/businness.route.module';
     FileModule,
     MailModule,
     DatabaseModule,
+    MessageGatewayModule,
   ],
 })
 export default class SponsorshipApplication {}

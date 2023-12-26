@@ -54,6 +54,16 @@ export default class FixNeedDAO {
     return fixNeed;
   }
 
+  public async getFreeFixNeedofChild(childId: number) {
+    const query = this.fixNeedRepository
+      .createQueryBuilder('fix_need')
+      .leftJoin('dix_need.sponsorship', 'sponsorship')
+      .where('fix_need.sponosrship IS NULL')
+      .getMany();
+
+    return query;
+  }
+
   public async getChildFixNeeds(
     chldId: number,
     filterParams?: IGetFixNeedFilter,
@@ -145,6 +155,7 @@ export default class FixNeedDAO {
   public async getFixNeed(params: FindOptionsWhere<FixNeed>) {
     const fixNeed = await this.fixNeedRepository.findOne({
       where: { ...params },
+      relations: { sponsorship: true },
     });
 
     if (!fixNeed) throw new NotFound('The Child Fix Neeed Not Found');

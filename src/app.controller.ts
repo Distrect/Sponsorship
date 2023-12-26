@@ -9,7 +9,7 @@ export class AppController {
   @Post('/')
   async getHello() {
     console.log(
-      'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     );
     const deneme = await this.appService.getHello();
     return { ok: true };
