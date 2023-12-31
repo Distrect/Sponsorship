@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, ReturnDocument } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import UserDAO from 'src/database/user/user/user.DAO';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
-import { NotFound } from 'src/utils/error';
+import { NotFound, UserNotFoundError } from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
 
 @Injectable()
@@ -80,21 +80,46 @@ export default class SponsorshipDAO {
     return await this.saveSponsorshipEntity(sponsorShipInstance);
   }
 
-  // public async getChildSponsors(childId: number) {
-  //   return await this.sponsorshipRepository
-  //     .createQueryBuilder('sponsor_ship')
-  //     .leftJoinAndSelect('sponsor_ship.child', 'child')
-  //     .leftJoinAndSelect('sponsor_ship.user', 'user')
-  //     .where('child.userId = :childId', { childId })
-  //     .getMany();
-  // }
+  public async checkIfUserSponsorToChild(userId: number, childId: number) {
+    const [user, child] = await Promise.all([
+      this.userDAO.getUser({ userId }),
+      this.childDAO.getChild({ userId: childId }),
+    ]);
 
-  // public async getUserSponsors(userId: number) {
-  //   return await this.sponsorshipRepository
-  //     .createQueryBuilder('sponsor_ship')
-  //     .leftJoinAndSelect('sponsor_ship.child', 'child')
-  //     .leftJoinAndSelect('sponsor_ship.user', 'user')
-  //     .where('user.userId = :userId', { userId })
-  //     .getMany();
-  // }
+    const sponosrship = await this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .where(
+        'sponsorship.user = :userId AND fix_need.child = :childId AND sponsorship.status = :status',
+        {
+          childId: child.userId,
+          userId: user.userId,
+          status: SponsorshipStatus.APPROVED,
+        },
+      )
+      .getMany();
+
+    if (!sponosrship) throw new NotFound();
+
+    return sponosrship;
+  }
 }
+
+// public async getChildSponsors(childId: number) {
+//   return await this.sponsorshipRepository
+//     .createQueryBuilder('sponsor_ship')
+//     .leftJoinAndSelect('sponsor_ship.child', 'child')
+//     .leftJoinAndSelect('sponsor_ship.user', 'user')
+//     .where('child.userId = :childId', { childId })
+//     .getMany();
+// }
+
+// public async getUserSponsors(userId: number) {
+//   return await this.sponsorshipRepository
+//     .createQueryBuilder('sponsor_ship')
+//     .leftJoinAndSelect('sponsor_ship.child', 'child')
+//     .leftJoinAndSelect('sponsor_ship.user', 'user')
+//     .where('user.userId = :userId', { userId })
+//     .getMany();
+// }

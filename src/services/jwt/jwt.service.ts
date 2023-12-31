@@ -3,6 +3,7 @@ import jwt, {
   TokenExpiredError,
   VerifyOptions,
 } from 'jsonwebtoken';
+import { IUserCookie } from 'src/shared/types';
 import { FormFieldError, ServerError } from 'src/utils/error';
 
 export default class JwtService {
@@ -32,5 +33,19 @@ export default class JwtService {
       console.log(error);
       throw new ServerError();
     }
+  }
+
+  public static getUserCookieFromTokens<T>(
+    token: string,
+    refreshToken: string,
+  ): T {
+    const tokenDecr = this.deTokenizData<T>(token);
+    const refreshDecr = this.deTokenizData<T>(refreshToken);
+
+    let userData: T = tokenDecr ? tokenDecr : refreshDecr ? refreshDecr : null;
+
+    if (!userData) return;
+
+    return userData;
   }
 }

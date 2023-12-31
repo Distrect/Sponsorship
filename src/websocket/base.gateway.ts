@@ -5,7 +5,7 @@ import {
   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { WebSocketAuthGuard } from 'src/guards/websoocket.auth.guard';
+import WebSocketAuthGuard from 'src/guards/websoocket.auth.guard';
 
 @Injectable()
 export default class BaseSocket {

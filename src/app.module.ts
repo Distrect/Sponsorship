@@ -6,6 +6,7 @@ import DatabaseModule from 'src/database/main/database.module';
 import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import BusinnessRouteModule from 'src/routes/businness.route.module';
 import MessageGatewayModule from 'src/websocket/messageGateway/message.gateway.module';
+import SocketStorageModule from 'src/services/socketStorage/socketStorage.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import MessageGatewayModule from 'src/websocket/messageGateway/message.gateway.m
     FileModule,
     MailModule,
     DatabaseModule,
+    SocketStorageModule,
     MessageGatewayModule,
   ],
 })
