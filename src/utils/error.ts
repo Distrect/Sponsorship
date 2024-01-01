@@ -81,3 +81,9 @@ export class BadRequestError extends HttpException {
     super(message, HttpStatus.BAD_REQUEST);
   }
 }
+
+export class NotSponsoredError extends HttpException {
+  constructor() {
+    super('You are not sponsored to this user', HttpStatus.BAD_REQUEST);
+  }
+}

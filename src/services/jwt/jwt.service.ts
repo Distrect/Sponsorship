@@ -4,7 +4,11 @@ import jwt, {
   VerifyOptions,
 } from 'jsonwebtoken';
 import { IUserCookie } from 'src/shared/types';
-import { FormFieldError, ServerError } from 'src/utils/error';
+import {
+  AuthorizationError,
+  FormFieldError,
+  ServerError,
+} from 'src/utils/error';
 
 export default class JwtService {
   public static tokenizeData(data: any, options?: jwt.SignOptions) {
@@ -29,6 +33,7 @@ export default class JwtService {
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         return false;
+        // throw new AuthorizationError();
       }
       console.log(error);
       throw new ServerError();
@@ -44,7 +49,7 @@ export default class JwtService {
 
     let userData: T = tokenDecr ? tokenDecr : refreshDecr ? refreshDecr : null;
 
-    if (!userData) return;
+    if (!userData) throw new AuthorizationError();
 
     return userData;
   }

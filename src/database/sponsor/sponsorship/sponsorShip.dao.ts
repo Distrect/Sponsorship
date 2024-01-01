@@ -5,7 +5,11 @@ import ChildDAO from 'src/database/user/child/child.DAO';
 import UserDAO from 'src/database/user/user/user.DAO';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
-import { NotFound, UserNotFoundError } from 'src/utils/error';
+import {
+  NotFound,
+  NotSponsoredError,
+  UserNotFoundError,
+} from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
 
 @Injectable()
@@ -25,6 +29,32 @@ export default class SponsorshipDAO {
 
   private async saveSponsorshipEntity(entity: Sponsorship) {
     return await this.sponsorshipRepository.save(entity);
+  }
+
+  public async getUserChildSponsorship(userId: number, childId: number) {
+    const [user, child] = await Promise.all([
+      this.userDAO.getUser({ userId }),
+      this.childDAO.getChild({ userId: childId }),
+    ]);
+
+    const sponsorship = await this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .where(
+        'user.userId = :userId AND child.userId = :childId AND sponsorship.status = :status',
+        {
+          childId: child.userId,
+          userId: user.userId,
+          status: SponsorshipStatus.APPROVED,
+        },
+      )
+      .getOne();
+
+    if (!sponsorship) throw new NotSponsoredError();
+
+    return { child, user, sponsorship };
   }
 
   public async getUserSponsoredChilds(userId: number) {
@@ -80,6 +110,12 @@ export default class SponsorshipDAO {
     return await this.saveSponsorshipEntity(sponsorShipInstance);
   }
 
+  public async checkIfSponosrshipActive(sponsorshipId: number) {
+    const sponosrship = await this.getSponsorship({ sponsorshipId });
+
+    return sponosrship.status !== SponsorshipStatus.APPROVED;
+  }
+
   public async checkIfUserSponsorToChild(userId: number, childId: number) {
     const [user, child] = await Promise.all([
       this.userDAO.getUser({ userId }),
@@ -90,19 +126,20 @@ export default class SponsorshipDAO {
       .createQueryBuilder('sponsorship')
       .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
       .leftJoinAndSelect('fix_need.child', 'child')
+      .leftJoinAndSelect('sponsorship.user', 'user')
       .where(
-        'sponsorship.user = :userId AND fix_need.child = :childId AND sponsorship.status = :status',
+        'user.userId = :userId AND child.userId = :childId AND sponsorship.status = :status',
         {
           childId: child.userId,
           userId: user.userId,
           status: SponsorshipStatus.APPROVED,
         },
       )
-      .getMany();
+      .getOne();
 
-    if (!sponosrship) throw new NotFound();
+    if (!sponosrship) return false;
 
-    return sponosrship;
+    return !!sponosrship;
   }
 }
 

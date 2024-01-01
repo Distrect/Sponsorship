@@ -14,7 +14,7 @@
     "baseUrl": "./",
 
     "paths": {
-      "exclude": ["./çöp"],
+      // "exclude": ["src/client"],
       "@services": ["services/*"],
       "@modules": ["modules/*"]
     },

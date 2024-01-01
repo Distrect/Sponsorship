@@ -40,7 +40,7 @@ export const databaseProviders = [
         InitializedDatabase.manager.save(entity);
 
       const devOps = async () => {
-        const [authority, childs, users] = await Promise.all([
+        const [authority, childs, users, nique] = await Promise.all([
           managerSave(mockDataGenerator.generateMockAuthority()),
           managerSave(
             mockDataGenerator.multiplier(
@@ -51,13 +51,21 @@ export const databaseProviders = [
           managerSave(
             mockDataGenerator.multiplier(
               () => mockDataGenerator.generateMockUser(),
-              { count: 20 },
+              { count: 19 },
             ),
           ),
           managerSave(
             mockDataGenerator.generateMockUser({ email: 'Xyz@gmail.com' }),
           ),
+          managerSave(
+            mockDataGenerator.generateMockUser({
+              email: '123@gmail.com',
+              password: 'Xyzt.12345',
+            }),
+          ),
         ]);
+        console.log('Mi', nique);
+        users.unshift(nique);
 
         const userIds = users.map(({ userId }) => userId);
         const childIds = childs.map(({ userId }) => userId);

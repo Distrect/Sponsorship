@@ -7,8 +7,26 @@ import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import Answer from 'src/database/user/answer/answer.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 
+abstract class UserRelations extends BaseUser {
+  @OneToMany(() => UserRequest, (userRequest) => userRequest.user)
+  loginRequests: UserRequest[];
+
+  @OneToMany(() => Identification, (identification) => identification.user)
+  identifications: Identification[];
+
+  @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
+  sponsor: Sponsorship[];
+
+  @OneToMany(() => Donation, (donation) => donation.user)
+  donations: Donation;
+
+  @OneToOne(() => Answer, (answer) => answer.user)
+  @JoinColumn()
+  answer: Answer;
+}
+
 @Entity()
-export default class User extends BaseUser {
+export default class User extends UserRelations {
   @Column('date')
   dateOfBirth: Date;
 
