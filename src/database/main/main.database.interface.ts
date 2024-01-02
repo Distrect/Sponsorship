@@ -11,6 +11,7 @@ import Child from 'src/database/user/child/child.entity';
 import User from 'src/database/user/user/user.entity';
 import UserRequest from 'src/database/user/userRequest/userRequest.entity';
 import Identification from 'src/database/user/identification/identification.entity';
+import Message from 'src/database/sponsor/message/message.entity';
 
 interface EntyityRecord {
   ChildNeed: ChildNeed;
@@ -25,6 +26,7 @@ interface EntyityRecord {
   User: User;
   UserRequest: UserRequest;
   Identification: Identification;
+  Message: Message;
 }
 
 type Entities<T> = T extends 'ChildNeed'
@@ -49,7 +51,9 @@ type Entities<T> = T extends 'ChildNeed'
   ? UserRequest
   : T extends 'Safe'
   ? Safe
-  : Identification;
+  : T extends Identification
+  ? Identification
+  : Message;
 
 const EntityMap = {
   ChildNeed: ChildNeed,

@@ -17,6 +17,7 @@ import { MessageDTO } from 'src/shared/webSocket.types';
 import SocketStorageService from 'src/services/socketStorage/socketStorage.service';
 import JwtService from 'src/services/jwt/jwt.service';
 import MessageService from 'src/modules/sponsorModule/messageModule/message.service';
+import UserService from 'src/modules/userModule/userModule/user.service';
 
 @Injectable()
 @WebSocketGateway({
@@ -38,13 +39,8 @@ export default class MessageGateway
   constructor(
     private messageService: MessageService,
     private socketStorgeSerice: SocketStorageService,
+    private userService: UserService,
   ) {}
-
-  private errorHandler(error: any) {
-    const { message, stack, name } = error;
-
-    return { ok: false, message, stack, name };
-  }
 
   private checkScore(p1: number, p2: number) {
     if (p1 === p2) throw new AuthorizationError();
@@ -53,24 +49,27 @@ export default class MessageGateway
   }
 
   private formatCookies(parsedCookie: string, role: Role) {
-    if (!parsedCookie) throw new Error('1');
+    if (!parsedCookie || !Object.values(Role).includes(role))
+      throw new AuthorizationError();
+
+    console.log('Parsed:', parsedCookie);
 
     const cookies = parsedCookie.split('; ');
+    console.log('p', cookies);
+    if (cookies.length < 1) throw new ServerError();
 
     const token = cookies
       .find((cookie) => cookie.includes(role + 'Authorization'))
-      .trim()
+      ?.trim()
       .split('=')[1];
-
-    console.log('Role', role, token);
 
     const refreshToken = cookies
       .find((cookie) => cookie.includes(role + 'Refresh'))
-      .trim()
+      ?.trim()
       .split('=')[1];
 
     if (!token || !refreshToken) {
-      throw new Error('Bir Olay Vr');
+      throw new ServerError();
     }
 
     const actorCredentials = JwtService.getUserCookieFromTokens<IUserCookie>(
@@ -96,40 +95,36 @@ export default class MessageGateway
       const query = Object.assign({}, client.handshake.query);
       const role = query.role as Role;
       const cookieString = client.handshake.headers.cookie;
-
+      console.log('Cooke String', cookieString);
+      console.log('Role:', role);
       if (!cookieString) throw new AuthorizationError();
 
-      const cookies = cookieString.split('; ');
+      const user: IUserCookie = this.formatCookies(cookieString, role);
 
-      if (!cookieString || !cookies || cookies.length < 1)
-        throw new ServerError();
+      // const cookies = cookieString.split('; ');
 
-      console.log('Query:', query);
-      console.log('Role:', role);
-      console.log('CookieString:', cookieString);
-      console.log('Cookies:', cookies);
+      // if (!cookieString || !cookies || cookies.length < 1)
+      //   throw new ServerError();
 
-      // const [token,refresToken] = cookies.reduce((acc,val) => ,[])
+      // const token = cookies
+      //   .find((cookie) => cookie.trim().includes(role + 'Authorization'))
+      //   ?.split('=')[1];
 
-      const token = cookies
-        .find((cookie) => cookie.trim().includes(role + 'Authorization'))
-        ?.split('=')[1];
+      // const refreshToken = cookies
+      //   .find((cookie) => cookie.trim().includes(role + 'Refresh'))
+      //   ?.split('=')[1];
 
-      const refreshToken = cookies
-        .find((cookie) => cookie.trim().includes(role + 'Refresh'))
-        ?.split('=')[1];
+      // if (!Object.values(Role).includes(role) && (!token || !refreshToken))
+      //   throw new AuthorizationError();
 
-      if (!Object.values(Role).includes(role) && (!token || !refreshToken))
-        return client.disconnect(true);
+      // const actorCredential = JwtService.deTokenizData<IUserCookie>(
+      //   token || refreshToken,
+      // );
 
-      const actorCredential = JwtService.deTokenizData<IUserCookie>(
-        token || refreshToken,
-      );
+      // if (!actorCredential) throw new AuthorizationError();
+      // console.log('Credetial', actorCredential);
 
-      if (!actorCredential) return client.disconnect(true);
-      console.log('Credetial', actorCredential);
-
-      this.socketStorgeSerice.addSocket(actorCredential, client);
+      this.socketStorgeSerice.addSocket(user, client);
 
       return client;
     } catch (error) {
@@ -151,7 +146,10 @@ export default class MessageGateway
 
       if (fromUser.userId !== user.userId) throw new AuthorizationError();
 
-      const toUserSocket = this.socketStorgeSerice.getSocket(toUser.userId);
+      const toUserSocket = this.socketStorgeSerice.getSocket(
+        toUser.role,
+        toUser.userId,
+      );
 
       console.log('To User Socket', toUserSocket);
 
@@ -160,6 +158,8 @@ export default class MessageGateway
         this.pointObject[toUser.role],
       );
 
+      // const actor = await this.userService.getUser({userId:user.userId},user.role)
+      await this.messageService.getMessagesOfUser(user);
       let messageRecord;
 
       if (score === 4) {
@@ -173,6 +173,7 @@ export default class MessageGateway
       }
       return messageRecord;
     } catch (error) {
+      fromUserSocket.disconnect();
       console.log(error);
       this.errorEmitter(fromUserSocket, error);
     }

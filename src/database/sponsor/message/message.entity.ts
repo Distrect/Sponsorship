@@ -4,17 +4,14 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  Index,
 } from 'typeorm';
 import { Role } from 'src/database/user';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
-abstract class MessageEntityRelations {
-  @ManyToOne(() => Sponsorship, (sponsorship) => sponsorship.messages)
-  sponsorship: Sponsorship;
-}
-
 @Entity()
-export default class Message extends MessageEntityRelations {
+export default class Message {
+  @Index()
   @PrimaryGeneratedColumn()
   messageId: number;
 
@@ -29,4 +26,7 @@ export default class Message extends MessageEntityRelations {
 
   @CreateDateColumn()
   date: Date;
+
+  @ManyToOne(() => Sponsorship, (sponsorship) => sponsorship.messages)
+  sponsorship: Sponsorship;
 }

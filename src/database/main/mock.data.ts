@@ -18,10 +18,16 @@ import User from 'src/database/user/user/user.entity';
 import BaseUser from 'src/database/user/baseUser';
 import Authority from 'src/database/user/authority/authority.entity';
 import Identification from 'src/database/user/identification/identification.entity';
-import { FixNeedStatus } from 'src/database/sponsor';
+import { FixNeedStatus, SponsorshipStatus } from 'src/database/sponsor';
 import { NeedUrgency, Status } from 'src/database/donation';
 import jwt from 'jsonwebtoken';
 import Donation from 'src/database/donation/donation/donation.entity';
+import Message from 'src/database/sponsor/message/message.entity';
+
+enum m {
+  Child = 'Child',
+  User = 'User',
+}
 
 interface IMockDataGenerator {
   multiplier: Multiplier;
@@ -52,7 +58,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
     if (!dataSource) throw new Error('bABA Hata');
 
     this.EntityObject = {
-      Child: this.generateMockUser,
+      Child: this.generateMockChild,
       User: this.generateMockUser,
       ChildNeed: this.generateChildNeed,
       FixNeed: this.generateFixNeed,
@@ -106,6 +112,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
         throw new Error('Function not implemented.');
       },
       Identification: this.generateMockIdentification,
+      Message: this.generateMockMessage,
     };
   }
 
@@ -214,16 +221,19 @@ export default class MockDataGenerator implements IMockDataGenerator {
     }) as NeedGroup;
   }
 
-  public generateFixNeed(
-    fixNeedParams: DeepPartial<FixNeed> = {},
-  ): DeepPartial<FixNeed> {
+  public generateFixNeed({
+    child,
+    ...rest
+  }: DeepPartial<FixNeed> = {}): FixNeed {
+    const childInstance = child as Child;
     return this.dataSource.manager.create(FixNeed, {
+      ...rest,
       title: faker.commerce.productName(),
       explanation: faker.commerce.productDescription(),
       amount: faker.number.int({ min: 50, max: 200 }),
       status: FixNeedStatus.ACTIVE,
       isDeleted: false,
-      ...fixNeedParams,
+      child: childInstance,
     });
   }
 
@@ -244,13 +254,18 @@ export default class MockDataGenerator implements IMockDataGenerator {
     });
   }
 
-  public generateSponsorship(
-    sponsorshipParams: DeepPartial<Sponsorship>,
-  ): DeepPartial<Sponsorship> {
-    if (!sponsorshipParams) throw new Error('Cannot be empty');
+  public generateSponsorship({
+    fixNeed,
+    user,
+    ...rest
+  }: DeepPartial<Sponsorship>): Sponsorship {
+    const fixNeedInstance = fixNeed as FixNeed;
+    const userInstance = user as User;
 
     return this.dataSource.manager.create(Sponsorship, {
-      ...sponsorshipParams,
+      fixNeed: fixNeedInstance,
+      user: userInstance,
+      status: SponsorshipStatus.APPROVED,
     });
   }
 
@@ -270,5 +285,17 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return this.dataSource.manager.create(Donation, {
       ...donationParams,
     }) as Donation;
+  }
+
+  public generateMockMessage({ sponsorship }: DeepPartial<Message>): Message {
+    const from = Math.random() > 0.5 ? Role.Child : Role.User;
+    const to = from === Role.Child ? Role.User : Role.Child;
+
+    return this.dataSource.manager.create(Message, {
+      from,
+      to,
+      message: faker.music.songName(),
+      sponsorship,
+    });
   }
 }

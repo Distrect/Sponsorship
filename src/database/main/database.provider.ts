@@ -9,6 +9,13 @@ import Identification from 'src/database/user/identification/identification.enti
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import Donation from 'src/database/donation/donation/donation.entity';
+import Message from 'src/database/sponsor/message/message.entity';
+
+const mainUser = {
+  name: 'XXXXXXXXXX',
+  lastname: 'YYYYYYY',
+  email: 'Xyz@gmail.com',
+};
 
 export const databaseProviders = [
   {
@@ -18,7 +25,7 @@ export const databaseProviders = [
       const databaseOptions = configService.getDatabaseConfig();
       const Database = new DataSource({
         migrationsRun: false,
-        synchronize: isDevMode,
+        synchronize: true || isDevMode,
         dropSchema: isDevMode,
         ...databaseOptions,
         entities: [__dirname + '/../**/*.entity.{js,ts}'],
@@ -40,38 +47,17 @@ export const databaseProviders = [
         InitializedDatabase.manager.save(entity);
 
       const devOps = async () => {
-        const [authority, childs, users, nique] = await Promise.all([
+        const [authority, childs, users] = await Promise.all([
           managerSave(mockDataGenerator.generateMockAuthority()),
-          managerSave(
-            mockDataGenerator.multiplier(
-              () => mockDataGenerator.generateMockChild(),
-              { count: 100 },
-            ),
-          ),
-          managerSave(
-            mockDataGenerator.multiplier(
-              () => mockDataGenerator.generateMockUser(),
-              { count: 19 },
-            ),
-          ),
-          managerSave(
-            mockDataGenerator.generateMockUser({ email: 'Xyz@gmail.com' }),
-          ),
-          managerSave(
-            mockDataGenerator.generateMockUser({
-              email: '123@gmail.com',
-              password: 'Xyzt.12345',
-            }),
-          ),
+          managerSave(mockDataGenerator.generator(100, 'Child')),
+          managerSave([
+            mockDataGenerator.generateMockUser(mainUser),
+            ...mockDataGenerator.generator(19, 'User'),
+          ]),
         ]);
-        console.log('Mi', nique);
-        users.unshift(nique);
-
-        const userIds = users.map(({ userId }) => userId);
-        const childIds = childs.map(({ userId }) => userId);
 
         const needGroups: NeedGroup[] = [];
-        const sposnsoships: DeepPartial<Sponsorship>[] = [];
+        const sposnsoships: Sponsorship[] = [];
         const identifications: Identification[] = [];
 
         let i = 0;
@@ -117,6 +103,13 @@ export const databaseProviders = [
           i++;
         }
 
+        /* const messages = await managerSave(
+          mockDataGenerator.generator(20, 'Message', {
+            sponsorship: fUfC,
+          }),
+        );*/
+        /*fUfC.messages = [...messages];*/
+
         const toDonateChildNeed = childs[0].needGroups[0].needs[0];
 
         const donations: Donation[] = [];
@@ -130,12 +123,20 @@ export const databaseProviders = [
           donations.push(donation);
         }
 
-        const x = await Promise.all([
-          managerSave(needGroups),
-          managerSave(sposnsoships),
-          managerSave(identifications),
-          managerSave(donations),
-        ]);
+        const [needGroupsRecords, sponsorshipRecords, ...rest] =
+          await Promise.all([
+            managerSave(needGroups),
+            managerSave(sposnsoships),
+            managerSave(identifications),
+            managerSave(donations),
+          ]);
+
+        const fUfC = sponsorshipRecords[0];
+        const mockMessages = await managerSave(
+          mockDataGenerator.generator(100, 'Message', { sponsorship: fUfC }),
+        );
+
+        fUfC.messages = mockMessages;
 
         const childNeedRepository =
           InitializedDatabase.getRepository(ChildNeed);

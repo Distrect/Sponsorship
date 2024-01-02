@@ -14,7 +14,18 @@ import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import SponsorShipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
 import Message from 'src/database/sponsor/message/message.entity';
 
-abstract class SponosrshipEntityRelations {
+@Entity()
+export default class Sponsorship {
+  @Index()
+  @PrimaryGeneratedColumn()
+  sponsorshipId: number;
+
+  @Column('enum', {
+    default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
+    enum: SponsorshipStatus,
+  })
+  status: SponsorshipStatus;
+
   @ManyToOne(() => User, (user) => user.sponsor)
   user: User;
 
@@ -26,18 +37,5 @@ abstract class SponosrshipEntityRelations {
   payment: SponsorShipPayment[];
 
   @OneToMany(() => Message, (message) => message.sponsorship)
-  messages: Message;
-}
-
-@Entity()
-export default class Sponsorship extends SponosrshipEntityRelations {
-  @Index()
-  @PrimaryGeneratedColumn()
-  sponsorshipId: number;
-
-  @Column('enum', {
-    default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
-    enum: SponsorshipStatus,
-  })
-  status: SponsorshipStatus;
+  messages: Message[];
 }

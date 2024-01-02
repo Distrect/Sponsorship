@@ -4,13 +4,20 @@ import { Injector } from 'src/database/utils/repositoryProvider';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import UserDAO from 'src/database/user/user/user.DAO';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
-import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
+import {
+  ActorMessage,
+  FindSponsorship,
+} from 'src/database/sponsor/sponsorship/sponosrship.interface';
 import {
   NotFound,
   NotSponsoredError,
+  ServerError,
   UserNotFoundError,
 } from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
+import BaseUser from 'src/database/user/baseUser';
+import { Role } from 'src/database/user';
+import { Server } from 'mysql2/typings/mysql/lib/Server';
 
 @Injectable()
 export default class SponsorshipDAO {
@@ -141,6 +148,60 @@ export default class SponsorshipDAO {
 
     return !!sponosrship;
   }
+
+  public async getActorMessages(user: BaseUser): Promise<ActorMessage[]> {
+    const childRepo = this.childDAO.childRepository.createQueryBuilder('child');
+    const userRepo = this.userDAO.userRepository.createQueryBuilder('user');
+
+    const useQueryBuilder = user.role === 'Child' ? userRepo : childRepo;
+
+    const entityAlias = user.role === 'Child' ? 'child' : 'user';
+    
+    const queryBuilder = useQueryBuilder
+      .leftJoinAndSelect(`${entityAlias}.sponsorship`, 'sponsorship')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('sponsorship.messages', 'message');
+    
+    if (user.role === 'Child') {
+      queryBuilder.leftJoinAndSelect('sponsorship.user', 'user')
+        .where('user.userId = :userId', { userId: user.userId });
+    } else {
+      queryBuilder.leftJoinAndSelect('fix_need.child', 'child')
+        .where('child.userId = :userId', { userId: user.userId });
+    }
+
+    /*
+
+   
+
+    const actor = await useQueryBuilder.where("user.userId = :userId",{userId:user.userId}).getOne();
+    const x = childRepo.leftJoinAndSelect("child.fixNeeds","fix_ned").leftJoinAndSelect("fix_need.sponpo")*/
+    return [] as unknown as Promise<ActorMessage[]>;
+  }
+
+  /*public async getActorMessages({ userId, role }: BaseUser) {
+    if (![Role.User, Role.Child].includes(role)) throw new ServerError('Baba');
+
+    const selectAlias =
+      role === 'Child' ? 'sponsorship.fixNeed.child' : 'sponsorship.user';
+
+    const whereAlias = `${role.toLowerCase()}.userId = :userId`;
+
+    const userMessagesSponosrship = await this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      // .select([selectAlias, 'sponsorship.*'])
+      .where(whereAlias, { userId })
+      // .orderBy('message.createdAt', 'DESC')
+      .getMany();
+
+    console.log('User Message Sponsorship:', userMessagesSponosrship);
+
+    return userMessagesSponosrship;
+  }*/
 }
 
 // public async getChildSponsors(childId: number) {

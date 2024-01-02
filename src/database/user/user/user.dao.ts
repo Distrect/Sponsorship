@@ -13,7 +13,7 @@ import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 @Injectable()
 export default class UserDAO {
   constructor(
-    @Injector(User) private userRepository: Repository<User>,
+    @Injector(User) public userRepository: Repository<User>,
     private userRequestDAO: UserRequestDAO,
   ) {}
 

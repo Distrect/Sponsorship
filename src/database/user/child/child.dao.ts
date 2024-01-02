@@ -18,7 +18,7 @@ import Child from 'src/database/user/child/child.entity';
 
 @Injectable()
 export default class ChildDAO {
-  constructor(@Injector(Child) private childRepository: Repository<Child>) {}
+  constructor(@Injector(Child) public childRepository: Repository<Child>) {}
 
   private async updateChildEntity(
     entity: Child,
