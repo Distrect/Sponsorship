@@ -18,6 +18,7 @@ export default class SocketStorageService {
 
   public addSocket(user: IUserCookie, socket: Socket) {
     this.socketMap.set(this.createKey(user.role, user.userId), socket);
+    this.logConnectedScoket();
   }
 
   public getSocket(role: Role, userId: number) {
@@ -26,5 +27,17 @@ export default class SocketStorageService {
     if (!socket) return null;
 
     return socket;
+  }
+
+  public async deleteSocket(userId: number, role: Role) {
+    const key = this.createKey(role, userId);
+
+    const isExist = this.socketMap.delete(key);
+
+    return isExist;
+  }
+
+  public logConnectedScoket() {
+    console.log(this.socketMap.keys());
   }
 }

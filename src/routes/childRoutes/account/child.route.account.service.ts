@@ -8,6 +8,6 @@ export default class ChildAccountRouteService {
   constructor(private userService: UserService) {}
 
   public async login(body: LoginDto) {
-    return await this.userService.logIn(body, Role.Authority);
+    return await this.userService.logIn(body, Role.Child);
   }
 }

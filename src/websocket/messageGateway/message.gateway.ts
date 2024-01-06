@@ -43,7 +43,7 @@ export default class MessageGateway
   ) {}
 
   private checkScore(p1: number, p2: number) {
-    if (p1 === p2) throw new AuthorizationError();
+    if (p1 === p2) throw new ServerError('Aynı tipte kişilere mesaj atamasın');
 
     return p1 + p2;
   }
@@ -52,10 +52,8 @@ export default class MessageGateway
     if (!parsedCookie || !Object.values(Role).includes(role))
       throw new AuthorizationError();
 
-    console.log('Parsed:', parsedCookie);
-
     const cookies = parsedCookie.split('; ');
-    console.log('p', cookies);
+
     if (cookies.length < 1) throw new ServerError();
 
     const token = cookies
@@ -95,39 +93,18 @@ export default class MessageGateway
       const query = Object.assign({}, client.handshake.query);
       const role = query.role as Role;
       const cookieString = client.handshake.headers.cookie;
-      console.log('Cooke String', cookieString);
-      console.log('Role:', role);
+
       if (!cookieString) throw new AuthorizationError();
 
       const user: IUserCookie = this.formatCookies(cookieString, role);
 
-      // const cookies = cookieString.split('; ');
-
-      // if (!cookieString || !cookies || cookies.length < 1)
-      //   throw new ServerError();
-
-      // const token = cookies
-      //   .find((cookie) => cookie.trim().includes(role + 'Authorization'))
-      //   ?.split('=')[1];
-
-      // const refreshToken = cookies
-      //   .find((cookie) => cookie.trim().includes(role + 'Refresh'))
-      //   ?.split('=')[1];
-
-      // if (!Object.values(Role).includes(role) && (!token || !refreshToken))
-      //   throw new AuthorizationError();
-
-      // const actorCredential = JwtService.deTokenizData<IUserCookie>(
-      //   token || refreshToken,
-      // );
-
-      // if (!actorCredential) throw new AuthorizationError();
-      // console.log('Credetial', actorCredential);
+      console.log('User', user);
 
       this.socketStorgeSerice.addSocket(user, client);
 
       return client;
     } catch (error) {
+      console.error('Handle Connection Error:', error);
       this.errorEmitter(client, error);
       return { ok: false, error };
     }
@@ -146,20 +123,19 @@ export default class MessageGateway
 
       if (fromUser.userId !== user.userId) throw new AuthorizationError();
 
+      console.log('From User:', fromUser);
+      console.log('To User:', toUser);
+
       const toUserSocket = this.socketStorgeSerice.getSocket(
         toUser.role,
         toUser.userId,
       );
-
-      console.log('To User Socket', toUserSocket);
 
       const score = this.checkScore(
         this.pointObject[user.role],
         this.pointObject[toUser.role],
       );
 
-      // const actor = await this.userService.getUser({userId:user.userId},user.role)
-      await this.messageService.getMessagesOfUser(user);
       let messageRecord;
 
       if (score === 4) {
@@ -173,11 +149,53 @@ export default class MessageGateway
       }
       return messageRecord;
     } catch (error) {
+      console.error('Message Error:', error);
       fromUserSocket.disconnect();
-      console.log(error);
       this.errorEmitter(fromUserSocket, error);
     }
   }
 
-  public async handleDisconnect(client: Socket) {}
+  public async handleDisconnect(client: Socket) {
+    try {
+      const query = Object.assign({}, client.handshake.query);
+      const role = query.role as Role;
+      const cookieString = client.handshake.headers.cookie;
+
+      const user = this.formatCookies(cookieString, role);
+
+      console.log('Disconnected Client:', client.handshake.query);
+
+      const exist = this.socketStorgeSerice.deleteSocket(
+        user.userId,
+        user.role,
+      );
+
+      console.log('Exist:', exist);
+    } catch (error) {
+      console.error('Disconnect Error:', error);
+    }
+  }
 }
+
+// const cookies = cookieString.split('; ');
+
+// if (!cookieString || !cookies || cookies.length < 1)
+//   throw new ServerError();
+
+// const token = cookies
+//   .find((cookie) => cookie.trim().includes(role + 'Authorization'))
+//   ?.split('=')[1];
+
+// const refreshToken = cookies
+//   .find((cookie) => cookie.trim().includes(role + 'Refresh'))
+//   ?.split('=')[1];
+
+// if (!Object.values(Role).includes(role) && (!token || !refreshToken))
+//   throw new AuthorizationError();
+
+// const actorCredential = JwtService.deTokenizData<IUserCookie>(
+//   token || refreshToken,
+// );
+
+// if (!actorCredential) throw new AuthorizationError();
+// console.log('Credetial', actorCredential);

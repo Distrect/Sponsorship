@@ -4,16 +4,8 @@ import { Injector } from 'src/database/utils/repositoryProvider';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import UserDAO from 'src/database/user/user/user.DAO';
 import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
-import {
-  ActorMessage,
-  FindSponsorship,
-} from 'src/database/sponsor/sponsorship/sponosrship.interface';
-import {
-  NotFound,
-  NotSponsoredError,
-  ServerError,
-  UserNotFoundError,
-} from 'src/utils/error';
+import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
+import { NotFound, NotSponsoredError } from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
 import BaseUser from 'src/database/user/baseUser';
 import { Role } from 'src/database/user';
@@ -149,34 +141,30 @@ export default class SponsorshipDAO {
     return !!sponosrship;
   }
 
-  public async getActorMessages(user: BaseUser): Promise<ActorMessage[]> {
-    const childRepo = this.childDAO.childRepository.createQueryBuilder('child');
-    const userRepo = this.userDAO.userRepository.createQueryBuilder('user');
+  public async getActorMessages(user: BaseUser) {
+    const whereAlias =
+      user.role === Role.User
+        ? `user.userId = :userId`
+        : user.role === Role.Child
+        ? 'child.userId = :userId'
+        : null;
 
-    const useQueryBuilder = user.role === 'Child' ? userRepo : childRepo;
+    if (!whereAlias) throw new Error('User Role is Not accepted');
 
-    const entityAlias = user.role === 'Child' ? 'child' : 'user';
-    
-    const queryBuilder = useQueryBuilder
-      .leftJoinAndSelect(`${entityAlias}.sponsorship`, 'sponsorship')
-      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
-      .leftJoinAndSelect('sponsorship.messages', 'message');
-    
-    if (user.role === 'Child') {
-      queryBuilder.leftJoinAndSelect('sponsorship.user', 'user')
-        .where('user.userId = :userId', { userId: user.userId });
-    } else {
-      queryBuilder.leftJoinAndSelect('fix_need.child', 'child')
-        .where('child.userId = :userId', { userId: user.userId });
-    }
+    const den = this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .innerJoinAndSelect('sponsorship.messages', 'message')
+      .innerJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .innerJoinAndSelect('sponsorship.user', 'user')
+      .innerJoinAndSelect('fix_need.child', 'child')
+      .orderBy('message.date', 'ASC')
+      .where(whereAlias, { userId: user.userId });
 
-    /*
+    const result = await den.getMany();
 
-   
+    console.log('Messages:', result[0].messages);
 
-    const actor = await useQueryBuilder.where("user.userId = :userId",{userId:user.userId}).getOne();
-    const x = childRepo.leftJoinAndSelect("child.fixNeeds","fix_ned").leftJoinAndSelect("fix_need.sponpo")*/
-    return [] as unknown as Promise<ActorMessage[]>;
+    return result;
   }
 
   /*public async getActorMessages({ userId, role }: BaseUser) {
@@ -221,3 +209,54 @@ export default class SponsorshipDAO {
 //     .where('user.userId = :userId', { userId })
 //     .getMany();
 // }
+
+// const childRepo = this.childDAO.childRepository.createQueryBuilder('child');
+// const userRepo = this.userDAO.userRepository.createQueryBuilder('user');
+
+// const useQueryBuilder = user.role === 'Child' ? userRepo : childRepo;
+
+// const entityAlias = user.role === 'Child' ? 'child' : 'user';
+
+// const queryBuilder = useQueryBuilder
+//   .leftJoinAndSelect(`${entityAlias}.sponsorship`, 'sponsorship')
+//   .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+//   .leftJoinAndSelect('sponsorship.messages', 'message');
+
+// if (user.role === Role.User) {
+//   queryBuilder
+//     .leftJoinAndSelect('sponsorship.user', 'user')
+//     .where('user.userId = :userId', { userId: user.userId });
+// } else if (user.role === Role.Child) {
+//   queryBuilder
+//     .leftJoinAndSelect('fix_need.child', 'child')
+//     .where('child.userId = :userId', { userId: user.userId });
+// } else {
+//   throw new Error('Dayiii');
+// }
+
+// console.log('Messages:', await queryBuilder.getMany());
+
+// /*
+
+// const actor = await useQueryBuilder.where("user.userId = :userId",{userId:user.userId}).getOne();
+// const x = childRepo.leftJoinAndSelect("child.fixNeeds","fix_ned").leftJoinAndSelect("fix_need.sponpo")*/
+// return [] as unknown as Promise<ActorMessage[]>;
+
+/* const childRepo = this.childDAO.childRepository.createQueryBuilder('child');
+    const userRepo = this.userDAO.userRepository.createQueryBuilder('user');
+*/
+/*    const userMessages = userRepo
+      .leftJoinAndSelect('user.sponsor', 'sponsorship')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .where('user.userId = :userId', { userId: user.userId });
+
+    const childMessages = childRepo
+      .innerJoinAndSelect('child.fixNeeds', 'fix_need')
+      .innerJoinAndSelect('fix_need.sponsorship', 'sponsorship')
+      .innerJoinAndSelect('sponsorship.messages', 'message')
+      .innerJoinAndSelect('sponsorship.user', 'user')
+      .where('user.userId = :userId', { userId: user.userId })
+      .orderBy('message.date', 'ASC');
+*/
