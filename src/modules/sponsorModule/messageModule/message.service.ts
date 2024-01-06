@@ -30,6 +30,8 @@ export default class MessageService {
     if (!user) throw new Error('haya');
 
     const actorMessages = await this.sponsorshipDAO.getActorMessages(user);
+
+    return actorMessages;
   }
 
   public async message(userId: number, childId: number, message: string) {

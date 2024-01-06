@@ -6,13 +6,11 @@ import {
   Patch,
   Param,
   Body,
-  UseGuards,
   ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
-import { RoleGuard } from 'src/guards/userAuthentication.guard';
 import { IUserCookie } from 'src/shared/types';
 import {
   EditNeedDTO,
@@ -22,7 +20,6 @@ import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import NeedManagementRouteService from 'src/routes/authorityRoutes/needManagement/needManagement.route.service';
 
 @UseInterceptors(new CookieInterceptor(Role.Authority))
-// @UseGuards(new RoleGuard(Role.Authority))
 @Controller('authority/needManagement')
 export default class NeedManagmentRouteController {
   constructor(
