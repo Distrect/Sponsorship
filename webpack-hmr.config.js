@@ -23,3 +23,4 @@ module.exports = function (options, webpack) {
     ],
   };
 };
+('');
