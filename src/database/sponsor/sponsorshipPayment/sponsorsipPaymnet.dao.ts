@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { Repository } from 'typeorm';
-import SponsorShipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
+import SponsorshipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
 
 @Injectable()
 export default class SponsorshipPaymnetDAO {
-  @Injector(SponsorShipPayment)
-  private sponsorshipPaymentRepository: Repository<SponsorShipPayment>;
+  @Injector(SponsorshipPayment)
+  private sponsorshipPaymentRepository: Repository<SponsorshipPayment>;
 
-  private async saveSponsorshipPaymentEntity(entity: SponsorShipPayment) {
+  private async saveSponsorshipPaymentEntity(entity: SponsorshipPayment) {
     return await this.sponsorshipPaymentRepository.save(entity);
   }
 

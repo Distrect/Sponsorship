@@ -95,4 +95,8 @@ export default class FileService {
       throw new ServerError();
     }
   }
+
+  public checker() {
+    console.log('File Serice is Active');
+  }
 }

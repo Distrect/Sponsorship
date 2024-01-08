@@ -8,10 +8,12 @@ export class AppController {
 
   @Post('/')
   async getHello() {
-    console.log(
-      'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    );
-    const deneme = await this.appService.getHello();
+    console.log('App Controller Testing');
+
+    const res = await this.appService.getHello();
+
+    console.log('App Controller Result:', res);
+
     return { ok: true };
   }
 }

@@ -13,16 +13,15 @@ async function bootstrap() {
   app.useGlobalPipes(new CustomValidationPipe());
   app.use(cookieParser());
   app.enableCors({ origin: ['http://localhost:5173'], credentials: true });
-  // app.use(cors({ origin: 'http:localhost:5173', credentials: true }));
 
   await app.listen(4041);
-  // console.log(await app.getUrl());
-  // listRoutes(app.getHttpServer()._events.request._router);
 
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
+
+  console.log('APPLICATION IS READY');
 }
 
 bootstrap();

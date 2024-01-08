@@ -23,6 +23,7 @@ import { NeedUrgency, Status } from 'src/database/donation';
 import jwt from 'jsonwebtoken';
 import Donation from 'src/database/donation/donation/donation.entity';
 import Message from 'src/database/sponsor/message/message.entity';
+import SponsorshipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
 
 enum m {
   Child = 'Child',
@@ -297,5 +298,20 @@ export default class MockDataGenerator implements IMockDataGenerator {
       message: faker.music.songName(),
       sponsorship,
     });
+  }
+
+  public generateMockSponsorshipPayment(sponsorship: Sponsorship) {
+    return this.dataSource.manager.create(SponsorshipPayment, {
+      sponsorship,
+      paymentAmount: sponsorship.fixNeed.amount,
+    });
+  }
+
+  public genearateMockUserRequest(
+    userRequestParams: DeepPartial<UserRequest>,
+  ): UserRequest {
+    return this.dataSource.manager.create(UserRequest, {
+      ...userRequestParams,
+    }) as UserRequest;
   }
 }

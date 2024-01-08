@@ -98,7 +98,7 @@ export default class SponsorshipDAO {
 
   public async isSponsorToNeed(fixNeedId: number) {
     const sponsorship = await this.sponsorshipRepository.findOne({
-      where: { fixNeed: { fixNeedId } },
+      where: { fixNeed: { fixNeedId }, status: SponsorshipStatus.APPROVED },
     });
 
     return !!sponsorship;

@@ -3,6 +3,7 @@ import { AlreadyHave } from 'src/utils/error';
 import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import UserDAO from 'src/database/user/user/user.DAO';
+import SponsorshipPaymnetDAO from 'src/database/sponsor/sponsorshipPayment/sponsorsipPaymnet.DAO';
 
 @Injectable()
 export default class SponsorshipService {
@@ -10,6 +11,7 @@ export default class SponsorshipService {
     private sponsorshipDAO: SponsorshipDAO,
     private fixNeedDAO: FixNeedDAO,
     private userDAO: UserDAO,
+    private sponsorshipPaymentDAO: SponsorshipPaymnetDAO,
   ) {}
 
   public async blockSponsorship(sponosrshipId: number) {
@@ -33,15 +35,8 @@ export default class SponsorshipService {
     return availableFixNeeds;
   }
 
-  // public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
-  //   if (user === 'Child')
-  //     return await this.sponsorshipDAO.getChildSponsors(userId);
-
-  //   return await this.sponsorshipDAO.getUserSponsors(userId);
-  // }
-
   public async sponsorToChild(userId: number, fixNeedId: number) {
-    const sponsorshipInstance = await this.fixNeedDAO.getFixNeed({ fixNeedId });
+    const fixNeed = await this.fixNeedDAO.getFixNeed({ fixNeedId });
 
     const isFixNeedSponsored =
       await this.sponsorshipDAO.isSponsorToNeed(fixNeedId);
@@ -54,6 +49,11 @@ export default class SponsorshipService {
       fixNeedId,
     );
 
+    const payment = await this.sponsorshipPaymentDAO.createPaymentRecord(
+      sponsorship.sponsorshipId,
+      fixNeed.amount,
+    );
+
     return sponsorship;
   }
 
@@ -61,6 +61,13 @@ export default class SponsorshipService {
     return await this.sponsorshipDAO.getUserSponsoredChilds(userId);
   }
 }
+
+// public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
+//   if (user === 'Child')
+//     return await this.sponsorshipDAO.getChildSponsors(userId);
+
+//   return await this.sponsorshipDAO.getUserSponsors(userId);
+// }
 
 // public async paySponsorship(userId: number) {}
 /*

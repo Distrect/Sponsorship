@@ -4,11 +4,13 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  CreateDateColumn,
   Index,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
-export default class SponsorShipPayment {
+export default class SponsorshipPayment {
   @Index()
   @PrimaryGeneratedColumn()
   paymentId: number;
@@ -17,5 +19,9 @@ export default class SponsorShipPayment {
   paymentAmount: number;
 
   @ManyToOne(() => Sponsorship, (sp) => sp.payment)
+  @JoinColumn({ name: 'sponsorship' })
   sponsorship: Sponsorship;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

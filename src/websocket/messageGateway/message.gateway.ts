@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
+  MessageBody,
   OnGatewayInit,
   ConnectedSocket,
   WebSocketGateway,
   SubscribeMessage,
-  MessageBody,
+  OnGatewayDisconnect,
+  OnGatewayConnection,
 } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
 import { Role } from 'src/database/user';
 import { IUserCookie } from 'src/shared/types';
 import { ActorPoint } from 'src/websocket/messageGateway/message.gateway.interface';
-import { AuthorizationError, ServerError } from 'src/utils/error';
 import { MessageDTO } from 'src/shared/webSocket.types';
-import SocketStorageService from 'src/services/socketStorage/socketStorage.service';
+import { Socket, Server } from 'socket.io';
+import { AuthorizationError, ServerError } from 'src/utils/error';
 import JwtService from 'src/services/jwt/jwt.service';
 import MessageService from 'src/modules/sponsorModule/messageModule/message.service';
-import UserService from 'src/modules/userModule/userModule/user.service';
+import SocketStorageService from 'src/services/socketStorage/socketStorage.service';
 
 @Injectable()
 @WebSocketGateway({
@@ -39,7 +38,6 @@ export default class MessageGateway
   constructor(
     private messageService: MessageService,
     private socketStorgeSerice: SocketStorageService,
-    private userService: UserService,
   ) {}
 
   private checkScore(p1: number, p2: number) {
@@ -85,7 +83,7 @@ export default class MessageGateway
   }
 
   public afterInit(server: Server) {
-    console.log(' Socket has been created and ready to serve', server);
+    console.log(' Socket has been created and ready to serve');
   }
 
   public async handleConnection(client: Socket) {
@@ -97,8 +95,6 @@ export default class MessageGateway
       if (!cookieString) throw new AuthorizationError();
 
       const user: IUserCookie = this.formatCookies(cookieString, role);
-
-      console.log('User', user);
 
       this.socketStorgeSerice.addSocket(user, client);
 
@@ -122,9 +118,6 @@ export default class MessageGateway
       );
 
       if (fromUser.userId !== user.userId) throw new AuthorizationError();
-
-      console.log('From User:', fromUser);
-      console.log('To User:', toUser);
 
       const toUserSocket = this.socketStorgeSerice.getSocket(
         toUser.role,
@@ -152,7 +145,6 @@ export default class MessageGateway
     } catch (error) {
       console.error('Message Error:', error);
       this.errorEmitter(fromUserSocket, error);
-      // fromUserSocket.disconnect();
     }
   }
 
@@ -164,39 +156,12 @@ export default class MessageGateway
 
       const user = this.formatCookies(cookieString, role);
 
-      console.log('Disconnected Client:', client.handshake.query);
-
       const exist = this.socketStorgeSerice.deleteSocket(
         user.userId,
         user.role,
       );
-
-      console.log('Exist:', exist);
     } catch (error) {
       console.error('Disconnect Error:', error);
     }
   }
 }
-
-// const cookies = cookieString.split('; ');
-
-// if (!cookieString || !cookies || cookies.length < 1)
-//   throw new ServerError();
-
-// const token = cookies
-//   .find((cookie) => cookie.trim().includes(role + 'Authorization'))
-//   ?.split('=')[1];
-
-// const refreshToken = cookies
-//   .find((cookie) => cookie.trim().includes(role + 'Refresh'))
-//   ?.split('=')[1];
-
-// if (!Object.values(Role).includes(role) && (!token || !refreshToken))
-//   throw new AuthorizationError();
-
-// const actorCredential = JwtService.deTokenizData<IUserCookie>(
-//   token || refreshToken,
-// );
-
-// if (!actorCredential) throw new AuthorizationError();
-// console.log('Credetial', actorCredential);

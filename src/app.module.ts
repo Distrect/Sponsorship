@@ -7,6 +7,8 @@ import BusinnessLogicModule from 'src/modules/businnes.logic.module';
 import BusinnessRouteModule from 'src/routes/businness.route.module';
 import MessageGatewayModule from 'src/websocket/messageGateway/message.gateway.module';
 import SocketStorageModule from 'src/services/socketStorage/socketStorage.module';
+import { AppService } from 'src/app.service';
+import { AppController } from 'src/app.controller';
 
 @Module({
   imports: [
@@ -19,5 +21,7 @@ import SocketStorageModule from 'src/services/socketStorage/socketStorage.module
     SocketStorageModule,
     MessageGatewayModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export default class SponsorshipApplication {}

@@ -40,7 +40,8 @@ export class AppService {
     private questionDAO: QuestionDAO,
   ) {}
   async getHello() {
-    await console.log(this.userRequestDAO);
+    return await this.sponsorshipDAO.getSponsorship({ sponsorshipId: 1 });
+    /* await console.log(this.userRequestDAO);
     await console.log(this.userDAO);
     await console.log(this.childDAO);
     await console.log(this.authorityDAO);
@@ -57,6 +58,6 @@ export class AppService {
     await console.log(this.childStatusDAO);
     await console.log(this.identificationDAO);
     await console.log(this.questionDAO);
-    await this.needGroupDAO.getActiveGroupOfChild(1);
+    await this.needGroupDAO.getActiveGroupOfChild(1);*/
   }
 }

@@ -1,26 +1,29 @@
 import {
-  Controller,
-  Query,
   Get,
-  ParseIntPipe,
   Post,
-  Param,
   Body,
+  Query,
+  Param,
+  Controller,
+  ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { IUserCookie } from 'src/shared/types';
-import UserRequestRouteService from 'src/routes/authorityRoutes/userRequest/userRequest.route.service';
 import { AnswerDTO } from 'src/routes/authorityRoutes/userRequest/userRequest.route.dto';
+import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
+import UserRequestRouteService from 'src/routes/authorityRoutes/userRequest/userRequest.route.service';
 
 @Controller('authority/request')
+@UseInterceptors(new CookieInterceptor(Role.Authority))
 export default class UserRequestController {
   constructor(private userRequestRouteService: UserRequestRouteService) {}
 
-  @Get('/getrequests')
+  @Get('/getRequests?:page')
   public async GetRequests(
     @User(Role.Authority) authority: IUserCookie,
-    @Query('page', ParseIntPipe) page: number,
+    @Query('page', ParseIntPipe) page: number = 0,
   ) {
     const requests = await this.userRequestRouteService.getRequests(
       authority,
