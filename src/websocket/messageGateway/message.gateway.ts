@@ -67,7 +67,7 @@ export default class MessageGateway
       .split('=')[1];
 
     if (!token || !refreshToken) {
-      throw new ServerError();
+      throw new AuthorizationError();
     }
 
     const actorCredentials = JwtService.getUserCookieFromTokens<IUserCookie>(
@@ -140,8 +140,9 @@ export default class MessageGateway
 
       if (score === 4) {
         messageRecord = await this.messageService.message(
-          user.userId,
-          toUser.userId,
+          user,
+          toUser,
+          sponsorshipId,
           message,
         );
 
@@ -150,8 +151,8 @@ export default class MessageGateway
       return messageRecord;
     } catch (error) {
       console.error('Message Error:', error);
-      fromUserSocket.disconnect();
       this.errorEmitter(fromUserSocket, error);
+      // fromUserSocket.disconnect();
     }
   }
 

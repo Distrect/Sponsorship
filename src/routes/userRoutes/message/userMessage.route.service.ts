@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import MessageService from 'src/modules/sponsorModule/messageModule/message.service';
 import { IUserCookie } from 'src/shared/types';
+import MessageService from 'src/modules/sponsorModule/messageModule/message.service';
 
 @Injectable()
 export default class UserMessageRotueService {

@@ -30,7 +30,11 @@ export default class SponsorshipDAO {
     return await this.sponsorshipRepository.save(entity);
   }
 
-  public async getUserChildSponsorship(userId: number, childId: number) {
+  public async getUserChildSponsorship(
+    userId: number,
+    childId: number,
+    sponsorshipId?: number,
+  ) {
     const [user, child] = await Promise.all([
       this.userDAO.getUser({ userId }),
       this.childDAO.getChild({ userId: childId }),

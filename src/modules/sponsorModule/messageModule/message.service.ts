@@ -34,16 +34,26 @@ export default class MessageService {
     return actorMessages;
   }
 
-  public async message(userId: number, childId: number, message: string) {
+  public async message(
+    fromUser: IUserCookie,
+    toUser: { userId: number; role: Role },
+    sponosrshipId: number,
+    message: string,
+  ) {
     const { user, child, sponsorship } =
-      await this.sponsorshipDAO.getUserChildSponsorship(userId, childId);
+      await this.sponsorshipDAO.getUserChildSponsorship(
+        fromUser.userId,
+        toUser.userId,
+      );
+
+    const to = fromUser.role === Role.User ? Role.Child : Role.User;
 
     if (sponsorship.status !== SponsorshipStatus.APPROVED)
       throw new NotSponsoredError();
 
     const messageRecord = await this.messageDAO.createMessage({
-      from: user.role,
-      to: child.role,
+      from: fromUser.role,
+      to,
       message,
       sponsorship,
     });
