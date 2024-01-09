@@ -18,8 +18,8 @@ export default class UserRequestService {
   ) {}
 
   private joinUserAndID(user: User, ID: IIDFile) {
-    const extendedUser = ((user as UserWithIDImages).idIamges = ID);
-    return extendedUser;
+    // (user as UserWithIDImages).idIamges = ID;
+    return user;
   }
 
   private getUserRequestIDs(users: User[]) {
@@ -45,6 +45,8 @@ export default class UserRequestService {
 
     const requestsWithIDs = this.getUserRequestIDs(requests);
 
+    console.log(requestsWithIDs);
+
     return requestsWithIDs;
   }
 
@@ -56,6 +58,11 @@ export default class UserRequestService {
       requestId,
       answer,
     );
+
+    if (answer === Status.DENIED) {
+      request.user.canLogin = false;
+      await this.userDAO.saveUserEntity(request.user);
+    }
 
     return request;
   }

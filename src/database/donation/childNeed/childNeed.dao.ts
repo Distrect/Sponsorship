@@ -39,6 +39,15 @@ export default class ChildNeedDAO {
     return await this.saveChildNeed(childNeeds);
   }
 
+  public async getNeed2(attributes: FindOptionsWhere<ChildNeed>) {
+    const need = await this.childNeedRepository.findOne({
+      where: { ...attributes },
+    });
+
+    if (!need) throw new NotFound();
+
+    return need;
+  }
   public async getNeed(
     attributes: FindOptionsWhere<ChildNeed> | FindOptionsWhere<ChildNeed>[],
   ) {

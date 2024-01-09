@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { NotFound, UserNotFoundError } from 'src/utils/error';
 import { Role } from 'src/database/user';
-import type { DeepPartial } from 'typeorm';
 import {
   ChildWhere,
   DeepPartialChild,
-  IListedChild,
 } from 'src/database/user/child/child.DAO.interface';
 import {
   IFilterChilds,
@@ -81,18 +79,12 @@ export default class ChildDAO {
     { age, idNumber, lastname, name }: IFilterChilds = {},
     sort: ISortChilds = {},
     page: number = 0,
-  ): Promise<IPaginationData<IListedChild>> {
+  ): Promise<IPaginationData<Child>> {
     console.log`Page:${page},name:${name}`;
     let querry = this.childRepository
       .createQueryBuilder('child')
       .leftJoinAndSelect('child.identifications', 'identification')
-      .select([
-        'child.name as name',
-        'child.lastname as lastname',
-        'child.city as city',
-        'FLOOR(DATEDIFF(child.dateOfBirth,NOW()) / 365)  AS age',
-        'identification.idNumber as idNumber',
-      ])
+      .where('child.isDeleted = :isDeleted', { isDeleted: false })
       .offset(page * 10)
       .limit(10);
 
@@ -124,7 +116,7 @@ export default class ChildDAO {
 
     const [count, result] = await Promise.all([
       querry.getCount(),
-      querry.getRawMany(),
+      querry.getMany(),
     ]);
 
     return { count, result };

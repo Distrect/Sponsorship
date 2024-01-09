@@ -1,3 +1,5 @@
+import { IsNotEmpty } from 'class-validator';
+
 export interface ICreateChild {
   name: string;
   lastname: string;

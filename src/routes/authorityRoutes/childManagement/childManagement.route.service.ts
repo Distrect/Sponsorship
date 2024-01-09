@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ICreateChild } from 'src/modules/userModule/childModule/child.module.interface';
 import ChildService from 'src/modules/userModule/childModule/child.service';
 import {
   EditChildDTO,
@@ -9,6 +10,10 @@ import { IUserCookie } from 'src/shared/types';
 @Injectable()
 export default class ChildManagementRouteService {
   constructor(private childService: ChildService) {}
+
+  public async createChild(authority: IUserCookie, requestBody: ICreateChild) {
+    return await this.childService.createChild(authority, requestBody);
+  }
 
   public async listChilds(
     requestBody: ListChildDTO,
@@ -24,7 +29,7 @@ export default class ChildManagementRouteService {
   }
 
   public async deleteChild(childId: number, authority: IUserCookie) {
-    return await this.childService.deleteChild(childId, authority);
+    return await this.childService.deleteChild2(childId, authority);
   }
 
   public async editChild(

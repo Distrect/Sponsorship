@@ -8,6 +8,14 @@ import Identification from 'src/database/user/identification/identification.enti
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 import FileService from 'src/services/file/file.service';
+import { readFileSync } from 'fs';
+
+const fronIdBuffer = readFileSync(
+  'C:/Users/myfor/OneDrive/Masaüstü/ID_FRONT_PAGE.jpg',
+);
+const backIdBuffer = readFileSync(
+  'C:/Users/myfor/OneDrive/Masaüstü/ID_BACK_PAGE.jpg',
+);
 
 // InitializedDatabase.entityMetadatas.map((metada) => metada.tableName);
 
@@ -61,6 +69,18 @@ export const databaseProviders = [
 
         const userRequests = requestUsers.map((user) => {
           const request = mockDataGenerator.genearateMockUserRequest({ user });
+          fileService.saveFile2(
+            fronIdBuffer,
+            'identification',
+            user,
+            'ID_FRONT_PAGE.jpg',
+          );
+          fileService.saveFile2(
+            backIdBuffer,
+            'identification',
+            user,
+            'ID_BACK_PAGE.jpg',
+          );
           return request;
         });
 
@@ -141,6 +161,9 @@ export const databaseProviders = [
 
         const childNeedRepository =
           InitializedDatabase.getRepository(ChildNeed);
+
+        let need = await childNeedRepository.findOne({ where: { needId: 1 } });
+        console.log('Need:', need.totals);
       };
 
       isDevMode && (await devOps());

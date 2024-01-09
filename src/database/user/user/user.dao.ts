@@ -17,7 +17,7 @@ export default class UserDAO {
     private userRequestDAO: UserRequestDAO,
   ) {}
 
-  private async saveUserEntity(entity: User) {
+  public async saveUserEntity(entity: User) {
     return await this.userRepository.save(entity);
   }
 
@@ -29,17 +29,9 @@ export default class UserDAO {
     let querry = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.loginRequests', 'user_request')
-      // .select('user.userId')
-      // .select([
-      //   'user.userId',
-      //   'user.name',
-      //   'user.lastname',
-      //   'user_request.requestId',
-      //   'user_request.status',
-      // ])
-      .orderBy('user_request.createdAt', 'DESC')
-      .skip((filters.page || 0) * 5)
-      .take(5)
+      .orderBy('user_request.createdAt', 'ASC')
+      .skip((filters.page || 0) * skip)
+      .take(skip)
       .where('user_request.status = :status', { status });
 
     if (filters.city) {
@@ -47,10 +39,6 @@ export default class UserDAO {
     }
 
     const usersWithRequests = await querry.getMany();
-    console.log(usersWithRequests);
-    // if (usersWithRequests.some((userWithRequest) => !!userWithRequest)) {
-    //   throw new EmptyData('Some of the Reuqest is null');
-    // }
 
     return usersWithRequests;
   }

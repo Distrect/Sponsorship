@@ -17,6 +17,7 @@ import {
 } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import ChildManagementRouteService from 'src/routes/authorityRoutes/childManagement/childManagement.route.service';
+import { ICreateChild } from 'src/modules/userModule/childModule/child.module.interface';
 
 @UseInterceptors(new CookieInterceptor(Role.Authority))
 @Controller('authority/childManagement')
@@ -24,6 +25,19 @@ export default class ChildManagementRouteController {
   constructor(
     private childManagementRouteService: ChildManagementRouteService,
   ) {}
+
+  @Post('createChild')
+  public async CreateChild(
+    @User(Role.Authority) authority: IUserCookie,
+    @Body() requestBody: ICreateChild,
+  ) {
+    const createdChild = await this.childManagementRouteService.createChild(
+      authority,
+      requestBody,
+    );
+
+    return { ok: true, message: 'Child Has Been Created', createdChild };
+  }
 
   @Get('getChildCard/:childId')
   public async GetChild(@Param('childId', ParseIntPipe) childId: number) {

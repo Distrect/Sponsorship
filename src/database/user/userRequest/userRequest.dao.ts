@@ -28,6 +28,7 @@ export default class UserRequestDAO {
   ) {
     const userRequest = await this.userRequestRepository.findOne({
       where: { ...userRequestParams },
+      relations: { user: true },
     });
 
     if (!userRequest) throw new NotFound('User Request is Not Fopund');

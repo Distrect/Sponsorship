@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, ReturnDocument } from 'typeorm';
+import { Repository, Or } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import ChildDAO from 'src/database/user/child/child.DAO';
-import UserDAO from 'src/database/user/user/user.DAO';
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
 import { NotFound, NotSponsoredError } from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
-import BaseUser from 'src/database/user/baseUser';
 import { Role } from 'src/database/user';
-import { Server } from 'mysql2/typings/mysql/lib/Server';
+import UserDAO from 'src/database/user/user/user.DAO';
+import BaseUser from 'src/database/user/baseUser';
+import ChildDAO from 'src/database/user/child/child.DAO';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
 @Injectable()
 export default class SponsorshipDAO {
@@ -26,8 +25,32 @@ export default class SponsorshipDAO {
     }
   }
 
-  private async saveSponsorshipEntity(entity: Sponsorship) {
+  public async saveSponsorshipEntity(entity: Sponsorship) {
     return await this.sponsorshipRepository.save(entity);
+  }
+  public async saveSponsorshipEntityArr(entity: Sponsorship[]) {
+    return await this.sponsorshipRepository.save(entity);
+  }
+
+  public async getChildActiveSponsorships(childId: number) {
+    const child = await this.childDAO.getChild({ userId: childId });
+
+    const sponsorships = await this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .where('child.userId = :userId', { userId: child.userId })
+      .andWhere(
+        'sponsorship.status = :approved OR sponsorship.status = :waiting',
+        {
+          approved: SponsorshipStatus.APPROVED,
+          waiting: SponsorshipStatus.WAITING_FOR_PAYMENT,
+        },
+      )
+      .getMany();
+
+    return sponsorships;
   }
 
   public async getUserChildSponsorship(
@@ -150,8 +173,8 @@ export default class SponsorshipDAO {
       user.role === Role.User
         ? `user.userId = :userId`
         : user.role === Role.Child
-        ? 'child.userId = :userId'
-        : null;
+          ? 'child.userId = :userId'
+          : null;
 
     if (!whereAlias) throw new Error('User Role is Not accepted');
 

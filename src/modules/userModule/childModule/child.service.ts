@@ -7,11 +7,12 @@ import type {
 import type { IUserCookie } from 'src/shared/types';
 import type { ChildWhere } from 'src/database/user/child/child.DAO.interface';
 import { EditChildDTO } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
-import Child from 'src/database/user/child/child.entity';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import ChildStatusDAO from 'src/database/user/childStatus/childStatus.DAO';
 import SafeDAO from 'src/database/donation/safe/safe.DAO';
-import ChildStatus from 'src/database/user/childStatus/childStatus.entity';
+import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
+import { SponsorshipStatus } from 'src/database/sponsor';
 
 @Injectable()
 export default class ChildService {
@@ -19,6 +20,8 @@ export default class ChildService {
     private safeDAO: SafeDAO,
     private childDAO: ChildDAO,
     private childStatusDAO: ChildStatusDAO,
+    private needGroupDAO: NeedGroupDAO,
+    private sponsorshipDAO: SponsorshipDAO,
   ) {}
 
   public async createChild(authority: IUserCookie, createParams: ICreateChild) {
@@ -33,6 +36,8 @@ export default class ChildService {
     const child = await this.childDAO.createChild({
       safe: childSafe,
       status: [childStatus],
+      city,
+      ...createParams,
     });
 
     return child;
@@ -52,8 +57,29 @@ export default class ChildService {
     return await this.childDAO.getChildCard(childId);
   }
 
+  public async deleteChild2(childId: number, authority: IUserCookie) {
+    const activeNeedsOfChild =
+      await this.needGroupDAO.getActiveNeedGroupOfChild(childId);
+
+    console.log('Active Need Group Of Child:', activeNeedsOfChild);
+  }
+
   public async deleteChild(childId: number, authority: IUserCookie) {
     const deletedChild = await this.childDAO.deleteChild(childId);
+
+    const activeNeedGroupWithNeeds =
+      await this.needGroupDAO.getActiveNeedGroupWithNeeds(deletedChild.userId);
+
+    const childSponsorships =
+      await this.sponsorshipDAO.getChildActiveSponsorships(childId);
+
+    const disabledSponsorships =
+      await this.sponsorshipDAO.saveSponsorshipEntityArr(
+        childSponsorships.map((sp) => {
+          sp.status = SponsorshipStatus.CHILD_DELETED;
+          return sp;
+        }),
+      );
 
     return deletedChild;
   }

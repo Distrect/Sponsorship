@@ -28,12 +28,13 @@ export default class FileService {
     fileName: IDSide,
   ) {
     const fullFilePath = path.join(filePath, fileName);
-    console.log('PATH1', path, fullFilePath);
     fs.writeFileSync(fullFilePath, file.buffer);
+  }
+  private createFile2(file: Buffer, filePath: string, fileName: IDSide) {
+    fs.writeFileSync(path.join(filePath, fileName), file);
   }
 
   private createDirectory(path: string) {
-    console.log('PATH', path);
     fs.mkdirSync(path, { recursive: true });
   }
 
@@ -58,9 +59,6 @@ export default class FileService {
 
     const front = fs.readFileSync(frontPageID);
     const back = fs.readFileSync(backPageID);
-
-    console.log(front);
-    console.log(back);
 
     return { front, back };
   }
@@ -87,6 +85,27 @@ export default class FileService {
       switch (type) {
         case 'identification':
           this.createFile(file, targetPath, side);
+      }
+
+      return targetPath;
+    } catch (error) {
+      console.log(error);
+      throw new ServerError();
+    }
+  }
+  public saveFile2(file: Buffer, type: FileType, user: BaseUser, side: IDSide) {
+    if (!file) throw new ServerError();
+
+    try {
+      const targetPath = this.getUserPath(user, type);
+
+      if (!fs.existsSync(targetPath)) {
+        this.createDirectory(targetPath);
+      }
+
+      switch (type) {
+        case 'identification':
+          this.createFile2(file, targetPath, side);
       }
 
       return targetPath;
