@@ -58,20 +58,9 @@ export default class NeedGroupDAO {
 
     if (activeGroups.length > 1) throw new HasActiveNeedGroupError();
 
+    if (activeGroups.length === 0) return null;
+
     return activeGroups[0];
-  }
-
-  public async getActiveNeedGroupOfChild(childId: number) {
-    const child = await this.childDAO.getChild({ userId: childId });
-
-    const activeNeedGroup = await this.getActiveNeedGroups(child.userId);
-
-    console.log(
-      'Child Need:',
-      (await this.childNeedDAO.getNeed2({ needId: 1 })).totals,
-    );
-
-    return activeNeedGroup;
   }
 
   public async getActiveNeedGroupWithNeeds(
@@ -164,5 +153,40 @@ export default class NeedGroupDAO {
     return await query
       .getManyAndCount()
       .then(([result, count]) => ({ count, result }));
+  }
+
+  /*newwwwwwwwwww (SAKIN SİLME AMINA KOYARIM SENİN) */
+
+  public async updateNeedGroupEntity(
+    needGroupId: number,
+    updateParams: Omit<NeedGroup, 'needGroupId'>,
+  ) {
+    return (await this.needGroupRepository.save({
+      ...updateParams,
+      needGroupId,
+    })) as NeedGroup;
+  }
+
+  public async getActiveNeedGroupOfChild(childId: number) {
+    const child = await this.childDAO.getChild({ userId: childId });
+    const activeNeedGroup = await this.getActiveNeedGroups(child.userId);
+
+    return activeNeedGroup;
+  }
+
+  public async newGetActiveNeedGroupWithChildNeedWithTotalDonation(
+    childId: number,
+  ) {
+    const activeNeedGroup = await this.getActiveGroupOfChild(childId);
+
+    if (!activeNeedGroup) return null;
+
+    const activeNeedGroupNeeds =
+      await this.childNeedDAO.getNeedGroupNeedsWithTotalDonation(
+        activeNeedGroup.needGroupId,
+      );
+    activeNeedGroup.needs = activeNeedGroupNeeds;
+
+    return activeNeedGroup;
   }
 }

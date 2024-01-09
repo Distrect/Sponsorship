@@ -13,6 +13,8 @@ import SafeDAO from 'src/database/donation/safe/safe.DAO';
 import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import { SponsorshipStatus } from 'src/database/sponsor';
+import { ChildNeedGroupStatus, Status } from 'src/database/donation';
+import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 
 @Injectable()
 export default class ChildService {
@@ -22,6 +24,7 @@ export default class ChildService {
     private childStatusDAO: ChildStatusDAO,
     private needGroupDAO: NeedGroupDAO,
     private sponsorshipDAO: SponsorshipDAO,
+    private childNeedDAO: ChildNeedDAO,
   ) {}
 
   public async createChild(authority: IUserCookie, createParams: ICreateChild) {
@@ -55,13 +58,6 @@ export default class ChildService {
 
   public async getChildCard(childId: number) {
     return await this.childDAO.getChildCard(childId);
-  }
-
-  public async deleteChild2(childId: number, authority: IUserCookie) {
-    const activeNeedsOfChild =
-      await this.needGroupDAO.getActiveNeedGroupOfChild(childId);
-
-    console.log('Active Need Group Of Child:', activeNeedsOfChild);
   }
 
   public async deleteChild(childId: number, authority: IUserCookie) {
@@ -99,5 +95,74 @@ export default class ChildService {
     const listedChilds = await this.childDAO.listChilds(filters, sort, page);
 
     return listedChilds;
+  }
+
+  /*New*/
+
+  public async cancelChildNeeds(childId: number) {
+    const activeNeedsOfChild =
+      await this.needGroupDAO.newGetActiveNeedGroupWithChildNeedWithTotalDonation(
+        childId,
+      );
+
+    if (!activeNeedsOfChild) return null;
+
+    activeNeedsOfChild.status = ChildNeedGroupStatus.CLOSE;
+
+    const updatedNeeds = await this.childNeedDAO.updateArrayChildNeedEntity(
+      activeNeedsOfChild.needs.map((need) => {
+        const status = need.status;
+        if (status === Status.COMPLETED || status === Status.MET) return need;
+        need.status = Status.NOT_COMPLETED;
+        return need;
+      }),
+    );
+
+    await this.needGroupDAO.updateNeedGroupEntity(
+      activeNeedsOfChild.needGroupId,
+      activeNeedsOfChild,
+    );
+
+    const needGroupTotal = activeNeedsOfChild.needs.reduce(
+      (acc, val) => acc + val.totals,
+      0,
+    );
+
+    const updatedChildSafe = await this.safeDAO.addMoneyToChildSafe(
+      childId,
+      needGroupTotal,
+    );
+
+    return { safe: updatedChildSafe, needGroup: activeNeedsOfChild };
+  }
+
+  public async cancelChildSponsorships(childId: number) {
+    // çocuğun sponsorluklarını al
+    // sponosrlukların durumunu CHILD_DELETED olarak işaretle
+    // kayedet
+    const childActiveSponosrships =
+      await this.sponsorshipDAO.getChildActiveSponsorships(childId);
+
+    if (!childActiveSponosrships) return null;
+
+    const updatedSponosrships =
+      await this.sponsorshipDAO.saveSponsorshipEntityArr(
+        childActiveSponosrships.map((sponsorship) => {
+          sponsorship.status = SponsorshipStatus.CHILD_DELETED;
+          return sponsorship;
+        }),
+      );
+
+    return updatedSponosrships;
+  }
+
+  public async deleteChild2(childId: number, authority: IUserCookie) {
+    const child = await this.childDAO.getChild({ userId: childId });
+    const cancelChildNeedsResult = await this.cancelChildNeeds(childId);
+    const cancelChildSponosrships = await this.cancelChildSponsorships(childId);
+    child.isDeleted = true;
+    const updatedChild = await this.childDAO.saveChildEntity(child);
+
+    return { child, cancelChildNeedsResult, cancelChildSponosrships };
   }
 }

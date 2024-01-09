@@ -214,4 +214,8 @@ export default class UserService {
   public async resetPassword(email: string) {
     console.log(email);
   }
+
+  public async getUserActor(userId: number) {
+    return await this.userDAO.getUser({ userId });
+  }
 }

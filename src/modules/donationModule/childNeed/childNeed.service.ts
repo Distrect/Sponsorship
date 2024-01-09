@@ -153,9 +153,7 @@ export default class ChildNeedService {
     return needData;
   }
 
-  public async listSponsorableNeeds() {
-    return await this.childNeedDAO.listSponosrableNeeds();
-  }
+  public async listSponsorableNeeds() {}
 
   public async donationHistory(
     userId: number,

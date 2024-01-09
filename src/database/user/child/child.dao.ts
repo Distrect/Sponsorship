@@ -18,7 +18,7 @@ import Child from 'src/database/user/child/child.entity';
 export default class ChildDAO {
   constructor(@Injector(Child) public childRepository: Repository<Child>) {}
 
-  private async updateChildEntity(
+  public async updateChildEntity(
     entity: Child,
     updatedChildData: DeepPartial<Child>,
   ) {
@@ -34,7 +34,7 @@ export default class ChildDAO {
     )) as Child;
   }
 
-  private async saveChildEntity(entity: Child) {
+  public async saveChildEntity(entity: Child) {
     return await this.childRepository.save(entity);
   }
 
@@ -136,6 +136,8 @@ export default class ChildDAO {
       .where('sponsorship.user = :userId', { userId });
 
     const childs = await query.getMany();
+
+    if (childs.length === 0) return null;
 
     return childs;
   }

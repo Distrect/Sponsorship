@@ -36,6 +36,7 @@ export class CookieInterceptor implements NestInterceptor {
     console.log(`Token:${token},refreshToken:${refreshToken}`);
 
     if (!token && !refreshToken) throw new AuthorizationError();
+    if (!token) throw new Error('Amına Koyayım Token nedenyok');
 
     const refreshData = AuthService.deTokenizData<IUserCookie>(refreshToken);
     let userData = AuthService.deTokenizData<IUserCookie>(token);

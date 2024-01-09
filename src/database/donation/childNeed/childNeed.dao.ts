@@ -1,22 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { NotFound } from 'src/utils/error';
+import { EmptyData, NotFound } from 'src/utils/error';
 import { Repository, DeepPartial, FindOptionsWhere, In } from 'typeorm';
-import {
-  IDonateNeed,
-  INeedWithTotal,
-} from 'src/database/donation/childNeed/childNeed.DAO.interface';
-import { DonateToNeed } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
+import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import DonationDAO from 'src/database/donation/donation/donation.DAO';
 
 @Injectable()
 export default class ChildNeedDAO {
-  listSponosrableNeeds() {
-    throw new Error('Method not implemented.');
-  }
-  @Injector(ChildNeed) private childNeedRepository: Repository<ChildNeed>;
-  private userDAO: UserDAO;
+  constructor(
+    @Injector(ChildNeed) private childNeedRepository: Repository<ChildNeed>,
+    @Inject(forwardRef(() => DonationDAO)) private donationDAO: DonationDAO,
+    private userDAO: UserDAO,
+  ) {}
 
   private updateInstance(
     needEntity: ChildNeed,
@@ -46,8 +43,15 @@ export default class ChildNeedDAO {
 
     if (!need) throw new NotFound();
 
+    const totalDonation = await this.donationDAO.getTotalDonationOfNeed(
+      need.needId,
+    );
+
+    need.totals = totalDonation;
+
     return need;
   }
+
   public async getNeed(
     attributes: FindOptionsWhere<ChildNeed> | FindOptionsWhere<ChildNeed>[],
   ) {
@@ -115,6 +119,35 @@ export default class ChildNeedDAO {
 
     return deletedNeed;
   }
+
+  /*New SAKIN SİLME AMK*/
+
+  public async updateArrayChildNeedEntity(entity: ChildNeed[]) {
+    return await this.childNeedRepository.save(entity);
+  }
+
+  public async updateChildNeedEntity(
+    needId: number,
+    updateParams: Omit<ChildNeed, 'needId'>,
+  ) {}
+
+  public async getNeedGroupNeedsWithTotalDonation(needGroupId: number) {
+    const needs = await this.childNeedRepository
+      .createQueryBuilder('child_need')
+      .where('child_need.group = :needGroupId', { needGroupId })
+      .getMany();
+
+    if (needs.length < 1) throw new EmptyData();
+
+    const totalDonationsOfNeeds = await Promise.all(
+      needs.map((need) => this.donationDAO.getTotalDonationOfNeed(need.needId)),
+    );
+
+    return totalDonationsOfNeeds.map((totalDonation, i) => {
+      needs[i].totals = totalDonation;
+      return needs[i];
+    });
+  }
 }
 
 /*
@@ -131,7 +164,7 @@ export default class ChildNeedDAO {
 
     if (age) {
       needListWİthChild = needListWİthChild.andWhere(
-        'child.age BETWEEN :min and :max',
+        'child.age  :min and :max',
         {
           min: age[0],
           max: age[1],

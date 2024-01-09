@@ -9,6 +9,7 @@ import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 import FileService from 'src/services/file/file.service';
 import { readFileSync } from 'fs';
+import Safe from 'src/database/donation/safe/safe.entity';
 
 const fronIdBuffer = readFileSync(
   'C:/Users/myfor/OneDrive/Masaüstü/ID_FRONT_PAGE.jpg',
@@ -61,10 +62,16 @@ export const databaseProviders = [
           ]),
         ]);
 
+        await managerSave(
+          mockDataGenerator.generateMockChild({
+            name: 'YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUU',
+          }),
+        );
+
         const needGroups: NeedGroup[] = [];
         const sposnsoships: Sponsorship[] = [];
         const identifications: Identification[] = [];
-
+        const safes: Safe[] = [];
         const requestUsers = users.slice(5);
 
         const userRequests = requestUsers.map((user) => {
@@ -88,6 +95,8 @@ export const databaseProviders = [
 
         for (const child of childs) {
           const user = users[i];
+
+          safes.push(mockDataGenerator.generateMockSafe(child));
 
           const needGroup = await managerSave(
             mockDataGenerator.generateNeedGroup({ child }),
@@ -147,6 +156,7 @@ export const databaseProviders = [
             managerSave(identifications),
             managerSave(donations),
             managerSave(userRequests),
+            managerSave(safes),
           ]);
 
         const fUfC = sponsorshipRecords[0];
@@ -163,7 +173,7 @@ export const databaseProviders = [
           InitializedDatabase.getRepository(ChildNeed);
 
         let need = await childNeedRepository.findOne({ where: { needId: 1 } });
-        console.log('Need:', need.totals);
+        console.log('Need:', need);
       };
 
       isDevMode && (await devOps());

@@ -11,4 +11,4 @@ const DonationProvider = createRepositoryProvider(Donation);
   providers: [DonationProvider, DonationDAO],
   exports: [DonationDAO],
 })
-export default class DonationDatabaseModule {}
+export default class DonationEntityModule {}

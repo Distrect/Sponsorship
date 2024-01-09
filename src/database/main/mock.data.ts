@@ -143,14 +143,20 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return faker.helpers.multiple((...param: any[]) => method(param), options);
   }
 
+  public generateMockSafe(child: Child) {
+    return this.dataSource.manager.create(Safe, { child });
+  }
+
   public generateMockChild(childParams: DeepPartial<Child> = {}): Child {
-    return this.dataSource.manager.create(Child, {
+    const child = this.dataSource.manager.create(Child, {
       ...this.generateMockBaseUser(),
       role: Role.Child,
       story: faker.person.bio(),
       dateOfBirth: faker.date.birthdate(),
       ...childParams,
     });
+
+    return child;
   }
 
   public generateMockBaseUser(): Partial<BaseUser> {

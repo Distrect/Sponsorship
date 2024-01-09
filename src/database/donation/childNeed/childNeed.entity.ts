@@ -28,7 +28,7 @@ class ChildNeedRelations {
   group: NeedGroup;
 }
 
-@Entity({ orderBy: { needId: 'ASC' } })
+@Entity()
 export default class ChildNeed extends ChildNeedRelations {
   @Index()
   @PrimaryGeneratedColumn()
@@ -55,11 +55,29 @@ export default class ChildNeed extends ChildNeedRelations {
   @Column('enum', { default: NeedUrgency.NORMAL, enum: NeedUrgency })
   urgency: NeedUrgency;
 
-  @VirtualColumn({
+  /*@VirtualColumn({
     type: 'integer',
     query: (alias: string) => 'SELECT 1',
-  })
+  })*/
   totals: number;
+
+  @VirtualColumn({
+    type: 'integer',
+    query(alias: string) {
+      const whereAlias = `childNeed = ${alias}.needId`;
+      const query =
+        `SELECT SUM(IFNULL(amount,0)) FROM donation WHERE ` + whereAlias;
+
+      console.log(
+        'Quey',
+        'SELECT IFNULL(SUM(IFNULL(NULLIF(amount,""),0)),0) FROM donation WHERE childNeed = ' +
+          `${alias}.needId`,
+      );
+
+      return `SELECT "donationId"`;
+    },
+  })
+  private deneme: number;
 
   @BeforeInsert()
   private async setStartAmount() {

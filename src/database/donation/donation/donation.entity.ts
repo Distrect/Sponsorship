@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  CreateDateColumn,
 } from 'typeorm';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import User from 'src/database/user/user/user.entity';
@@ -24,4 +25,7 @@ export default class Donation {
 
   @ManyToOne(() => User, (user) => user.donations)
   user: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

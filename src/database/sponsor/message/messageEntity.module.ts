@@ -11,4 +11,4 @@ const MessageProvider = createRepositoryProvider(Message);
   providers: [MessageProvider, MessageDAO],
   exports: [MessageDAO],
 })
-export class MessageEntityModule {}
+export default class MessageEntityModule {}

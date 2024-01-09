@@ -2,11 +2,8 @@ import { Role, Status } from './../index';
 import { Repository, FindOptionsWhere, Entity } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { EmptyData, UserNotFoundError } from 'src/utils/error';
-import {
-  ISkipTake,
-  IUserRequestFilters,
-} from 'src/database/user/user/user.DAO.types';
+import { UserNotFoundError } from 'src/utils/error';
+import { IUserRequestFilters } from 'src/database/user/user/user.DAO.types';
 import User from 'src/database/user/user/user.entity';
 import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 
@@ -57,6 +54,12 @@ export default class UserDAO {
   public async getUser(userParams: FindOptionsWhere<User>) {
     const user = await this.userRepository.findOne({
       where: { ...userParams },
+      relations: {
+        loginRequests: true,
+        donations: true,
+        identifications: true,
+        sponsor: true,
+      },
     });
 
     if (!user) throw new UserNotFoundError();

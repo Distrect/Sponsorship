@@ -28,6 +28,7 @@ export default class SponsorshipDAO {
   public async saveSponsorshipEntity(entity: Sponsorship) {
     return await this.sponsorshipRepository.save(entity);
   }
+
   public async saveSponsorshipEntityArr(entity: Sponsorship[]) {
     return await this.sponsorshipRepository.save(entity);
   }
@@ -49,6 +50,8 @@ export default class SponsorshipDAO {
         },
       )
       .getMany();
+
+    if (sponsorships.length === 0) return null;
 
     return sponsorships;
   }
@@ -193,30 +196,6 @@ export default class SponsorshipDAO {
 
     return result;
   }
-
-  /*public async getActorMessages({ userId, role }: BaseUser) {
-    if (![Role.User, Role.Child].includes(role)) throw new ServerError('Baba');
-
-    const selectAlias =
-      role === 'Child' ? 'sponsorship.fixNeed.child' : 'sponsorship.user';
-
-    const whereAlias = `${role.toLowerCase()}.userId = :userId`;
-
-    const userMessagesSponosrship = await this.sponsorshipRepository
-      .createQueryBuilder('sponsorship')
-      .leftJoinAndSelect('sponsorship.user', 'user')
-      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
-      .leftJoinAndSelect('sponsorship.messages', 'message')
-      .leftJoinAndSelect('fix_need.child', 'child')
-      // .select([selectAlias, 'sponsorship.*'])
-      .where(whereAlias, { userId })
-      // .orderBy('message.createdAt', 'DESC')
-      .getMany();
-
-    console.log('User Message Sponsorship:', userMessagesSponosrship);
-
-    return userMessagesSponosrship;
-  }*/
 }
 
 // public async getChildSponsors(childId: number) {
@@ -287,3 +266,27 @@ export default class SponsorshipDAO {
       .where('user.userId = :userId', { userId: user.userId })
       .orderBy('message.date', 'ASC');
 */
+
+/*public async getActorMessages({ userId, role }: BaseUser) {
+    if (![Role.User, Role.Child].includes(role)) throw new ServerError('Baba');
+
+    const selectAlias =
+      role === 'Child' ? 'sponsorship.fixNeed.child' : 'sponsorship.user';
+
+    const whereAlias = `${role.toLowerCase()}.userId = :userId`;
+
+    const userMessagesSponosrship = await this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      // .select([selectAlias, 'sponsorship.*'])
+      .where(whereAlias, { userId })
+      // .orderBy('message.createdAt', 'DESC')
+      .getMany();
+
+    console.log('User Message Sponsorship:', userMessagesSponosrship);
+
+    return userMessagesSponosrship;
+  }*/

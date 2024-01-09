@@ -2,9 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { CustomValidationPipe } from 'src/pipes/validation.pipe';
 import SponsorshipApplication from './app.module';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
-const listRoutes = require('express-list-routes');
-
+import listRoutes from 'express-list-routes';
+import { Express } from 'express';
 declare const module: any;
 
 async function bootstrap() {
@@ -20,6 +19,10 @@ async function bootstrap() {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
+
+  const routes = listRoutes(app.getHttpServer());
+
+  console.log('Routes', routes);
 
   console.log('APPLICATION IS READY');
 }

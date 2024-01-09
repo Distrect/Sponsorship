@@ -18,7 +18,7 @@ abstract class UserRelations extends BaseUser {
   sponsor: Sponsorship[];
 
   @OneToMany(() => Donation, (donation) => donation.user)
-  donations: Donation;
+  donations: Donation[];
 
   @OneToOne(() => Answer, (answer) => answer.user)
   @JoinColumn()
@@ -42,11 +42,11 @@ export default class User extends UserRelations {
   @OneToMany(() => Identification, (identification) => identification.user)
   identifications: Identification[];
 
-  @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
-  sponsor: Sponsorship[];
+  /* @OneToMany(() => Sponsorship, (sponsorship) => sponsorship.user)
+  sponsor: Sponsorship[];*/
 
-  @OneToMany(() => Donation, (donation) => donation.user)
-  donations: Donation;
+  // @OneToMany(() => Donation, (donation) => donation.user)
+  // donations: Donation;
 
   @OneToOne(() => Answer, (answer) => answer.user)
   @JoinColumn()

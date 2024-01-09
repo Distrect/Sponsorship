@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import MessageEntityModule from 'src/database/sponsor/message/messageEntity.module';
 import CategoryEntityModule from 'src/database/donation/category/category.module';
 import ChildNeedEntityModule from 'src/database/donation/childNeed/childNeedEntity.module';
 import DonationEntityModule from 'src/database/donation/donation/donationEntityModule.module';
@@ -7,7 +8,6 @@ import NeedSafeEntityModule from 'src/database/donation/needSafe/needSafeEntity.
 import SafeEntityModule from 'src/database/donation/safe/safeEntity.module';
 import MySQLConnectorModule from 'src/database/main/mysql.connector.module';
 import FixNeedEntityModule from 'src/database/sponsor/fixNeed/fixNeedEntity.module';
-import { MessageEntityModule } from 'src/database/sponsor/message/messageEntity.module';
 import SponsorshipEntityModule from 'src/database/sponsor/sponsorship/sponsorshipEntity.module';
 import SponsorshipPaymentEntityModule from 'src/database/sponsor/sponsorshipPayment/sponsorshipPaymentEntity.module';
 import AdminEntityModule from 'src/database/user/admin/adminEntity.module';
@@ -26,7 +26,6 @@ const AllModules = [
   UserEntityModule,
   ChildEntityModule,
   AuthorityEntityModule,
-  ChildEntityModule,
   NeedGroupEntityModule,
   ChildNeedEntityModule,
   UserRequestEntityModule,

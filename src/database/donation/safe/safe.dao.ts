@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, FindOptionsWhere, DeepPartial } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { NotFound } from 'src/utils/error';
+import { NotFound, ServerError } from 'src/utils/error';
 import Safe from 'src/database/donation/safe/safe.entity';
+import ChildDAO from 'src/database/user/child/child.DAO';
 
 @Injectable()
 export default class SafeDAO {
-  @Injector(Safe) private safeRepository: Repository<Safe>;
+  constructor(
+    @Injector(Safe) private safeRepository: Repository<Safe>,
+    private childDAO: ChildDAO,
+  ) {}
 
   private async saveSafeEntity(entity: Safe) {
     return await this.safeRepository.save(entity);
@@ -39,5 +43,17 @@ export default class SafeDAO {
     safe.totalMoney = money;
 
     return await this.saveSafeEntity(safe);
+  }
+
+  public async addMoneyToChildSafe(childId: number, money: number) {
+    const child = await this.childDAO.getChild({ userId: childId });
+
+    const childSafe = await this.getChildSafe({ child });
+
+    if (money < 0) throw new ServerError('Money Cannot be lower t han 0');
+
+    childSafe.totalMoney = childSafe.totalMoney + money;
+
+    return await this.saveSafeEntity(childSafe);
   }
 }
