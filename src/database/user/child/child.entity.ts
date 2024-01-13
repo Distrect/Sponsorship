@@ -16,7 +16,6 @@ export default class Child extends BaseUser {
   story: string;
 
   @OneToOne(() => Safe, (safe) => safe.child)
-  @JoinColumn()
   safe: Safe;
 
   @OneToMany(() => Identification, (identification) => identification.child)

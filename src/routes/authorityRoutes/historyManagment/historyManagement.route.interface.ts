@@ -1,11 +1,8 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
-type HistoryType = 'Donation' | 'Sponosrship';
+type HistoryType = 'Donation' | 'Sponsorship';
 
-export class HistoryDTO {
-  @IsNotEmpty()
-  type: HistoryType;
-
+class BaseHistory {
   @IsOptional()
   userId?: number;
 
@@ -15,3 +12,10 @@ export class HistoryDTO {
   @IsOptional()
   dateRange?: [Date, Date];
 }
+
+export class HistoryDTO extends BaseHistory {
+  @IsNotEmpty()
+  type: HistoryType;
+}
+
+export class SponsorshipHistoryDTO extends BaseHistory {}

@@ -11,3 +11,10 @@ export interface ActorMessage {
   sponsorship: Sponsorship;
   messages: Message[];
 }
+
+export interface ISponsorshipHistory {
+  userId?: number;
+  childId?: number;
+  fixNeedId?: number;
+  range?: [Date, Date];
+}

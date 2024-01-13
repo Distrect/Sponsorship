@@ -1,11 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import DonationService from 'src/modules/donationModule/donation/donation.service';
-import { HistoryDTO } from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
+import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
+import {
+  HistoryDTO,
+  SponsorshipHistoryDTO,
+} from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
 import { IUserCookie } from 'src/shared/types';
 
 @Injectable()
 export default class HistoryManagementRouteService {
-  constructor(private donationService: DonationService) {}
+  constructor(
+    private donationService: DonationService,
+    private sponsorshipService: SponsorshipService,
+  ) {}
+
+  public async getSponsorshipHistory(
+    authority: IUserCookie,
+    requestBody: SponsorshipHistoryDTO,
+    page: number,
+  ) {
+    return await this.sponsorshipService.getSponsorshipistory(
+      authority,
+      requestBody,
+      page,
+    );
+  }
 
   public async listHistory(
     authority: IUserCookie,

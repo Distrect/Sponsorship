@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import SponsorshipPayment from 'src/database/sponsor/sponsorshipPayment/sponsorshipPayment.entity';
 
 @Injectable()
-export default class SponsorshipPaymnetDAO {
+export default class SponsorshipPaymentDAO {
   @Injector(SponsorshipPayment)
   private sponsorshipPaymentRepository: Repository<SponsorshipPayment>;
 

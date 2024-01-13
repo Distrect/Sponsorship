@@ -8,6 +8,7 @@ import {
   Body,
   ParseIntPipe,
   UseInterceptors,
+  HttpException,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
@@ -15,6 +16,7 @@ import { IUserCookie } from 'src/shared/types';
 import {
   EditNeedDTO,
   CreateNeedDTO,
+  EditNeed,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import NeedManagementRouteService from 'src/routes/authorityRoutes/needManagement/needManagement.route.service';
@@ -59,17 +61,10 @@ export default class NeedManagmentRouteController {
     };
   }
 
-  @Patch(':childId/editNeed/:needGroupId')
-  public async EditNeed(
-    @Param('needGroupId', ParseIntPipe) needGroupId: number,
-    @Param('childId', ParseIntPipe) childId: number,
-    requestBody: EditNeedDTO,
-  ) {
-    const updatedNeeds = await this.childManagementRouteService.editNeed(
-      needGroupId,
-      requestBody.editedNeeds,
-      childId,
-    );
+  @Patch('editNeed')
+  public async EditNeed(@Body() requestBody: EditNeed) {
+    const updatedNeeds =
+      await this.childManagementRouteService.editNeed(requestBody);
 
     return {
       ok: true,

@@ -1,4 +1,4 @@
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { NeedUrgency } from 'src/database/donation';
 import { CityEnum } from 'src/database/user';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
@@ -29,20 +29,23 @@ export class EditNeed implements Partial<ChildNeed> {
   @IsNotEmpty()
   needId: number;
 
-  title: string;
+  @IsOptional()
+  title?: string;
 
-  description: string;
+  @IsOptional()
+  description?: string;
 
+  @IsOptional()
   @Min(0)
-  price: number;
+  price?: number;
 
+  @IsOptional()
   @Min(0)
-  amount: number;
-
-  categoryId: number;
+  amount?: number;
 }
 
 export class EditNeedDTO {
+  @IsOptional()
   editedNeeds: EditNeed[];
 }
 

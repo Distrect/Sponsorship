@@ -3,11 +3,11 @@ import { DeepPartial, Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { IDonateNeed } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import { DonationHistoryParams } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
+import { IPaymentHistoryFilters } from 'src/database/donation/donation/donation.types';
 import Donation from 'src/database/donation/donation/donation.entity';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
-import { IPaymentHistoryFilters } from 'src/database/donation/donation/donation.types';
 
 @Injectable()
 export default class DonationDAO {

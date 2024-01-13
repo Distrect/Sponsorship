@@ -58,6 +58,15 @@ export class HasActiveNeedGroupError extends Error {
   }
 }
 
+export class HasNoActiveNeedGroupError extends HttpException {
+  constructor() {
+    super(
+      'The child has no active group. Please create it first',
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
 export class IsNotActiveGroup extends Error {
   constructor(message: string = 'The Need Group is Not Active') {
     super(message);

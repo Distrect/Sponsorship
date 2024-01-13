@@ -21,16 +21,8 @@ export default class NeedManagementRouteService {
   ): Promise<NeedGroupWithNeedsWithTotalDonation> {
     return await this.childNeedService.createNeeds(childId, authority, body);
   }
-  public async editNeed(
-    needGroupId: number,
-    editedNeeds: EditNeed[],
-    childId: number,
-  ): Promise<INeedWithTotal[]> {
-    return await this.childNeedService.editNeed(
-      needGroupId,
-      editedNeeds,
-      childId,
-    );
+  public async editNeed(editedNeed: EditNeed) {
+    return await this.childNeedService.editNeed2(editedNeed);
   }
   public async deleteNeed(
     needId: number,

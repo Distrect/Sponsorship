@@ -1,18 +1,20 @@
 import {
   Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
   Post,
+  Param,
+  Controller,
+  ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { IUserCookie } from 'src/shared/types';
-import { HistoryDTO } from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
-import HistoryManagementRouteService from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.service';
+import {
+  HistoryDTO,
+  SponsorshipHistoryDTO,
+} from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
+import HistoryManagementRouteService from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.service';
 
 @Controller('authority/historyManagement')
 @UseInterceptors(new CookieInterceptor(Role.Authority))
@@ -36,5 +38,19 @@ export default class HistoryManagementRouteController {
     return { ok: true, message: 'Payment History Retrieved', result };
   }
 
-  public async ListSponsorshipHistory() {}
+  @Post('sponsorshipHistory/:page')
+  public async ListSponsorshipHistory(
+    @Param('page', ParseIntPipe) page: number,
+    @User(Role.Authority) authority: IUserCookie,
+    @Body() requestBody: SponsorshipHistoryDTO,
+  ) {
+    const result =
+      await this.historyManagementRouteService.getSponsorshipHistory(
+        authority,
+        requestBody,
+        page,
+      );
+
+    return { ok: true, message: 'Sponsorship History Retrieved', result };
+  }
 }

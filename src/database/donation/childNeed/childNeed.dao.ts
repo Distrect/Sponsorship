@@ -74,20 +74,27 @@ export default class ChildNeedDAO {
   }
 
   public async getNeedWithTotalDonation(needId: number) {
-    const needWithTotal = (await this.childNeedRepository
+    const query = this.childNeedRepository
       .createQueryBuilder('child_need')
       .leftJoinAndSelect('child_need.donations', 'donation')
       .select([
         'child_need.*',
-        'SUM(IFNULL("donation.amount",0)) as totalDonation',
+        'SUM(IFNULL(donation.amount,0)) as totalDonation',
       ])
-      .where('child_need.needId  = :needId AND child_need = :isDeleted', {
-        needId,
-        idDeleted: false,
-      })
-      .getRawOne()) as INeedWithTotal;
+      .where(
+        'child_need.needId = :needId AND child_need.isDeleted = :isDeleted',
+        {
+          needId,
+          isDeleted: false,
+        },
+      );
+    const needWithTotal = (await query.getRawOne()) as INeedWithTotal;
+
+    console.log('QUERY =', query.getQuery());
 
     if (!needWithTotal) throw new NotFound();
+
+    console.log('ksd', needWithTotal);
 
     return needWithTotal;
   }
@@ -101,7 +108,7 @@ export default class ChildNeedDAO {
       this.updateInstance(need, rest),
     );
 
-    return updatedNeed;
+    return await this.getNeedWithTotalDonation(updatedNeed.needId);
   }
 
   public async getNeedsWithIds(ids: number[]) {

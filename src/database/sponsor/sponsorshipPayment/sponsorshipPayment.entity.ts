@@ -1,4 +1,3 @@
-import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,6 +7,7 @@ import {
   Index,
   JoinColumn,
 } from 'typeorm';
+import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
 @Entity()
 export default class SponsorshipPayment {

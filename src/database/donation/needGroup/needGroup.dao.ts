@@ -63,24 +63,24 @@ export default class NeedGroupDAO {
     return activeGroups[0];
   }
 
-  public async getActiveNeedGroupWithNeeds(
-    childId: number,
-  ) /*: Promise<NeedGroupWithNeedsWithTotalDonation> */ {
+  public async getActiveNeedGroupWithNeeds(childId: number) {
     const activeNeedGroup = (await this.getActiveNeedGroups(
       childId,
     )) as NeedGroupWithNeedsWithTotalDonation;
 
-    console.log('Active Need Groups', activeNeedGroup);
+    if (!activeNeedGroup) return null;
+
+    console.log('Active Need Group:', activeNeedGroup);
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
-      this.childNeedDAO.getNeed2({ needId }),
+      this.childNeedDAO.getNeedWithTotalDonation(needId),
     );
 
     const childNeeds = await Promise.all([...promiseChildNeeds]).then(
       (res) => res,
     );
 
-    //silme activeNeedGroup.needs = childNeeds;
+    activeNeedGroup.needs = childNeeds;
 
     return activeNeedGroup;
   }
@@ -97,6 +97,10 @@ export default class NeedGroupDAO {
         status: ChildNeedGroupStatus.OPEN,
       })
       .getMany();
+
+    console.log('Active Group:', activeGroups);
+
+    if (activeGroups.length === 0) return null;
 
     if (activeGroups.length > 1 || !activeGroups.every((group) => !!group))
       throw new ServerError('Active needs should not be more than one.');

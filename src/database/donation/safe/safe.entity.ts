@@ -5,6 +5,7 @@ import {
   Column,
   OneToOne,
   Index,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -17,5 +18,6 @@ export default class Safe {
   totalMoney: number;
 
   @OneToOne(() => Child, (child) => child.safe)
+  @JoinColumn()
   child: Child;
 }

@@ -13,9 +13,16 @@ import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 
-const totalDonationOfNeed = (alias: string) =>
-  'SELECT IFNULL(SUM(IFNULL(NULLIF(amount,""),0)),0) FROM donation WHERE childNeed = ' +
-  `${alias}.needId`;
+// 'SELECT IFNULL(SUM(IFNULL(NULLIF(amount,0),0)),0) FROM donation WHERE childNeed = '
+const totalDonationOfNeed = (alias: string) => {
+  const query =
+    'SELECT SUM(donation.amount) FROM child_need LEFT JOIN donation ON child_need.needId = donation.childNeed  WHERE childNeed = ' +
+    `${alias}.needId`;
+
+  console.log('Query', query);
+
+  return query;
+};
 
 class ChildNeedRelations {
   @OneToMany(() => NeedSafe, (needSafe) => needSafe.childNeed)
@@ -63,7 +70,8 @@ export default class ChildNeed extends ChildNeedRelations {
 
   @VirtualColumn({
     type: 'integer',
-    query(alias: string) {
+    query: totalDonationOfNeed,
+    /* query(alias: string) {
       const whereAlias = `childNeed = ${alias}.needId`;
       const query =
         `SELECT SUM(IFNULL(amount,0)) FROM donation WHERE ` + whereAlias;
@@ -75,9 +83,9 @@ export default class ChildNeed extends ChildNeedRelations {
       );
 
       return `SELECT "donationId"`;
-    },
+    }*/
   })
-  private deneme: number;
+  deneme: number;
 
   @BeforeInsert()
   private async setStartAmount() {

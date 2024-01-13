@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, Or } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { FindSponsorship } from 'src/database/sponsor/sponsorship/sponosrship.interface';
+import {
+  FindSponsorship,
+  ISponsorshipHistory,
+} from 'src/database/sponsor/sponsorship/sponosrship.interface';
 import { NotFound, NotSponsoredError } from 'src/utils/error';
 import { SponsorshipStatus } from 'src/database/sponsor';
 import { Role } from 'src/database/user';
@@ -195,6 +198,38 @@ export default class SponsorshipDAO {
     console.log('Messages:', result[0].messages);
 
     return result;
+  }
+
+  public async getSponsorshipHistory(
+    page: number,
+    { childId, fixNeedId, range, userId }: ISponsorshipHistory,
+  ) {
+    const sponsorshipHistoryQuery = this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .innerJoinAndSelect('sponsorship.user', 'user')
+      .innerJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .limit(10)
+      .offset(page * 10)
+      .orderBy('sponsorship.createdAt');
+
+    if (childId)
+      sponsorshipHistoryQuery.andWhere('user.userId = userId', { userId });
+    if (childId)
+      sponsorshipHistoryQuery.andWhere('child.userId = :childId', { childId });
+    if (fixNeedId)
+      sponsorshipHistoryQuery.andWhere('fix_need.fixNeedId', { fixNeedId });
+
+    if (range)
+      sponsorshipHistoryQuery.andWhere(
+        'sponsorship.crteatedAt BETWEEN :start AND :end',
+        { start: range[0], end: range[1] },
+      );
+
+    const [sponsorshipHistory, count] =
+      await sponsorshipHistoryQuery.getManyAndCount();
+
+    return { count, sponsorshipHistory };
   }
 }
 

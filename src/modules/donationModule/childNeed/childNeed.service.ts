@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { IUserCookie } from 'src/shared/types';
 import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
-import { ServerError, IsNotActiveGroup } from 'src/utils/error';
+import {
+  ServerError,
+  IsNotActiveGroup,
+  HasActiveNeedGroupError,
+  HasNoActiveNeedGroupError,
+} from 'src/utils/error';
 import {
   EditNeed,
   CreateNeedDTO,
@@ -12,6 +17,9 @@ import DonationDAO from 'src/database/donation/donation/donation.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import SafeDAO from 'src/database/donation/safe/safe.DAO';
+import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import { ICreateChild } from 'src/modules/userModule/childModule/child.module.interface';
+import { Status } from 'src/database/donation';
 
 @Injectable()
 export default class ChildNeedService {
@@ -48,8 +56,10 @@ export default class ChildNeedService {
     const createdNeedGroup =
       await this.needGroupDAO.getActiveGroupOfChild(childId);
 
+    if (!createdNeedGroup) throw new HasNoActiveNeedGroupError();
+
     const needPromises = needs.map((need) =>
-      this.childNeedDAO.createNeed(need),
+      this.childNeedDAO.createNeed({ group: createdNeedGroup, ...need }),
     );
 
     console.log('LFŞSDLŞFGLDSŞİLFŞİDSF', createdNeedGroup);
@@ -61,14 +71,56 @@ export default class ChildNeedService {
         throw new ServerError();
       });
 
-    createdNeedGroup.needs = [...createdNeeds];
+    /*createdNeedGroup.needs = [...createdNeeds];
 
-    await this.needGroupDAO.saveNeedGroupEntity(createdNeedGroup);
+    await this.needGroupDAO.saveNeedGroupEntity(createdNeedGroup);*/
 
     const needGroupWithNeedWithTotalDonation =
       await this.needGroupDAO.getActiveNeedGroupWithNeeds(child.userId);
 
     return needGroupWithNeedWithTotalDonation;
+  }
+
+  private newCalculateEditedNeed(
+    edited: EditNeed,
+    originalNeed: INeedWithTotal,
+  ) {
+    const originalPrice = originalNeed.amount * originalNeed.price;
+
+    const editedPrice =
+      (edited.amount || originalNeed.amount) *
+      (edited.price || originalNeed.price);
+
+    if (originalPrice === editedPrice) return null;
+
+    if (editedPrice < originalNeed.totalDonation)
+      return originalNeed.totalDonation - editedPrice;
+  }
+
+  public async editNeed2(editedNeed: EditNeed) {
+    const child = await this.childDAO.getChild({
+      needGroups: { needs: { needId: editedNeed.needId } },
+    });
+
+    console.log('Child', child);
+
+    const originalNeed = await this.childNeedDAO.getNeedWithTotalDonation(
+      editedNeed.needId,
+    );
+
+    const moneyToSafe = this.newCalculateEditedNeed(editedNeed, originalNeed);
+
+    const updatedNeed = await this.childNeedDAO.updateNeed({
+      ...editedNeed,
+      needId: originalNeed.needId,
+      status: moneyToSafe ? Status.MET : originalNeed.status,
+    });
+
+    if (moneyToSafe) {
+      await this.safeDAO.addMoneyToChildSafe(child.userId, moneyToSafe);
+    }
+
+    return updatedNeed;
   }
 
   public async editNeed(
@@ -148,7 +200,7 @@ export default class ChildNeedService {
     const needData =
       await this.needGroupDAO.getActiveNeedGroupWithNeeds(childId);
 
-    console.log('1', needData);
+    if (!needData) return null;
 
     return needData;
   }
