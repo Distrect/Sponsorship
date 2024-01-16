@@ -212,9 +212,9 @@ export default class MockDataGenerator implements IMockDataGenerator {
     childNeedParams: DeepPartial<ChildNeed> = {},
   ): ChildNeed {
     return this.dataSource.manager.create(ChildNeed, {
-      amount: faker.number.int({ min: 50, max: 650 }),
+      amount: 1,
       title: faker.person.zodiacSign(),
-      price: faker.number.float({ min: 50, max: 500, precision: 2 }),
+      price: 100,
       isDeleted: false,
       ...childNeedParams,
     });

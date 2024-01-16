@@ -73,15 +73,10 @@ export default class NeedManagmentRouteController {
     };
   }
 
-  @Delete(':childId/deleteNeed/:needId')
-  public async DeleteNeed(
-    @Param('needId', ParseIntPipe) childNeedId: number,
-    @Param('childId', ParseIntPipe) childId: number,
-  ) {
-    const deletedNeed = await this.childManagementRouteService.deleteNeed(
-      childNeedId,
-      childId,
-    );
+  @Delete('deleteNeed/:needId')
+  public async DeleteNeed(@Param('needId', ParseIntPipe) childNeedId: number) {
+    const deletedNeed =
+      await this.childManagementRouteService.deleteNeed(childNeedId);
 
     return {
       ok: true,

@@ -24,11 +24,8 @@ export default class NeedManagementRouteService {
   public async editNeed(editedNeed: EditNeed) {
     return await this.childNeedService.editNeed2(editedNeed);
   }
-  public async deleteNeed(
-    needId: number,
-    childId: number,
-  ): Promise<INeedWithTotal> {
-    return await this.childNeedService.deleteNeed(needId, childId);
+  public async deleteNeed(needId: number): Promise<INeedWithTotal> {
+    return await this.childNeedService.deleteNeed(needId);
   }
   public async donationHistory(
     userId: number,

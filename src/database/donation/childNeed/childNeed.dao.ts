@@ -6,6 +6,7 @@ import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.in
 import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import DonationDAO from 'src/database/donation/donation/donation.DAO';
+import { Status } from 'src/database/donation';
 
 @Injectable()
 export default class ChildNeedDAO {
@@ -73,7 +74,10 @@ export default class ChildNeedDAO {
     return need;
   }
 
-  public async getNeedWithTotalDonation(needId: number) {
+  public async getNeedWithTotalDonation(
+    needId: number,
+    isDeleted: boolean = false,
+  ) {
     const query = this.childNeedRepository
       .createQueryBuilder('child_need')
       .leftJoinAndSelect('child_need.donations', 'donation')
@@ -85,7 +89,7 @@ export default class ChildNeedDAO {
         'child_need.needId = :needId AND child_need.isDeleted = :isDeleted',
         {
           needId,
-          isDeleted: false,
+          isDeleted,
         },
       );
     const needWithTotal = (await query.getRawOne()) as INeedWithTotal;
@@ -122,7 +126,14 @@ export default class ChildNeedDAO {
   }
 
   public async deleteNeed(needId: number) {
-    const deletedNeed = await this.updateNeed({ needId, isDeleted: true });
+    const need = await this.getNeed2({ needId });
+    need.isDeleted = true;
+
+    console.log('Deleted True:', need);
+
+    const deletedNeed = await this.saveChildNeed(need);
+
+    console.log('Deleted Enti,ty', deletedNeed);
 
     return deletedNeed;
   }

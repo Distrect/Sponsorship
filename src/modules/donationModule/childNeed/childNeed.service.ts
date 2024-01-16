@@ -177,13 +177,12 @@ export default class ChildNeedService {
     return updateResults;
   }
 
-  public async deleteNeed(needId: number, childId: number) {
-    const [need, child] = await Promise.all([
+  public async deleteNeed(needId: number) {
+    const [need] = await Promise.all([
       this.childNeedDAO.getNeedWithTotalDonation(needId),
-      this.childDAO.getChild({ userId: childId }),
     ]);
 
-    await this.childNeedDAO.deleteNeed(need.needId);
+    const deletedNeed = await this.childNeedDAO.deleteNeed(need.needId);
     /*
     await this.safeService.depositMoneyToChild(
       need.needId,
@@ -191,7 +190,10 @@ export default class ChildNeedService {
       need.totalDonation,
     );*/
 
-    return need;
+    return await this.childNeedDAO.getNeedWithTotalDonation(
+      deletedNeed.needId,
+      true,
+    );
   }
 
   public async getChildNeedsData(authority: IUserCookie, childId: number) {
@@ -199,6 +201,8 @@ export default class ChildNeedService {
 
     const needData =
       await this.needGroupDAO.getActiveNeedGroupWithNeeds(childId);
+
+    await this.childDAO.calculateChildSafeMoney(childId);
 
     if (!needData) return null;
 

@@ -14,6 +14,12 @@ import {
 import { IPaginationData } from 'src/shared/types';
 import Child from 'src/database/user/child/child.entity';
 
+interface IChildSafe {
+  totalNeedsDonation: number;
+  totalNeedsPrice: number;
+  moneyBox: number;
+}
+
 @Injectable()
 export default class ChildDAO {
   constructor(@Injector(Child) public childRepository: Repository<Child>) {}
@@ -140,5 +146,45 @@ export default class ChildDAO {
     if (childs.length === 0) return null;
 
     return childs;
+  }
+
+  public async calculateChildSafeMoney(childId: number) {
+    const child = await this.getChild({ userId: childId });
+
+    const safeQuery = this.childRepository
+      .createQueryBuilder('child')
+      .leftJoinAndSelect('child.needGroups', 'need_group')
+      .leftJoinAndSelect('need_group.needs', 'child_need')
+      .leftJoinAndSelect('child_need.donations', 'donation')
+      .where('child.userId = :childId', { childId });
+
+    const selected = safeQuery.select([
+      'SUM(IFNULL(donation.amount,0)) AS totalNeedsDonation',
+      'SUM(IFNULL(child_need.amount * child_need.price,0)) AS totalNeedsPrice',
+    ]);
+
+    const { totalNeedsDonation, totalNeedsPrice } =
+      (await selected.getRawOne()) as Omit<IChildSafe, 'moneyBox'>;
+
+    console.log(
+      'TOTLA:',
+      totalNeedsDonation,
+      totalNeedsPrice,
+      selected.getQuery(),
+    );
+
+    const difference = totalNeedsDonation - totalNeedsPrice;
+
+    const moneyBox = difference < 0 ? 0 : difference;
+
+    const result = {
+      totalNeedsDonation,
+      totalNeedsPrice: parseInt(totalNeedsPrice.toString()),
+      moneyBox,
+    } as IChildSafe;
+
+    console.log('RESSS:', result);
+
+    return result;
   }
 }

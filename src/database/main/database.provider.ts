@@ -10,6 +10,7 @@ import Donation from 'src/database/donation/donation/donation.entity';
 import FileService from 'src/services/file/file.service';
 import { readFileSync } from 'fs';
 import Safe from 'src/database/donation/safe/safe.entity';
+import { Status } from 'src/database/donation';
 
 const fronIdBuffer = readFileSync(
   'C:/Users/myfor/OneDrive/Masaüstü/ID_FRONT_PAGE.jpg',
@@ -62,12 +63,6 @@ export const databaseProviders = [
           ]),
         ]);
 
-        await managerSave(
-          mockDataGenerator.generateMockChild({
-            name: 'YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUU',
-          }),
-        );
-
         const needGroups: NeedGroup[] = [];
         const sposnsoships: Sponsorship[] = [];
         const identifications: Identification[] = [];
@@ -102,7 +97,7 @@ export const databaseProviders = [
             mockDataGenerator.generateNeedGroup({ child }),
           );
           const childNeeds = await managerSave(
-            mockDataGenerator.generator(20, 'ChildNeed', { group: needGroup }),
+            mockDataGenerator.generator(5, 'ChildNeed', { group: needGroup }),
           );
 
           const fixNeeds = await managerSave(
@@ -160,20 +155,49 @@ export const databaseProviders = [
           ]);
 
         const fUfC = sponsorshipRecords[0];
-        const p = await managerSave(
-          mockDataGenerator.generateMockSponsorshipPayment(fUfC),
-        );
-        const mockMessages = await managerSave(
-          mockDataGenerator.generator(100, 'Message', { sponsorship: fUfC }),
-        );
 
-        fUfC.messages = mockMessages;
+        /* const mockMessages = await managerSave(
+          mockDataGenerator.generator(100, 'Message', { sponsorship: fUfC }),
+        );*/
+
+        /*fUfC.messages = mockMessages;*/
 
         const childNeedRepository =
           InitializedDatabase.getRepository(ChildNeed);
-
+        /*
         let need = await childNeedRepository.findOne({ where: { needId: 1 } });
-        console.log('Need:', need);
+        console.log('Need:', need);*/
+
+        const sChild = await managerSave(
+          mockDataGenerator.generateMockChild({
+            name: 'YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUU',
+          }),
+        );
+
+        const sChildNeedGroup = await managerSave(
+          mockDataGenerator.generateNeedGroup({ child: sChild }),
+        );
+
+        const sChildNeeds = await managerSave(
+          mockDataGenerator.generator(3, 'ChildNeed', {
+            group: sChildNeedGroup,
+          }),
+        );
+
+        const sChildNeedsDonations = sChildNeeds.map((childNeed) =>
+          managerSave(
+            mockDataGenerator.generateMockDonation({
+              childNeed,
+              amount: 50,
+              user: users[0],
+            }),
+          ),
+        );
+
+        await Promise.all([
+          ...sChildNeedsDonations,
+          managerSave(sChildNeedGroup),
+        ]);
       };
 
       isDevMode && (await devOps());

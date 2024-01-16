@@ -41,10 +41,10 @@ export default class ChildNeed extends ChildNeedRelations {
   @PrimaryGeneratedColumn()
   needId: number;
 
-  @Column('varchar')
+  @Column('varchar', { length: 15 })
   title: string;
 
-  @Column('integer')
+  @Column('integer', {})
   price: number;
 
   @Column('integer')
@@ -68,10 +68,10 @@ export default class ChildNeed extends ChildNeedRelations {
   })*/
   totals: number;
 
-  @VirtualColumn({
+  /*@VirtualColumn({
     type: 'integer',
     query: totalDonationOfNeed,
-    /* query(alias: string) {
+    query(alias: string) {
       const whereAlias = `childNeed = ${alias}.needId`;
       const query =
         `SELECT SUM(IFNULL(amount,0)) FROM donation WHERE ` + whereAlias;
@@ -83,9 +83,9 @@ export default class ChildNeed extends ChildNeedRelations {
       );
 
       return `SELECT "donationId"`;
-    }*/
-  })
-  deneme: number;
+    }
+  })*/
+  //deneme: number;
 
   @BeforeInsert()
   private async setStartAmount() {
