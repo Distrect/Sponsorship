@@ -26,12 +26,6 @@ export default class NeedGroupService {
     user: IUserCookie,
     requestBody: IDonateChildNeedDTO,
   ) {
-    console.log(
-      'Vay',
-      requestBody,
-      Object.keys(requestBody.donatedNeeds).map(([key]) => parseInt(key)),
-    );
-
     try {
       const isCorrectIds =
         await this.needGroupDAO.checkIfNeedsBelongsToNeedGroup(
@@ -39,13 +33,9 @@ export default class NeedGroupService {
           Object.keys(requestBody.donatedNeeds).map(([key]) => parseInt(key)),
         );
 
-      console.log('Is:', isCorrectIds);
-
       const childNeeds = await this.childNeedDAO.getNeedsWithIds(
         Object.keys(requestBody.donatedNeeds).map(([key]) => parseInt(key)),
       );
-
-      console.log('ChildNeeds', childNeeds);
 
       const donationRequests: Promise<Donation>[] = [];
 
@@ -65,7 +55,6 @@ export default class NeedGroupService {
         );
       }
 
-      console.log('don', donationRequests);
       const donations = await Promise.all(donationRequests).then((res) => res);
 
       return donations;

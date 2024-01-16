@@ -54,8 +54,6 @@ export default class NeedGroupDAO {
       where: { status: ChildNeedGroupStatus.OPEN, child: { userId: childId } },
     });
 
-    console.log('Active groups', activeGroups);
-
     if (activeGroups.length > 1) throw new HasActiveNeedGroupError();
 
     if (activeGroups.length === 0) return null;
@@ -69,8 +67,6 @@ export default class NeedGroupDAO {
     )) as NeedGroupWithNeedsWithTotalDonation;
 
     if (!activeNeedGroup) return null;
-
-    console.log('Active Need Group:', activeNeedGroup);
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
       this.childNeedDAO.getNeedWithTotalDonation(needId),

@@ -9,8 +9,6 @@ export const User = createParamDecorator(
 
     const { user } = ctx.switchToHttp().getRequest();
 
-    console.log('USER', user);
-
     if (!user || user.role !== role) throw new AuthorizationError();
     if (!user.role) throw new ServerError('Cookie is problematic');
 

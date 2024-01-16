@@ -62,7 +62,6 @@ export default class DonationDAO {
     if (amount > left) throw new Error('Dayı olmaz');
 
     const donation = await this.createDonation({ amount, childNeed, user });
-    console.log('Donatioın:', donation);
 
     return donation;
   }

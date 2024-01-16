@@ -86,7 +86,6 @@ export default class ChildDAO {
     sort: ISortChilds = {},
     page: number = 0,
   ): Promise<IPaginationData<Child>> {
-    console.log`Page:${page},name:${name}`;
     let querry = this.childRepository
       .createQueryBuilder('child')
       .leftJoinAndSelect('child.identifications', 'identification')
@@ -182,8 +181,6 @@ export default class ChildDAO {
       totalNeedsPrice: parseInt(totalNeedsPrice.toString()),
       moneyBox,
     } as IChildSafe;
-
-    console.log('RESSS:', result);
 
     return result;
   }

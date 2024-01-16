@@ -33,11 +33,12 @@ export default class FixNeedManagementRouteController {
     @User(Role.Authority) authority: IUserCookie,
     @Body() requestBody: GetFixNeedsDTO,
   ) {
-    const fixNeeds = await this.fixNeedManagementService.getChildFixNeeds(
-      childId,
-      authority,
-      requestBody,
-    );
+    console.log('Fix Needs', 'Vay Vay vaYU');
+    const fixNeeds = await this.fixNeedManagementService
+      .getChildFixNeeds(childId, authority, requestBody)
+      .catch((err) => console.log('Err', console.error(err)));
+
+    console.log('Fix Needs', fixNeeds);
 
     return {
       ok: true,

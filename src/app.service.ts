@@ -41,23 +41,5 @@ export class AppService {
   ) {}
   async getHello() {
     return await this.sponsorshipDAO.getSponsorship({ sponsorshipId: 1 });
-    /* await console.log(this.userRequestDAO);
-    await console.log(this.userDAO);
-    await console.log(this.childDAO);
-    await console.log(this.authorityDAO);
-    await console.log(this.needGroupDAO);
-    await console.log(this.childNeedDAO);
-    await console.log(this.sponsorshipDAO);
-    await console.log(this.categoryDAO);
-    await console.log(this.donationDAO);
-    await console.log(this.needSafeDAO);
-    await console.log(this.safeDAO);
-    await console.log(this.fixNeedDAO);
-    await console.log(this.adminDAO);
-    await console.log(this.answerDAO);
-    await console.log(this.childStatusDAO);
-    await console.log(this.identificationDAO);
-    await console.log(this.questionDAO);
-    await this.needGroupDAO.getActiveGroupOfChild(1);*/
   }
 }

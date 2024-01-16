@@ -19,8 +19,6 @@ const totalDonationOfNeed = (alias: string) => {
     'SELECT SUM(donation.amount) FROM child_need LEFT JOIN donation ON child_need.needId = donation.childNeed  WHERE childNeed = ' +
     `${alias}.needId`;
 
-  console.log('Query', query);
-
   return query;
 };
 

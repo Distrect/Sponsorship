@@ -22,8 +22,6 @@ async function bootstrap() {
 
   const routes = listRoutes(app.getHttpServer());
 
-  console.log('Routes', routes);
-
   console.log('APPLICATION IS READY');
 }
 

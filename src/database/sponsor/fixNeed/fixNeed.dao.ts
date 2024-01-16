@@ -64,40 +64,44 @@ export default class FixNeedDAO {
     return query;
   }
 
-  public async getChildFixNeeds(
-    chldId: number,
-    filterParams?: IGetFixNeedFilter,
-  ) {
+  public async getChildFixNeeds(chldId: number, { status }: IGetFixNeedFilter) {
     const child = await this.childDAO.getChild({ userId: chldId });
 
     let childFixNeeds = this.fixNeedRepository
       .createQueryBuilder('fix_need')
       .leftJoinAndSelect('fix_need.sponsorship', 'sponsorship')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
+      .leftJoinAndSelect('sponsorship.payment', 'payments')
       .leftJoin('fix_need.child', 'child')
-      .where('child.userId = :userId', { userId: child.userId });
+      .where('child.userId = :userId', {
+        userId: child.userId,
+      });
+
+    console.log('Status', status);
 
     let result: FixNeed[];
 
-    if (filterParams) {
-      if (filterParams.status === 'ALL') {
-      } else if (filterParams.status === 'Active')
-        childFixNeeds = childFixNeeds.andWhere(
-          'fix_need.isDeleted = :isDeleted',
-          { isDeleted: false },
-        );
-      else if (filterParams.status === 'Inactive') {
-        childFixNeeds = childFixNeeds.andWhere(
-          'fix_need.isDeleted = :isDeleted',
-          { isDeleted: true },
-        );
-      } else {
-        childFixNeeds = childFixNeeds.andWhere('sponsorship.status = :status', {
-          status: SponsorshipStatus.WAITING_FOR_PAYMENT,
-        });
-      }
-
-      result = await childFixNeeds.getMany();
+    if (status === 'ALL') {
+    } else if (status === 'Active')
+      childFixNeeds = childFixNeeds.andWhere(
+        'fix_need.isDeleted = :isDeleted',
+        { isDeleted: false },
+      );
+    else if (status === 'Inactive') {
+      childFixNeeds = childFixNeeds.andWhere(
+        'fix_need.isDeleted = :isDeleted',
+        { isDeleted: true },
+      );
+    } else {
+      childFixNeeds = childFixNeeds.andWhere('sponsorship.status = :status', {
+        status: SponsorshipStatus.WAITING_FOR_PAYMENT,
+      });
     }
+
+    result = await childFixNeeds.getMany();
+
+    console.log('Result', result);
 
     if (result.length === 0)
       throw new EmptyData('The Child Fix Needs is Empty');
@@ -188,14 +192,12 @@ export default class FixNeedDAO {
     fixNeedId: number,
     updateParams: DeepPartial<FixNeed>,
   ) {
-    console.log('Update Params', updateParams);
     const fixNeed = await this.getFixNeed({ fixNeedId });
     const updatedFixNeed = await this.updateFixNeedEntity(
       fixNeed,
       updateParams,
     );
 
-    console.log('Update Params', updatedFixNeed);
     return updatedFixNeed;
   }
 }

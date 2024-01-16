@@ -18,7 +18,6 @@ export class CookieInterceptor implements NestInterceptor {
   constructor(private role: Role) {}
 
   private isEmpty(user: IUserCookie) {
-    console.log('User:', user);
     return _.isEmpty(user);
   }
 
@@ -28,12 +27,9 @@ export class CookieInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest() as ExtendedRequest;
     const res = context.switchToHttp().getResponse() as Response;
-    console.log('Reqq', req);
 
     const token = req.cookies[this.role + 'Authorization'];
     const refreshToken = req.cookies[this.role + 'Refresh'];
-
-    console.log(`Token:${token},refreshToken:${refreshToken}`);
 
     if (!token && !refreshToken) throw new AuthorizationError();
     if (!token) throw new Error('Amına Koyayım Token nedenyok');
@@ -71,34 +67,28 @@ export function CookieMiddlewareMixin(role: Role) {
     }
 
     use(req: ExtendedRequest, res: Response, next: NextFunction) {
-      console.log('MİDDLEWARE WORKS');
       const token = req.cookies[role + 'Authorization'];
       const refreshToken = req.cookies[role + 'Refresh'];
 
       if (!token && !refreshToken) throw new AuthorizationError();
 
-      console.log('2 --------------------------------------------------');
       const refreshData = AuthService.deTokenizData<IUserCookie>(refreshToken);
       let userData = AuthService.deTokenizData<IUserCookie>(token);
 
-      console.log('3 --------------------------------------------------');
       if (!refreshData && !userData) throw new AuthorizationError();
 
-      console.log('4 --------------------------------------------------');
       if (!userData || !refreshData) {
         const tokenType = !userData ? 'Authorization' : 'Refresh';
         const data = !userData
           ? AuthService.deTokenizData<IUserCookie>(refreshToken)
           : userData;
 
-        console.log('5 --------------------------------------------------');
         if (!data) throw new AuthorizationError();
 
         res.cookie(role + tokenType, data);
         userData = data;
       }
 
-      console.log('6 --------------------------------------------------');
       if (this.isEmpty(userData)) throw new AuthorizationError();
 
       req.user = userData;

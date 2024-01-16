@@ -94,11 +94,7 @@ export default class ChildNeedDAO {
       );
     const needWithTotal = (await query.getRawOne()) as INeedWithTotal;
 
-    console.log('QUERY =', query.getQuery());
-
     if (!needWithTotal) throw new NotFound();
-
-    console.log('ksd', needWithTotal);
 
     return needWithTotal;
   }
@@ -129,11 +125,7 @@ export default class ChildNeedDAO {
     const need = await this.getNeed2({ needId });
     need.isDeleted = true;
 
-    console.log('Deleted True:', need);
-
     const deletedNeed = await this.saveChildNeed(need);
-
-    console.log('Deleted Enti,ty', deletedNeed);
 
     return deletedNeed;
   }

@@ -61,7 +61,6 @@ export default class FixNeedService {
 
     const fixNeedWithSponsorship =
       await this.fixNeedDAO.getFixNeedWithSponsorship(updatedFixNeed.fixNeedId);
-    console.log('Updated Fix Need', fixNeedWithSponsorship);
 
     return fixNeedWithSponsorship;
   }

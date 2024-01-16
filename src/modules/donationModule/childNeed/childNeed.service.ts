@@ -62,8 +62,6 @@ export default class ChildNeedService {
       this.childNeedDAO.createNeed({ group: createdNeedGroup, ...need }),
     );
 
-    console.log('LFŞSDLŞFGLDSŞİLFŞİDSF', createdNeedGroup);
-
     const createdNeeds = await Promise.all(needPromises)
       .then((res) => res)
       .catch((err) => {
@@ -101,8 +99,6 @@ export default class ChildNeedService {
     const child = await this.childDAO.getChild({
       needGroups: { needs: { needId: editedNeed.needId } },
     });
-
-    console.log('Child', child);
 
     const originalNeed = await this.childNeedDAO.getNeedWithTotalDonation(
       editedNeed.needId,
@@ -197,8 +193,6 @@ export default class ChildNeedService {
   }
 
   public async getChildNeedsData(authority: IUserCookie, childId: number) {
-    console.log('THİS', this.childNeedDAO);
-
     const needData =
       await this.needGroupDAO.getActiveNeedGroupWithNeeds(childId);
 
