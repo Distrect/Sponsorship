@@ -15,6 +15,10 @@ export default class UserManagementRouteService {
   }
 
   public async getUserSponosredChilds(userId: number) {
-    return await this.sponsorshipService.getUserSponsoredChilds(userId);
+    return await this.userService.getAllSponsorshipsOfUser(userId);
+  }
+
+  public async blockUser(userId: number) {
+    return await this.userService.blockUser(userId);
   }
 }

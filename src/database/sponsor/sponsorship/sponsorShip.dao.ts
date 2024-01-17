@@ -117,7 +117,12 @@ export default class SponsorshipDAO {
   public async getSponsorship(sponsorshipParams: FindSponsorship) {
     const sponsorship = await this.sponsorshipRepository.findOne({
       where: { ...sponsorshipParams },
-      relations: { user: true, fixNeed: { child: true } },
+      relations: {
+        user: true,
+        fixNeed: { child: true },
+        payment: true,
+        messages: true,
+      },
     });
 
     this.checkEntity(sponsorship);
@@ -230,5 +235,26 @@ export default class SponsorshipDAO {
       await sponsorshipHistoryQuery.getManyAndCount();
 
     return { count, sponsorshipHistory };
+  }
+
+  public async getUserActiveSponsorships(userId: number) {
+    const query = this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .leftJoinAndSelect('sponsorship.payment', 'sponsorship_payment')
+      .where('user.userId = :userId', { userId })
+      .andWhere(
+        'sponsorship.status = :approved OR sponsorship.status = :waiting',
+        {
+          approved: SponsorshipStatus.APPROVED,
+          waiting: SponsorshipStatus.WAITING_FOR_PAYMENT,
+        },
+      );
+
+    const result = await query.getMany();
+
+    return result;
   }
 }

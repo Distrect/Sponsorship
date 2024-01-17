@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, ReturnDocument } from 'typeorm';
 import { FormFieldError, NotFound } from './../../../utils/error';
 import { Role } from 'src/database/user';
 import {
@@ -21,6 +21,8 @@ import IdentificationDAO from 'src/database/user/identification/identification.D
 import FileService from 'src/services/file/file.service';
 import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 import jwt from 'jsonwebtoken';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
+import { SponsorshipStatus } from 'src/database/sponsor';
 
 @Injectable()
 export default class UserService {
@@ -31,6 +33,7 @@ export default class UserService {
     private userRequestDAO: UserRequestDAO,
     private identificationDAO: IdentificationDAO,
     private fileService: FileService,
+    private sponsorshipDAO: SponsorshipDAO,
   ) {}
 
   public clearPrivateData({ password, isDeleted, ...rest }: BaseUser) {
@@ -158,7 +161,7 @@ export default class UserService {
     if (user instanceof User && !user.canLogin) {
       throw new Error('Baba giremezin');
     }
-    const encryptedPassword = await this.cryptor(user.password, 'decrypt');
+    const encryptedPassword = this.cryptor(user.password, 'decrypt');
 
     if (password !== encryptedPassword) {
       const message = 'Password is incorrect';
@@ -217,5 +220,29 @@ export default class UserService {
 
   public async getUserActor(userId: number) {
     return await this.userDAO.getUser({ userId });
+  }
+
+  public async getAllSponsorshipsOfUser(userId: number) {
+    return await this.sponsorshipDAO.getUserActiveSponsorships(userId);
+  }
+
+  public async blockUser(userId: number) {
+    const user = await this.userDAO.getUser({ userId });
+
+    user.canLogin = false;
+
+    const deletedUser = await this.userDAO.saveUserEntity(user);
+
+    const allUserSponsorships =
+      await this.sponsorshipDAO.getUserActiveSponsorships(userId);
+
+    const updateSponsorshipPromises = allUserSponsorships.map((sponsorship) => {
+      sponsorship.status = SponsorshipStatus.USER_DELETED;
+      return this.sponsorshipDAO.saveSponsorshipEntity(sponsorship);
+    });
+
+    const canceledSponsorships = await Promise.all(updateSponsorshipPromises);
+
+    return user;
   }
 }

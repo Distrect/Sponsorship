@@ -58,7 +58,7 @@ export default class UserDAO {
         loginRequests: true,
         donations: true,
         identifications: true,
-        sponsor: true,
+        sponsor: { payment: true, fixNeed: { child: true } },
       },
     });
 

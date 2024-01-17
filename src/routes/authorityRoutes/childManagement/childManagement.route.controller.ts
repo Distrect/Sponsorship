@@ -12,6 +12,7 @@ import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { Role } from 'src/database/user';
 import { IUserCookie } from 'src/shared/types';
 import {
+  CreateChildDTO,
   EditChildDTO,
   ListChildDTO,
 } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
@@ -29,7 +30,7 @@ export default class ChildManagementRouteController {
   @Post('createChild')
   public async CreateChild(
     @User(Role.Authority) authority: IUserCookie,
-    @Body() requestBody: ICreateChild,
+    @Body() requestBody: CreateChildDTO,
   ) {
     const createdChild = await this.childManagementRouteService.createChild(
       authority,
@@ -66,10 +67,9 @@ export default class ChildManagementRouteController {
     @Param('childId', ParseIntPipe) childId: number,
     @User(Role.Authority) authority: IUserCookie,
   ) {
-    const deletedChild = await this.childManagementRouteService.deleteChild(
-      childId,
-      authority,
-    );
+    const deletedChild = await this.childManagementRouteService
+      .deleteChild(childId, authority)
+      .catch((err) => console.error(err));
 
     return { ok: true, message: 'Child is deleted', deletedChild };
   }
@@ -85,7 +85,6 @@ export default class ChildManagementRouteController {
       page,
       authority,
     );
-
     return {
       ok: true,
       message: 'Childs Are Retrieved',

@@ -6,6 +6,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   PrimaryGeneratedColumn,
+  AfterUpdate,
 } from 'typeorm';
 
 export default abstract class BaseUser {
@@ -39,6 +40,7 @@ export default abstract class BaseUser {
   @Column('enum', { enum: CityEnum })
   city: CityEnum;
 
+  @AfterUpdate()
   @BeforeUpdate()
   @BeforeInsert()
   private setFullName() {

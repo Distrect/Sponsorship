@@ -56,7 +56,7 @@ export const databaseProviders = [
       const devOps = async () => {
         const [, childs, users] = await Promise.all([
           managerSave(mockDataGenerator.generateMockAuthority()),
-          managerSave(mockDataGenerator.generator(100, 'Child')),
+          managerSave(mockDataGenerator.generator(20, 'Child')),
           managerSave([
             mockDataGenerator.generateMockUser(mainUser),
             ...mockDataGenerator.generator(19, 'User'),
@@ -172,6 +172,10 @@ export const databaseProviders = [
           mockDataGenerator.generateMockChild({
             name: 'YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUU',
           }),
+        );
+
+        const sChildSafe = await managerSave(
+          mockDataGenerator.generateMockSafe(sChild),
         );
 
         const sChildNeedGroup = await managerSave(
