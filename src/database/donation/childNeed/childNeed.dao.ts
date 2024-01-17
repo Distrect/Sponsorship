@@ -112,13 +112,11 @@ export default class ChildNeedDAO {
   }
 
   public async getNeedsWithIds(ids: number[]) {
-    const childNeeds = await this.childNeedRepository.find({
-      where: { needId: In(ids) },
-    });
-
-    if (childNeeds.includes(null)) throw new NotFound();
-
-    return childNeeds;
+    console.log('IDS', ids);
+    const needs = await Promise.all(
+      ids.map((needId) => this.getNeedWithTotalDonation(needId)),
+    );
+    return needs;
   }
 
   public async deleteNeed(needId: number) {

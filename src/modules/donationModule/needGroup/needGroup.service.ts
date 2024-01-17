@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { IFilterNeedGroup } from 'src/database/donation/needGroup/needGroup.DAO.interface';
-import { IDonateChildNeedDTO } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
+import {
+  DonateToNeedsDTO,
+  IDonateChildNeedDTO,
+} from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
 import { IUserCookie } from 'src/shared/types';
 import { BadRequestError, ServerError } from 'src/utils/error';
 import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 import Donation from 'src/database/donation/donation/donation.entity';
 import DonationDAO from 'src/database/donation/donation/donation.DAO';
+import UserDAO from 'src/database/user/user/user.DAO';
 
 @Injectable()
 export default class NeedGroupService {
@@ -14,6 +18,7 @@ export default class NeedGroupService {
     private needGroupDAO: NeedGroupDAO,
     private childNeedDAO: ChildNeedDAO,
     private donationDAO: DonationDAO,
+    private userDAO: UserDAO,
   ) {}
 
   public async listChildwtihNeeds(filters: IFilterNeedGroup, page: number) {
@@ -21,11 +26,8 @@ export default class NeedGroupService {
 
     return result;
   }
-
-  public async donateToNeeds(
-    user: IUserCookie,
-    requestBody: IDonateChildNeedDTO,
-  ) {
+  /*
+  public async donateToNeeds(user: IUserCookie, requestBody: DonateToNeedsDTO) {
     try {
       const isCorrectIds =
         await this.needGroupDAO.checkIfNeedsBelongsToNeedGroup(
@@ -61,5 +63,47 @@ export default class NeedGroupService {
     } catch (error) {
       console.log('Error', error);
     }
+  }*/
+
+  public async donateToNeeds2(
+    { userId }: IUserCookie,
+    requestBody: DonateToNeedsDTO,
+  ) {
+    const user = await this.userDAO.getUser({ userId });
+    const donatedNeedsIDs = requestBody.donatedNeeds.map(
+      ({ needId }) => needId,
+    );
+    console.log('Donate Need Ids', donatedNeedsIDs);
+    const needs = await this.childNeedDAO.getNeedsWithIds(donatedNeedsIDs);
+
+    const promiser: Promise<Donation>[] = [];
+
+    for (const need of needs) {
+      const donated = requestBody.donatedNeeds.find(
+        ({ needId }) => needId === need.needId,
+      );
+      const needPrice = need.amount * need.price;
+
+      if (!donated) throw new Error('Bunada bak');
+
+      const needCompleted = needPrice < need.totalDonation;
+      const isExceeding = need.totalDonation + donated.amount > needPrice;
+
+      console.log(
+        'Need Copleted',
+        needCompleted,
+        'Is Exceeding',
+        isExceeding,
+        need,
+      );
+
+      if (needCompleted || isExceeding) throw new Error('Bir bakıver');
+
+      promiser.push(this.donationDAO.donateToNeed(userId, donated));
+    }
+
+    const donations = await Promise.all(promiser);
+
+    return donations;
   }
 }

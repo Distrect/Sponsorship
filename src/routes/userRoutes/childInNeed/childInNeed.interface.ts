@@ -26,3 +26,17 @@ export class IDonateChildNeedDTO {
     return Object.entries(this.donatedNeeds).map(([key]) => key);
   }
 }
+
+export class DonateToNeedsDTO {
+  @IsNotEmpty({ message: 'Could Not Be Empty' })
+  donatedNeeds: IDonateNeed[];
+
+  public get getNeedIDs() {
+    console.log('Vayt');
+    return this.donatedNeeds.map(({ needId }) => needId);
+  }
+
+  public getAmount(id: number) {
+    return this.donatedNeeds.find(({ needId }) => needId === id);
+  }
+}

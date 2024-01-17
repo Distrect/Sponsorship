@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import {
+  DonateToNeedsDTO,
   IDonateChildNeedDTO,
   ListChildwithNeedsDTO,
 } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
@@ -36,7 +37,7 @@ export default class ChildInNeedRouteController {
   }
   @Post('payNeed')
   public async PayNeed(
-    @Body() requestBody: IDonateChildNeedDTO,
+    @Body() requestBody: DonateToNeedsDTO,
     @User(Role.User) user: IUserCookie,
   ) {
     const result = await this.childInNeedRouteService.donateToNeeds(

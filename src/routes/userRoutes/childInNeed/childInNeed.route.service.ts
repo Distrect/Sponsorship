@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DonateToNeedsDTO,
   IDonateChildNeedDTO,
   ListChildwithNeedsDTO,
 } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
@@ -22,10 +23,7 @@ export default class ChildInNeedRouteService extends UserRouteService {
       .catch((err) => console.error(err));
   }
 
-  public async donateToNeeds(
-    user: IUserCookie,
-    requestBody: IDonateChildNeedDTO,
-  ) {
-    return await this.needGroupService.donateToNeeds(user, requestBody);
+  public async donateToNeeds(user: IUserCookie, requestBody: DonateToNeedsDTO) {
+    return await this.needGroupService.donateToNeeds2(user, requestBody);
   }
 }

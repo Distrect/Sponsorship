@@ -71,34 +71,9 @@ export default class SponsorshipService {
     const result = await this.sponsorshipDAO.getSponsorshipHistory(page, body);
     return result;
   }
+
+  public async getUserActiveSponsorships({ userId }: IUserCookie) {
+    const user = await this.userDAO.getUser({ userId });
+    return await this.sponsorshipDAO.getUserActiveSponsorships(user.userId);
+  }
 }
-
-// public async getUserSponsorShips(user: 'User' | 'Child', userId: number) {
-//   if (user === 'Child')
-//     return await this.sponsorshipDAO.getChildSponsors(userId);
-
-//   return await this.sponsorshipDAO.getUserSponsors(userId);
-// }
-
-// public async paySponsorship(userId: number) {}
-/*
-async function sponsorToChild(
-  userId: number,
-  childId: number,
-  fixNeedId: number,
-) {
-  const [user, child, fixNeed] = await Promise.all([
-    this.userDAO.getUser({ userId }),
-    this.childDAO.getChild({ userId: childId }),
-    this.fixNeedDAO.getFixNeed({ fixNeedId }),
-  ]);
-
-  const sponsorship = await this.sponsorshipDAO.createSponsorship(
-    user,
-    child,
-    fixNeed,
-  );
-
-  console.log(sponsorship);
-}
-*/
