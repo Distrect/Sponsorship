@@ -59,10 +59,17 @@ export default class UserRequestService {
       answer,
     );
 
+    const requestUser = request.user;
+
+    if (!requestUser) throw new Error('Sıkıntı var');
+
     if (answer === Status.DENIED) {
       request.user.canLogin = false;
-      await this.userDAO.saveUserEntity(request.user);
+    } else {
+      request.user.canLogin = true;
     }
+
+    await this.userDAO.saveUserEntity(request.user);
 
     return request;
   }

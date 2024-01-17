@@ -68,7 +68,7 @@ export const databaseProviders = [
         const identifications: Identification[] = [];
         const safes: Safe[] = [];
         const requestUsers = users.slice(5);
-
+        /*
         const userRequests = requestUsers.map((user) => {
           const request = mockDataGenerator.genearateMockUserRequest({ user });
           fileService.saveFile2(
@@ -85,7 +85,7 @@ export const databaseProviders = [
           );
           return request;
         });
-
+*/
         let i = 0;
 
         for (const child of childs) {
@@ -150,7 +150,7 @@ export const databaseProviders = [
             managerSave(sposnsoships),
             managerSave(identifications),
             managerSave(donations),
-            managerSave(userRequests),
+            // managerSave(userRequests),
             managerSave(safes),
           ]);
 

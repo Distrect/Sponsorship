@@ -108,7 +108,7 @@ export default class UserService {
 
     if (mode === 'encrypt') {
       return jwt.sign(value, secretKey, {
-        expiresIn: 150 * 365 * 24 * 60 * 60 * 1000,
+        //expiresIn: 150 * 365 * 24 * 60 * 60 * 1000,
       });
     }
 
@@ -205,8 +205,10 @@ export default class UserService {
 
     this.checkIdentifications(identifications);
 
-    const user = await this.userDAO.createUser(rest);
-    this.createIdentificationFiles(identifications, user);
+    const password = this.cryptor(rest.password, 'encrypt');
+
+    const user = await this.userDAO.createUser({ ...rest, password });
+    await this.createIdentificationFiles(identifications, user);
     const userRequest = await this.userRequestDAO.createLoginRequest({ user });
 
     user.loginRequests = [userRequest];

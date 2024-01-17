@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NationalityEnum, Role } from 'src/database/user';
+import User from 'src/database/user/user/user.entity';
 import UserService from 'src/modules/userModule/userModule/user.service';
 import {
   UserIDImages,
@@ -12,9 +13,16 @@ export default class UserAccountRouteService {
   constructor(private userService: UserService) {}
 
   public async login(body: LoginDto) {
-    const user = await this.userService.logIn(body, Role.User);
+    const {
+      answer,
+      donations,
+      identifications,
+      loginRequests,
+      sponsor,
+      ...rest
+    } = await this.userService.logIn(body, Role.User);
 
-    return user;
+    return rest as User;
   }
 
   public async register(body: UserRegisterDTO, idImages: UserIDImages) {
@@ -28,5 +36,7 @@ export default class UserAccountRouteService {
       ],
       ...body,
     });
+
+    return user;
   }
 }

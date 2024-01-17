@@ -138,8 +138,9 @@ export default class NeedGroupDAO {
   ): Promise<IPaginationData<NeedGroup>> {
     const query = this.needGroupRepository
       .createQueryBuilder('need_group')
-      .leftJoinAndSelect('need_group.child', 'child')
-      .leftJoinAndSelect('need_group.needs', 'child_need')
+      .innerJoinAndSelect('need_group.child', 'child')
+      .innerJoinAndSelect('need_group.needs', 'child_need')
+      .leftJoinAndSelect('child_need.donations', 'donations')
       .skip(page * 10)
       .take(10)
       .where('child_need.isDeleted = false')
@@ -150,9 +151,19 @@ export default class NeedGroupDAO {
     if (city) query.andWhere('child.city = :city', { city });
     if (urgency) query.andWhere('child_need.urgency = :urgency', { urgency });
 
-    return await query
-      .getManyAndCount()
-      .then(([result, count]) => ({ count, result }));
+    const [result, count] = await query.getManyAndCount();
+
+    result.forEach((needGroup) => {
+      needGroup.needs.forEach((need) => {
+        const totalDonation = need.donations.reduce(
+          (acc, val) => acc + val.amount,
+          0,
+        );
+        need.totals = totalDonation;
+      });
+    });
+
+    return { result, count };
   }
 
   /*newwwwwwwwwww (SAKIN SİLME AMINA KOYARIM SENİN) */

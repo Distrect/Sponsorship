@@ -5,6 +5,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   Res,
+  Get,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -40,6 +41,8 @@ export default class UserAccountRouteController {
   ) {
     requestBody.dateOfBirth = new Date(requestBody.dateOfBirth);
 
+    console.log('REQUEST BODY', requestBody);
+
     await this.userAccountRouteService.register(requestBody, idImages);
 
     return {
@@ -71,5 +74,10 @@ export default class UserAccountRouteController {
     });
 
     return { ok: true, message: 'Login Succed', user };
+  }
+
+  @Get('logout')
+  public async Logout() {
+    throw new Error('Not ımplemented');
   }
 }

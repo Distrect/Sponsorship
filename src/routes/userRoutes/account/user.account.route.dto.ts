@@ -1,13 +1,10 @@
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsNumberString,
   IsStrongPassword,
   Length,
-  isDateString,
-  MaxDate,
-  IsDateString,
 } from 'class-validator';
 import { CityEnum, NationalityEnum } from 'src/database/user';
 
@@ -44,7 +41,7 @@ export class UserRegisterDTO {
   email: string;
 
   @IsNotEmpty({ message: 'date' })
-  // @IsDate()
+  @IsDateString()
   dateOfBirth: Date;
 
   @IsNotEmpty({ message: 'Should be selected' })

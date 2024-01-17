@@ -16,8 +16,10 @@ import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
 // 'SELECT IFNULL(SUM(IFNULL(NULLIF(amount,0),0)),0) FROM donation WHERE childNeed = '
 const totalDonationOfNeed = (alias: string) => {
   const query =
-    'SELECT SUM(donation.amount) FROM child_need LEFT JOIN donation ON child_need.needId = donation.childNeed  WHERE childNeed = ' +
+    'SELECT SUM(donation.amount) FROM donation WHERE childNeed = ' +
     `${alias}.needId`;
+
+  console.log('Virtual Column Query', query);
 
   return query;
 };
@@ -59,6 +61,8 @@ export default class ChildNeed extends ChildNeedRelations {
 
   @Column('enum', { default: NeedUrgency.NORMAL, enum: NeedUrgency })
   urgency: NeedUrgency;
+
+  @VirtualColumn({ type: 'integer', query: totalDonationOfNeed })
 
   /*@VirtualColumn({
     type: 'integer',
