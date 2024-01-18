@@ -6,7 +6,7 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { IUser, Role } from 'src/database/user';
+import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { IUserCookie } from 'shared/types';
 import ChildMessageRotueService from 'src/routes/childRoutes/message/childMessage.route.service';
@@ -22,7 +22,11 @@ export default class ChildMessageRouteController {
     const conversations =
       await this.childMessageRouteService.getConversations(child);
 
-    return { ok: true, mesage: 'Retrieved child conversations', conversations };
+    return {
+      ok: true,
+      mesage: 'Retrieved child conversations',
+      data: conversations,
+    };
   }
 
   @Post('blockUser/:sponsorshipId')
@@ -35,6 +39,6 @@ export default class ChildMessageRouteController {
       sponsorshipId,
     );
 
-    return { ok: true, message: 'User Blocked', blockedSponsorship };
+    return { ok: true, message: 'User Blocked', data: blockedSponsorship };
   }
 }

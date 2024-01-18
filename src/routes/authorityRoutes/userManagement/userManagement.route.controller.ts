@@ -25,7 +25,7 @@ export default class UserManagementRouteController {
     const userSponosrships =
       await this.userManagementRouteService.getUserSponosredChilds(userId);
 
-    return { ok: true, message: '', userSponosrships };
+    return { ok: true, message: '', data: userSponosrships };
   }
 
   @Get('getUser/:userId')
@@ -37,6 +37,8 @@ export default class UserManagementRouteController {
       authority,
       userId,
     );
+
+    return { ok: true, message: 'User Retrieved', data: user };
   }
 
   @Delete('blockUser/:userId')
@@ -46,6 +48,6 @@ export default class UserManagementRouteController {
   ) {
     const blockedUser = await this.userManagementRouteService.blockUser(userId);
 
-    return { ok: true, message: 'User Blocked', blockedUser };
+    return { ok: true, message: 'User Blocked', data: blockedUser };
   }
 }

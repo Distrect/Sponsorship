@@ -51,7 +51,7 @@ function cryptor(
   return jwt.verify(value, secretKey, { ignoreExpiration: true }) as string;
 }
 
-const x: string = '1';
+console.log(cryptor('Xyzt.12345', 'encrypt'));
 
 export default class MockDataGenerator implements IMockDataGenerator {
   EntityObject: EntitiyMapType<keyof TypeofEntityMap>;
@@ -191,7 +191,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
       name: 'Samet',
       lastname: 'Sarıçiçek',
       password:
-        'eyJhbGciOiJIUzI1NiJ9.MTIzNDU2Nzg5.zppFNJKR7ELJiwplJQQy_eUU818Oyn71OylXJ9s7EEU',
+        'eyJhbGciOiJIUzI1NiJ9.WHl6dC4xMjM0NQ.I2cod3KNT9DSb4lZ7z-9aQmhv4SeNANJ1aje401lZKA',
       dateOfBirth: new Date(2001, 1, 15),
     });
   }

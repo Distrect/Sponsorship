@@ -12,7 +12,7 @@ export default class AuthorityAccountController extends AuthorityRouteGlobal {
   constructor(private authorityRouteService: AuthorityAccountService) {
     super();
   }
-  private readonly cookieAge: number = 1 * 24 * 60 * 60;
+  private readonly cookieAge: number = 250 * 24 * 60 * 60;
   private readonly tokenName: string = this.role + 'Authorization';
   private readonly refreshTokenName: string = this.role + 'Refresh';
 
@@ -25,19 +25,19 @@ export default class AuthorityAccountController extends AuthorityRouteGlobal {
 
     const token = JwtService.tokenizeData(authority);
     const refreshToken = JwtService.tokenizeData(authority, {
-      expiresIn: '2d',
+      expiresIn: '10d',
     });
 
     response.cookie(this.tokenName, token, {
       httpOnly: false,
-      maxAge: this.cookieAge,
+      expires: new Date(2030, 1, 1),
     });
     response.cookie(this.refreshTokenName, refreshToken, {
       httpOnly: false,
-      maxAge: this.cookieAge * 2,
+      expires: new Date(2030, 1, 1),
     });
 
-    return { ok: true, message: 'You are Authorized', authority };
+    return { ok: true, message: 'You are Authorized', data: authority };
   }
 
   @Post('/logout')

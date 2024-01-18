@@ -49,6 +49,7 @@ export default class UserAccountRouteController {
       ok: true,
       message:
         'Your regiester request has ben created. When accepted, mail will be send to your email',
+      data: null,
     };
   }
 

@@ -38,7 +38,7 @@ export default class NeedManagmentRouteController {
       childId,
     );
 
-    return { ok: true, result: data };
+    return { ok: true, message: 'x', data };
   }
 
   @Post('createNeed/:childId')
@@ -57,7 +57,7 @@ export default class NeedManagmentRouteController {
     return {
       ok: true,
       message: 'The Child Needs hsa been created',
-      needs: result,
+      data: result,
     };
   }
 
@@ -69,7 +69,7 @@ export default class NeedManagmentRouteController {
     return {
       ok: true,
       message: 'Child Needs Succesfully Updated',
-      updatedNeeds,
+      data: updatedNeeds,
     };
   }
 
@@ -81,7 +81,7 @@ export default class NeedManagmentRouteController {
     return {
       ok: true,
       message: 'The Child Need Succesfully Deleted',
-      deletedNeed,
+      data: deletedNeed,
     };
   }
 

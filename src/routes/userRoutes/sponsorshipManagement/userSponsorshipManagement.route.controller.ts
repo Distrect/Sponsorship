@@ -22,7 +22,7 @@ export default class UserSponsorshipManagementController {
     return {
       ok: true,
       message: 'Sponsorships Retrieved',
-      userActiveSponsorships,
+      data: userActiveSponsorships,
     };
   }
 }

@@ -33,23 +33,3 @@ export enum ActorType {
   USER = 'User',
   CHILD = 'Child',
 }
-
-interface IBaseUser {
-  name: string;
-  lastname: string;
-  email: string;
-  role: Role;
-}
-
-export interface IAuthority extends IBaseUser {
-  authorityId: number;
-  city: CityEnum;
-}
-
-export interface IAdmin extends IBaseUser {
-  adminId: number;
-}
-
-export interface IUser extends IBaseUser {
-  userId: number;
-}

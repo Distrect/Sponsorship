@@ -35,7 +35,7 @@ export default class HistoryManagementRouteController {
       page,
     );
 
-    return { ok: true, message: 'Payment History Retrieved', result };
+    return { ok: true, message: 'Payment History Retrieved', data: result };
   }
 
   @Post('sponsorshipHistory/:page')
@@ -51,6 +51,6 @@ export default class HistoryManagementRouteController {
         page,
       );
 
-    return { ok: true, message: 'Sponsorship History Retrieved', result };
+    return { ok: true, message: 'Sponsorship History Retrieved', data: result };
   }
 }

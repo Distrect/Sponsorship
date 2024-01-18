@@ -15,6 +15,6 @@ export default class UserMessageRouteController {
     const conversations =
       await this.userMessageRouteService.getConversations(user);
 
-    return { ok: true, message: 'Retrieved', conversations };
+    return { ok: true, message: 'Retrieved', data: conversations };
   }
 }

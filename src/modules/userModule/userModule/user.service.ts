@@ -163,6 +163,8 @@ export default class UserService {
     }
     const encryptedPassword = this.cryptor(user.password, 'decrypt');
 
+    console.log('Encryptesd', encryptedPassword, password);
+
     if (password !== encryptedPassword) {
       const message = 'Password is incorrect';
       throw new FormFieldError(message, [

@@ -43,7 +43,7 @@ export default class FixNeedManagementRouteController {
     return {
       ok: true,
       message: 'Fix Needs Of Chid Successfully Retrieved',
-      fixNeeds,
+      data: fixNeeds,
     };
   }
 
@@ -62,7 +62,7 @@ export default class FixNeedManagementRouteController {
     return {
       ok: true,
       message: 'New Fix Need is Created For Child',
-      newFixNeed,
+      data: newFixNeed,
     };
   }
 
@@ -78,7 +78,7 @@ export default class FixNeedManagementRouteController {
       authority,
     );
 
-    return { ok: true, message: 'Fix Need is Updated', editedNeed };
+    return { ok: true, message: 'Fix Need is Updated', data: editedNeed };
   }
 
   @Delete('deleteFixNeed/:fixNeedId')
@@ -91,6 +91,10 @@ export default class FixNeedManagementRouteController {
       fixNeedId,
     );
 
-    return { ok: true, message: 'The Fix Need is Deleted', deletedFixNeed };
+    return {
+      ok: true,
+      message: 'The Fix Need is Deleted',
+      data: deletedFixNeed,
+    };
   }
 }

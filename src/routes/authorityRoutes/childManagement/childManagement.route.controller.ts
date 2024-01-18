@@ -37,14 +37,14 @@ export default class ChildManagementRouteController {
       requestBody,
     );
 
-    return { ok: true, message: 'Child Has Been Created', createdChild };
+    return { ok: true, message: 'Child Has Been Created', data: createdChild };
   }
 
   @Get('getChildCard/:childId')
   public async GetChild(@Param('childId', ParseIntPipe) childId: number) {
     const child = await this.childManagementRouteService.getChildCard(childId);
 
-    return { ok: true, message: 'Child Retrieved', child };
+    return { ok: true, message: 'Child Retrieved', data: child };
   }
 
   @Post('editChild/:childId')
@@ -59,7 +59,7 @@ export default class ChildManagementRouteController {
       requestBody,
     );
 
-    return { ok: true, message: 'Child is Edited', editedChild };
+    return { ok: true, message: 'Child is Edited', data: editedChild };
   }
 
   @Delete('deleteChild/:childId')
@@ -71,7 +71,7 @@ export default class ChildManagementRouteController {
       .deleteChild(childId, authority)
       .catch((err) => console.error(err));
 
-    return { ok: true, message: 'Child is deleted', deletedChild };
+    return { ok: true, message: 'Child is deleted', data: deletedChild };
   }
 
   @Post('listChilds/:page')
@@ -88,7 +88,7 @@ export default class ChildManagementRouteController {
     return {
       ok: true,
       message: 'Childs Are Retrieved',
-      result,
+      data: result,
     };
   }
 }

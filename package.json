@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "author": "Samet Sarıçiçek",
-  "private": true,
   "license": "UNLICENSED",
+  "main": "dist/main.js",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

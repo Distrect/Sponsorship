@@ -15,7 +15,7 @@ export default class ChildProfileRouteController {
     const profile =
       await this.childProfileRouteService.getChildProfile(childId);
 
-    return { ok: true, message: 'Child profile', profile };
+    return { ok: true, message: 'Child profile', data: profile };
   }
 
   @Get('getFixNeeds/:childId')
@@ -24,7 +24,7 @@ export default class ChildProfileRouteController {
   ) {
     const fixNeeds = await this.childProfileRouteService.getFixNeeds(childId);
 
-    return { ok: true, message: 'f', fixNeeds };
+    return { ok: true, message: 'f', data: fixNeeds };
   }
 
   @Get('sponsorToChild/:fixNeedId')
@@ -37,6 +37,6 @@ export default class ChildProfileRouteController {
       fixNeedId,
     );
 
-    return { ok: true, message: 'w', sponosorship };
+    return { ok: true, message: 'w', data: sponosorship };
   }
 }

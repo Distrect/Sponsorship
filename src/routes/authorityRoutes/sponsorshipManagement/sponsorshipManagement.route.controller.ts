@@ -29,7 +29,7 @@ export default class SponsorshipManagementRouteController {
         sponosrshipId,
       );
 
-    return { ok: true, message: 'Karagümrük yanıyor', sponsorship };
+    return { ok: true, message: 'Karagümrük yanıyor', data: sponsorship };
   }
 
   @Delete('blockSponsorship/:sponsorshipId')
@@ -39,6 +39,10 @@ export default class SponsorshipManagementRouteController {
         sponosrshipId,
       );
 
-    return { ok: true, message: 'Sponosrship is blocked', blockedSponsorship };
+    return {
+      ok: true,
+      message: 'Sponosrship is blocked',
+      data: blockedSponsorship,
+    };
   }
 }

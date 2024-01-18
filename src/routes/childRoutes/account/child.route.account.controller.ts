@@ -38,6 +38,6 @@ export default class ChildAccountRouteController {
       maxAge: this.cookieAge * 2,
     });
 
-    return { ok: true, mesage: 'You are logged in', child };
+    return { ok: true, mesage: 'You are logged in', data: child };
   }
 }

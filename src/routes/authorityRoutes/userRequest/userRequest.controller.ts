@@ -33,7 +33,7 @@ export default class UserRequestController {
     return {
       ok: true,
       message: 'User Requests Successfully Returned',
-      requests,
+      data: requests,
     };
   }
 
@@ -50,7 +50,7 @@ export default class UserRequestController {
     return {
       ok: true,
       message: 'Answer Succesfully saved',
-      userRequest,
+      data: userRequest,
     };
   }
 }
