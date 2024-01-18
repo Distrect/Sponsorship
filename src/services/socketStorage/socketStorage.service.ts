@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { Role } from 'src/database/user';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { ServerError } from 'src/utils/error';
 
 @Injectable()

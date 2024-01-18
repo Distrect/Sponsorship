@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Role } from 'src/database/user';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { AuthorizationError, ServerError } from 'src/utils/error';
 
 export const User = createParamDecorator(

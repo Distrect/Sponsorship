@@ -5,7 +5,7 @@ import {
   HistoryDTO,
   SponsorshipHistoryDTO,
 } from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class HistoryManagementRouteService {

@@ -11,7 +11,7 @@ import {
   IFilterChilds,
   ISortChilds,
 } from 'src/modules/userModule/childModule/child.module.interface';
-import { IPaginationData } from 'src/shared/types';
+import { IPaginationData } from 'shared/types';
 import Child from 'src/database/user/child/child.entity';
 
 interface IChildSafe {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import MessageService from 'src/modules/sponsorModule/messageModule/message.service';
 
 @Injectable()

@@ -6,7 +6,7 @@ import {
 } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
 import NeedGroupService from 'src/modules/donationModule/needGroup/needGroup.service';
 import { UserRouteService } from 'src/routes/userRoutes/user.route.service';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class ChildInNeedRouteService extends UserRouteService {

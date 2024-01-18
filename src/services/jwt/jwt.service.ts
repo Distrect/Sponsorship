@@ -3,7 +3,7 @@ import jwt, {
   TokenExpiredError,
   VerifyOptions,
 } from 'jsonwebtoken';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import {
   AuthorizationError,
   FormFieldError,

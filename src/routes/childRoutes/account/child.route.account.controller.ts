@@ -5,7 +5,7 @@ import { Role } from 'src/database/user';
 
 import ChildAccountRouteService from 'src/routes/childRoutes/account/child.route.account.service';
 import JwtService from 'src/services/jwt/jwt.service';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 
 @Controller('child/account')
 export default class ChildAccountRouteController {

@@ -4,7 +4,7 @@ import {
   DonateToNeedsDTO,
   IDonateChildNeedDTO,
 } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { BadRequestError, ServerError } from 'src/utils/error';
 import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';

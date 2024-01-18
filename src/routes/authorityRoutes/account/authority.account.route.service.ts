@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 import { Role } from 'src/database/user';
 import UserService from 'src/modules/userModule/userModule/user.service';
 

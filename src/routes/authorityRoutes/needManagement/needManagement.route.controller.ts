@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import {
   EditNeedDTO,
   CreateNeedDTO,

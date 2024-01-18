@@ -4,7 +4,7 @@ import FixNeedDAO from 'src/database/sponsor/fixNeed/fixNeed.DAO';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import UserDAO from 'src/database/user/user/user.DAO';
 import SponsorshipPaymnetDAO from 'src/database/sponsor/sponsorshipPayment/sponsorsipPaymnet.DAO';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { SponsorshipHistoryDTO } from 'src/routes/authorityRoutes/historyManagment/historyManagement.route.interface';
 
 @Injectable()

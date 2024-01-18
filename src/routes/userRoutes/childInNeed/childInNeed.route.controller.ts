@@ -12,7 +12,7 @@ import {
   IDonateChildNeedDTO,
   ListChildwithNeedsDTO,
 } from 'src/routes/userRoutes/childInNeed/childInNeed.interface';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { Role } from 'src/database/user';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import ChildInNeedRouteService from 'src/routes/userRoutes/childInNeed/childInNeed.route.service';

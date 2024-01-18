@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import UserRequestService from 'src/modules/userModule/userRequest/userRequest.service';
 import { AnswerDTO } from 'src/routes/authorityRoutes/userRequest/userRequest.route.dto';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class UserRequestRouteService {

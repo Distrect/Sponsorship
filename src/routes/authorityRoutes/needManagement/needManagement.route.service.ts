@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import { NeedGroupWithNeedsWithTotalDonation } from 'src/database/donation/needGroup/needGroup.DAO.interface';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import {
   CreateNeedDTO,
   EditNeed,

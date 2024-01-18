@@ -5,7 +5,7 @@ import {
   EditChildDTO,
   ListChildDTO,
 } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class ChildManagementRouteService {

@@ -9,9 +9,9 @@ import {
   OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Role } from 'src/database/user';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { ActorPoint } from 'src/websocket/messageGateway/message.gateway.interface';
-import { MessageDTO } from 'src/shared/webSocket.types';
+import { MessageDTO } from 'shared/webSocket.types';
 import { Socket, Server } from 'socket.io';
 import { AuthorizationError, ServerError } from 'src/utils/error';
 import JwtService from 'src/services/jwt/jwt.service';

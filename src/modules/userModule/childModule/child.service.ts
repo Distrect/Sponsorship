@@ -4,7 +4,7 @@ import type {
   IFilterChilds,
   ISortChilds,
 } from 'src/modules/userModule/childModule/child.module.interface';
-import type { IUserCookie } from 'src/shared/types';
+import type { IUserCookie } from 'shared/types';
 import type { ChildWhere } from 'src/database/user/child/child.DAO.interface';
 import { EditChildDTO } from 'src/routes/authorityRoutes/childManagement/childManagement.interface';
 import ChildDAO from 'src/database/user/child/child.DAO';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Injector } from 'src/database/utils/repositoryProvider';
-import { IPaginationData } from 'src/shared/types';
+import { IPaginationData } from 'shared/types';
 import { ChildNeedGroupStatus } from 'src/database/donation';
 import {
   HasActiveNeedGroupError,

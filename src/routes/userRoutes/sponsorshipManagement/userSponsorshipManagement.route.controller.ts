@@ -2,7 +2,7 @@ import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import UserSponsorshipManagementRouteService from 'src/routes/userRoutes/sponsorshipManagement/userSponsorshipManagement.route.service';
 
 @UseInterceptors(new CookieInterceptor(Role.User))

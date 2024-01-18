@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.interface';
 import {
   ServerError,

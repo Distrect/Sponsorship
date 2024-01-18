@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { AnswerDTO } from 'src/routes/authorityRoutes/userRequest/userRequest.route.dto';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import UserRequestRouteService from 'src/routes/authorityRoutes/userRequest/userRequest.route.service';

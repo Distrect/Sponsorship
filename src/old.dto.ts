@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import Child from 'src/database/user/child/child.entity';
 import { CityEnum, NationalityEnum } from 'src/database/user';
-import { ListPaginationDto } from 'src/shared/dtos';
+import { ListPaginationDto } from 'shared/dtos';
 
 class IdentificationDto {
   @IsNotEmpty()

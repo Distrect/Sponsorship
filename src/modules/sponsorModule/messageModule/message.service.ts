@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SponsorshipStatus } from 'src/database/sponsor';
 import { Role } from 'src/database/user';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import { NotSponsoredError } from 'src/utils/error';
 import MessageDAO from 'src/database/sponsor/message/message.dao';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
@@ -24,8 +24,8 @@ export default class MessageService {
       actor.role === Role.Child
         ? await this.childDAO.getChild({ userId: actor.userId })
         : actor.role === Role.User
-        ? await this.userDAO.getUser({ userId: actor.userId })
-        : null;
+          ? await this.userDAO.getUser({ userId: actor.userId })
+          : null;
 
     if (!user) throw new Error('haya');
 

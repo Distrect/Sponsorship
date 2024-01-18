@@ -16,7 +16,7 @@ import {
 } from 'src/routes/userRoutes/account/user.account.route.dto';
 import UserAccountRouteService from 'src/routes/userRoutes/account/user.account.route.service';
 import JwtService from 'src/services/jwt/jwt.service';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 
 @Controller('user/account')
 export default class UserAccountRouteController {

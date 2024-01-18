@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class SponsorshipManagementRouteService {

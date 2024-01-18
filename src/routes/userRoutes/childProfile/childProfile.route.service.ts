@@ -4,7 +4,7 @@ import ChildNeedService from 'src/modules/donationModule/childNeed/childNeed.ser
 import FixNeedService from 'src/modules/sponsorModule/fixNeed/fixNeed.service';
 import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
 import ChildService from 'src/modules/userModule/childModule/child.service';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class ChildProfileRouteService {

@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { Response, NextFunction, Request } from 'express';
 import { Role } from 'src/database/user';
-import { ExtendedRequest, IUserCookie } from 'src/shared/types';
+import { ExtendedRequest, IUserCookie } from 'shared/types';
 import { AuthorizationError } from 'src/utils/error';
 import _ from 'lodash';
 import AuthService from 'src/services/jwt/jwt.service';

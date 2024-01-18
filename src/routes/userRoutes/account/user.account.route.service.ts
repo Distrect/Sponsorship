@@ -6,7 +6,7 @@ import {
   UserIDImages,
   UserRegisterDTO,
 } from 'src/routes/userRoutes/account/user.account.route.dto';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 
 @Injectable()
 export default class UserAccountRouteService {

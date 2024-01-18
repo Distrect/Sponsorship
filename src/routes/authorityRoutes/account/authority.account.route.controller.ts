@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import { Response } from 'express';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 import { Role } from 'src/database/user';
 import AuthorityRouteGlobal from 'src/routes/authorityRoutes/authority.route.service';
 import JwtService from 'src/services/jwt/jwt.service';

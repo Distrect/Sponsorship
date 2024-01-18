@@ -1,6 +1,6 @@
 import { NestMiddleware, Injectable } from '@nestjs/common';
 import { Response, NextFunction } from 'express';
-import { ExtendedRequest } from 'src/shared/types';
+import { ExtendedRequest } from 'shared/types';
 import { AuthorizationError } from 'src/utils/error';
 import UserService from 'src/modules/userModule/userModule/user.service';
 

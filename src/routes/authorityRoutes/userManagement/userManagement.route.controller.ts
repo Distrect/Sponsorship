@@ -10,7 +10,7 @@ import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import UserManagementRouteService from 'src/routes/authorityRoutes/userManagement/userManagement.route.service';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @UseInterceptors(new CookieInterceptor(Role.Authority))
 @Controller('authority/userManagement')

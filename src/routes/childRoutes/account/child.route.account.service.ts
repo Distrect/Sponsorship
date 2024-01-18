@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from 'src/database/user';
 import UserService from 'src/modules/userModule/userModule/user.service';
-import { LoginDto } from 'src/shared/dtos';
+import { LoginDto } from 'shared/dtos';
 
 @Injectable()
 export default class ChildAccountRouteService {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import SponsorshipService from 'src/modules/sponsorModule/sponsor/sponsorShip.service';
 import UserService from 'src/modules/userModule/userModule/user.service';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 
 @Injectable()
 export default class UserManagementRouteService {

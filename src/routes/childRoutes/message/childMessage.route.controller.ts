@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { IUser, Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
-import { IUserCookie } from 'src/shared/types';
+import { IUserCookie } from 'shared/types';
 import ChildMessageRotueService from 'src/routes/childRoutes/message/childMessage.route.service';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 
