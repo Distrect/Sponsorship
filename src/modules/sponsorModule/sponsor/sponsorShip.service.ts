@@ -16,6 +16,10 @@ export default class SponsorshipService {
     private sponsorshipPaymentDAO: SponsorshipPaymnetDAO,
   ) {}
 
+  public async getSponsorshipMessages(sponsorshipId: number) {
+    return await this.sponsorshipDAO.getSponsorship({ sponsorshipId });
+  }
+
   public async blockSponsorship(sponosrshipId: number) {
     return await this.sponsorshipDAO.blockSponsorship(sponosrshipId);
   }

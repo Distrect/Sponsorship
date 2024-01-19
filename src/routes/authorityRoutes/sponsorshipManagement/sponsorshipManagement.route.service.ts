@@ -6,6 +6,13 @@ import { IUserCookie } from 'shared/types';
 export default class SponsorshipManagementRouteService {
   constructor(private sponosrshipService: SponsorshipService) {}
 
+  public async getSponsorshipMessages(
+    authority: IUserCookie,
+    sponosrshipId: number,
+  ) {
+    return await this.sponosrshipService.getSponsorshipMessages(sponosrshipId);
+  }
+
   public async blockSponsorship(sponosrshipId: number) {
     return await this.sponosrshipService.blockSponsorship(sponosrshipId);
   }
