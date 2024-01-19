@@ -4,6 +4,8 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   Index,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import User from '../user/user.entity';
 import { ActorType, NationalityEnum } from 'src/database/user';
@@ -35,7 +37,8 @@ export default class Identification {
   @Column('varchar', { default: 'www.x.com' })
   backPath: string;
 
-  @ManyToOne(() => User, (user) => user.identifications)
+  @OneToOne(() => User, (user) => user.identifications)
+  @JoinColumn()
   user: User;
 
   @ManyToOne(() => Child, (child) => child.identifications)

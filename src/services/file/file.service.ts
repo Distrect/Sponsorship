@@ -20,7 +20,8 @@ export default class FileService {
   private idFrontName: FrontIDName = 'ID_FRONT_PAGE.jpg';
   private idBackName: BackIDName = 'ID_BACK_PAGE.jpg';
 
-  private storagePath: string = path.join(__dirname, '/../../../storage');
+  private storagePath: string =
+    'C:/Users/myfor/Sponsorship-App/sponsorship/storage';
 
   private createFile(
     file: Express.Multer.File,

@@ -26,9 +26,10 @@ export default class UserDAO {
     let querry = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.loginRequests', 'user_request')
+      .leftJoinAndSelect('user.identifications', 'identification')
       .orderBy('user_request.createdAt', 'ASC')
-      .skip((filters.page || 0) * skip)
-      .take(skip)
+      /*.skip((filters.page || 0) * skip)
+      .take(skip)*/
       .where('user_request.status = :status', { status });
 
     if (filters.city) {

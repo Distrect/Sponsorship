@@ -11,6 +11,7 @@ import FileService from 'src/services/file/file.service';
 import { readFileSync } from 'fs';
 import Safe from 'src/database/donation/safe/safe.entity';
 import { Status } from 'src/database/donation';
+import { ActorType } from 'src/database/user';
 
 const fronIdBuffer = readFileSync(
   'C:/Users/myfor/OneDrive/Masaüstü/ID_FRONT_PAGE.jpg',
@@ -66,11 +67,18 @@ export const databaseProviders = [
         const needGroups: NeedGroup[] = [];
         const sposnsoships: Sponsorship[] = [];
         const identifications: Identification[] = [];
+        const identificationOfUsers: Identification[] = [];
         const safes: Safe[] = [];
         const requestUsers = users.slice(5);
-        /*
-        const userRequests = requestUsers.map((user) => {
+
+        const userRequests = users.map((user) => {
           const request = mockDataGenerator.genearateMockUserRequest({ user });
+          identificationOfUsers.push(
+            mockDataGenerator.generateIdentification({
+              user,
+              actorType: ActorType.USER,
+            }),
+          );
           fileService.saveFile2(
             fronIdBuffer,
             'identification',
@@ -85,7 +93,7 @@ export const databaseProviders = [
           );
           return request;
         });
-*/
+
         let i = 0;
 
         for (const child of childs) {
@@ -150,8 +158,9 @@ export const databaseProviders = [
             managerSave(sposnsoships),
             managerSave(identifications),
             managerSave(donations),
-            // managerSave(userRequests),
+            managerSave(userRequests),
             managerSave(safes),
+            managerSave(identificationOfUsers),
           ]);
 
         const fUfC = sponsorshipRecords[0];

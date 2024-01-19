@@ -278,14 +278,14 @@ export default class MockDataGenerator implements IMockDataGenerator {
 
   public generateIdentification(
     identificationParams: DeepPartial<Identification>,
-  ): DeepPartial<Identification> {
+  ): Identification {
     return this.dataSource.manager.create(Identification, {
       nationality: NationalityEnum.KKTC,
       idNumber: faker.string.numeric({ length: 10 }),
       frontPath: 'C:/Users/myfor/sponsorship/src/shared/ID_FRONT_PAGE.jpg',
       backPath: 'C:/Users/myfor/sponsorship/src/shared/ID_BACK_PAGE.jpg',
       ...identificationParams,
-    });
+    }) as Identification;
   }
 
   public generateMockDonation(donationParams: DeepPartial<Donation>): Donation {
