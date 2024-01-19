@@ -6,7 +6,7 @@ import { INeedWithTotal } from 'src/database/donation/childNeed/childNeed.DAO.in
 import UserDAO from 'src/database/user/user/user.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import DonationDAO from 'src/database/donation/donation/donation.DAO';
-import { Status } from 'src/database/donation';
+import { NeedStatus } from 'src/database/donation';
 
 @Injectable()
 export default class ChildNeedDAO {
@@ -93,6 +93,13 @@ export default class ChildNeedDAO {
         },
       );
     const needWithTotal = (await query.getRawOne()) as INeedWithTotal;
+
+    const x = await this.donationDAO.getNeedDonations(needWithTotal.needId);
+    console.log('xxxxx', x, needWithTotal);
+
+    if (needWithTotal.needId !== null) {
+      needWithTotal.donations = x;
+    }
 
     if (!needWithTotal) throw new NotFound();
 

@@ -6,6 +6,8 @@ import {
   CreateNeedDTO,
   EditNeed,
   DonationHistoryParams,
+  EditNeedGroupDTO,
+  ICreateNeedGroup,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import ChildNeedService from 'src/modules/donationModule/childNeed/childNeed.service';
 import Donation from 'src/database/donation/donation/donation.entity';
@@ -13,6 +15,14 @@ import Donation from 'src/database/donation/donation/donation.entity';
 @Injectable()
 export default class NeedManagementRouteService {
   constructor(private childNeedService: ChildNeedService) {}
+
+  public async createNeedGroup(body: ICreateNeedGroup) {
+    return await this.childNeedService.createNeedGroup(body);
+  }
+
+  public async editNeedGroup(body: EditNeedGroupDTO) {
+    return this.childNeedService.editNeedGroup(body);
+  }
 
   public async createNeeds(
     childId: number,

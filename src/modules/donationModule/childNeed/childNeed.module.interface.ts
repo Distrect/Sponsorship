@@ -1,7 +1,12 @@
 import { IsNotEmpty, IsOptional, Min } from 'class-validator';
-import { NeedUrgency } from 'src/database/donation';
+import {
+  NeedUrgency,
+  NeedStatus,
+  ChildNeedGroupStatus,
+} from 'src/database/donation';
 import { CityEnum } from 'src/database/user';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
+import { NeedGroup } from 'src/database/main/entities';
 
 class Need implements Partial<ChildNeed> {
   @IsNotEmpty()
@@ -25,6 +30,29 @@ export class CreateNeedDTO {
   // title: string;
 }
 
+export class ICreateNeedGroup {
+  @IsNotEmpty()
+  title: string;
+
+  @IsNotEmpty()
+  explanation: string;
+
+  @IsNotEmpty()
+  userId: number;
+}
+
+export class EditNeedGroupDTO implements Partial<NeedGroup> {
+  @IsNotEmpty()
+  needGroupId: number;
+
+  @IsOptional()
+  title?: string;
+  @IsOptional()
+  status?: ChildNeedGroupStatus;
+  @IsOptional()
+  explanation?: string;
+}
+
 export class EditNeed implements Partial<ChildNeed> {
   @IsNotEmpty()
   needId: number;
@@ -42,6 +70,9 @@ export class EditNeed implements Partial<ChildNeed> {
   @IsOptional()
   @Min(0)
   amount?: number;
+
+  @IsOptional()
+  status?: NeedStatus;
 }
 
 export class EditNeedDTO {

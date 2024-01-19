@@ -10,7 +10,6 @@ import Donation from 'src/database/donation/donation/donation.entity';
 import FileService from 'src/services/file/file.service';
 import { readFileSync } from 'fs';
 import Safe from 'src/database/donation/safe/safe.entity';
-import { Status } from 'src/database/donation';
 import { ActorType } from 'src/database/user';
 
 const fronIdBuffer = readFileSync(

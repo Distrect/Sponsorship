@@ -5,6 +5,7 @@ import { IPaginationData } from 'shared/types';
 import { ChildNeedGroupStatus } from 'src/database/donation';
 import {
   HasActiveNeedGroupError,
+  HasNoActiveNeedGroupError,
   NotFound,
   ServerError,
 } from 'src/utils/error';
@@ -66,7 +67,7 @@ export default class NeedGroupDAO {
       childId,
     )) as NeedGroupWithNeedsWithTotalDonation;
 
-    if (!activeNeedGroup) return null;
+    if (!activeNeedGroup) throw new HasNoActiveNeedGroupError();
 
     const promiseChildNeeds = activeNeedGroup.needs.map(({ needId }) =>
       this.childNeedDAO.getNeedWithTotalDonation(needId),
@@ -176,6 +177,20 @@ export default class NeedGroupDAO {
       ...updateParams,
       needGroupId,
     })) as NeedGroup;
+  }
+  public async updateNeedGroupEntity2(
+    needGroupId: number,
+    updateParams: DeepPartialNeedGroup,
+  ) {
+    const daved = (await this.needGroupRepository.save({
+      ...updateParams,
+      needGroupId,
+    })) as NeedGroup;
+
+    return await this.needGroupRepository.findOne({
+      where: { needGroupId },
+      relations: { child: true, needs: true },
+    });
   }
 
   public async getActiveNeedGroupOfChild(childId: number) {

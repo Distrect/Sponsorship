@@ -13,7 +13,7 @@ import SafeDAO from 'src/database/donation/safe/safe.DAO';
 import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import { SponsorshipStatus } from 'src/database/sponsor';
-import { ChildNeedGroupStatus, Status } from 'src/database/donation';
+import { ChildNeedGroupStatus, NeedStatus } from 'src/database/donation';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
 
 @Injectable()
@@ -112,8 +112,9 @@ export default class ChildService {
     const updatedNeeds = await this.childNeedDAO.updateArrayChildNeedEntity(
       activeNeedsOfChild.needs.map((need) => {
         const status = need.status;
-        if (status === Status.COMPLETED || status === Status.MET) return need;
-        need.status = Status.NOT_COMPLETED;
+        if (status === NeedStatus.COMPLETED || status === NeedStatus.MET)
+          return need;
+        need.status = NeedStatus.NOT_COMPLETED;
         return need;
       }),
     );

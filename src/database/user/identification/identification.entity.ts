@@ -41,7 +41,8 @@ export default class Identification {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Child, (child) => child.identifications)
+  @OneToOne(() => Child, (child) => child.identifications)
+  @JoinColumn()
   child: Child;
   /*
   @OneToMany(

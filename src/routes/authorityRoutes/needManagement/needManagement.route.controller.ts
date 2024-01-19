@@ -17,6 +17,8 @@ import {
   EditNeedDTO,
   CreateNeedDTO,
   EditNeed,
+  EditNeedGroupDTO,
+  ICreateNeedGroup,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import NeedManagementRouteService from 'src/routes/authorityRoutes/needManagement/needManagement.route.service';
@@ -85,5 +87,17 @@ export default class NeedManagmentRouteController {
     };
   }
 
-  public async GetNeeds() {}
+  @Post('createNeedGroup')
+  public async CreateNeedGroup(@Body() body: ICreateNeedGroup) {
+    const created =
+      await this.childManagementRouteService.createNeedGroup(body);
+  }
+
+  @Post('editNeedGroup')
+  public async EditNeedGroup(@Body() body: EditNeedGroupDTO) {
+    const editedNeedGrouyp =
+      await this.childManagementRouteService.editNeedGroup(body);
+
+    return { ok: true, message: 'x', data: editedNeedGrouyp };
+  }
 }

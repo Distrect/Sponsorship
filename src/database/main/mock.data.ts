@@ -19,7 +19,7 @@ import BaseUser from 'src/database/user/baseUser';
 import Authority from 'src/database/user/authority/authority.entity';
 import Identification from 'src/database/user/identification/identification.entity';
 import { FixNeedStatus, SponsorshipStatus } from 'src/database/sponsor';
-import { NeedUrgency, Status } from 'src/database/donation';
+import { NeedUrgency, NeedStatus } from 'src/database/donation';
 import jwt from 'jsonwebtoken';
 import Donation from 'src/database/donation/donation/donation.entity';
 import Message from 'src/database/sponsor/message/message.entity';
@@ -152,7 +152,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
       ...this.generateMockBaseUser(),
       role: Role.Child,
       story: faker.person.bio(),
-      dateOfBirth: faker.date.birthdate(),
+      dateOfBirth: new Date(2010, 1, 1),
       ...childParams,
     });
 
@@ -254,7 +254,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
       price: 100,
       // price: faker.number.float({ min: 50, max: 75, precision: 2 }),
       startAmount: amount,
-      status: Status.ACTIVE,
+      status: NeedStatus.ACTIVE,
       title: faker.commerce.product(),
       urgency: NeedUrgency.NORMAL,
       ...childNeedParams,

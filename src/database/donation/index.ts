@@ -9,7 +9,7 @@ export enum NeedSafeType {
   OUTCOME = 'Outcome',
 }
 
-export enum Status {
+export enum NeedStatus {
   ACTIVE = 'Active',
   COMPLETED = 'Completed',
   NOT_COMPLETED = 'Not Completed', // Bunu otorite seçer

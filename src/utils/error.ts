@@ -62,7 +62,7 @@ export class HasNoActiveNeedGroupError extends HttpException {
   constructor() {
     super(
       'The child has no active group. Please create it first',
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.METHOD_NOT_ALLOWED,
     );
   }
 }

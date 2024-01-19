@@ -126,4 +126,15 @@ export default class DonationDAO {
 
     return await donationHistory.getMany();
   }
+
+  public async getNeedDonations(needId: number) {
+    const res = await this.donationRepository.find({
+      where: { childNeed: { needId } },
+      relations: {
+        user: true,
+      },
+    });
+
+    return res;
+  }
 }

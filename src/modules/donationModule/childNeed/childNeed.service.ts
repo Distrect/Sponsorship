@@ -11,6 +11,8 @@ import {
   EditNeed,
   CreateNeedDTO,
   DonationHistoryParams,
+  EditNeedGroupDTO,
+  ICreateNeedGroup,
 } from 'src/modules/donationModule/childNeed/childNeed.module.interface';
 import ChildDAO from 'src/database/user/child/child.DAO';
 import DonationDAO from 'src/database/donation/donation/donation.DAO';
@@ -19,7 +21,7 @@ import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 import SafeDAO from 'src/database/donation/safe/safe.DAO';
 import ChildNeed from 'src/database/donation/childNeed/childNeed.entity';
 import { ICreateChild } from 'src/modules/userModule/childModule/child.module.interface';
-import { Status } from 'src/database/donation';
+import { ChildNeedGroupStatus, NeedStatus } from 'src/database/donation';
 
 @Injectable()
 export default class ChildNeedService {
@@ -30,6 +32,17 @@ export default class ChildNeedService {
     private donationDAO: DonationDAO,
     private safeDAO: SafeDAO,
   ) {}
+
+  public async createNeedGroup(body: ICreateNeedGroup) {
+    return await this.needGroupDAO.createChildNeedGroup(body.userId, {
+      title: body.title,
+      explanation: body.explanation,
+    });
+  }
+
+  public async editNeedGroup({ needGroupId, ...rest }: EditNeedGroupDTO) {
+    return await this.needGroupDAO.updateNeedGroupEntity2(needGroupId, rest);
+  }
 
   private compareNeed(
     { totalDonation }: INeedWithTotal,
@@ -109,7 +122,7 @@ export default class ChildNeedService {
     const updatedNeed = await this.childNeedDAO.updateNeed({
       ...editedNeed,
       needId: originalNeed.needId,
-      status: moneyToSafe ? Status.MET : originalNeed.status,
+      status: moneyToSafe ? NeedStatus.MET : originalNeed.status,
     });
 
     if (moneyToSafe) {

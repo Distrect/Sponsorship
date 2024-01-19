@@ -1,4 +1,11 @@
-import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+  AfterLoad,
+} from 'typeorm';
 import Safe from 'src/database/donation/safe/safe.entity';
 import FixNeed from 'src/database/sponsor/fixNeed/fixNeed.entity';
 import BaseUser from 'src/database/user/baseUser';
@@ -9,7 +16,7 @@ import Identification from 'src/database/user/identification/identification.enti
 
 @Entity()
 export default class Child extends BaseUser {
-  @Column('date')
+  @Column('datetime')
   dateOfBirth: Date;
 
   @Column('varchar', { default: '1' })
@@ -18,8 +25,8 @@ export default class Child extends BaseUser {
   @OneToOne(() => Safe, (safe) => safe.child)
   safe: Safe;
 
-  @OneToMany(() => Identification, (identification) => identification.child)
-  identifications: Identification[];
+  @OneToOne(() => Identification, (identification) => identification.child)
+  identifications: Identification;
 
   @OneToMany(() => ChildStatus, (childStatus) => childStatus.child)
   status: ChildStatus[];
@@ -30,14 +37,20 @@ export default class Child extends BaseUser {
   @OneToMany(() => NeedGroup, (needGroup) => needGroup.child)
   needGroups: NeedGroup[];
 
-  public get age() {
+  age: number;
+
+  @AfterLoad()
+  public calculateAge() {
+    console.log('Datre', this.dateOfBirth, typeof this.dateOfBirth);
     if (!this.dateOfBirth) {
       throw new Error('dateOfBirth is null');
     }
 
     const todayDate = new Date();
 
-    const difference = todayDate.getTime() - this.dateOfBirth.getTime();
+    const difference = todayDate.getFullYear() - this.dateOfBirth.getFullYear();
+
+    this.age = difference;
 
     return difference;
   }

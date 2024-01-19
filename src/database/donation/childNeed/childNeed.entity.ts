@@ -8,7 +8,7 @@ import {
   VirtualColumn,
   Index,
 } from 'typeorm';
-import { NeedUrgency, Status } from 'src/database/donation';
+import { NeedUrgency, NeedStatus } from 'src/database/donation';
 import NeedSafe from 'src/database/donation/needSafe/needSafe.entity';
 import Donation from 'src/database/donation/donation/donation.entity';
 import NeedGroup from 'src/database/donation/needGroup/needGroup.entity';
@@ -53,8 +53,8 @@ export default class ChildNeed extends ChildNeedRelations {
   @Column('integer', { nullable: true })
   startAmount: number;
 
-  @Column('enum', { default: Status.ACTIVE, enum: Status })
-  status: Status;
+  @Column('enum', { default: NeedStatus.ACTIVE, enum: NeedStatus })
+  status: NeedStatus;
 
   @Column('boolean', { default: false })
   isDeleted: boolean;

@@ -8,7 +8,7 @@ import { NeedUrgency } from 'src/database/donation';
 type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 export type DeepPartialNeedGroup = DeepPartial<NeedGroup>;
 
-export abstract class NeedGroupWithNeedsWithTotalDonation extends NeedGroup {
+export interface NeedGroupWithNeedsWithTotalDonation extends NeedGroup {
   needs: INeedWithTotal[];
 }
 
