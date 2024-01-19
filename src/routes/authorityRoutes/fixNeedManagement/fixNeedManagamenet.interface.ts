@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { FixNeedStatus, SponsorshipStatus } from 'src/database/sponsor';
 import { IGetFixNeedFilter } from 'src/database/sponsor/fixNeed/fixNeed.interface';
 
@@ -16,9 +16,9 @@ export class CreateFixNeedDTO {
 }
 
 export class EditFixneedDTO {
-  @IsNotEmpty()
+  @IsOptional()
   title?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   amount?: number;
 }

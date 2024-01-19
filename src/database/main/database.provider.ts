@@ -164,11 +164,11 @@ export const databaseProviders = [
 
         const fUfC = sponsorshipRecords[0];
 
-        /* const mockMessages = await managerSave(
+        const mockMessages = await managerSave(
           mockDataGenerator.generator(100, 'Message', { sponsorship: fUfC }),
-        );*/
+        );
 
-        /*fUfC.messages = mockMessages;*/
+        fUfC.messages = mockMessages;
 
         const childNeedRepository =
           InitializedDatabase.getRepository(ChildNeed);

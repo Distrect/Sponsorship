@@ -8,12 +8,14 @@ import {
   GetFixNeedsDTO,
 } from 'src/routes/authorityRoutes/fixNeedManagement/fixNeedManagamenet.interface';
 import ChildDAO from 'src/database/user/child/child.DAO';
+import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 
 @Injectable()
 export default class FixNeedService {
   constructor(
     private fixNeedDAO: FixNeedDAO,
     private childDAO: ChildDAO,
+    private sponsorshipDAO: SponsorshipDAO,
   ) {}
 
   public async gtFixNeedsOfChild(childId: number, body: GetFixNeedsDTO) {
@@ -44,6 +46,17 @@ export default class FixNeedService {
       fixNeedId,
       FixNeedStatus.DEACTIVE,
     );
+
+    const sponsorshipOfFixNeed = await this.sponsorshipDAO.getSponsorship({
+      fixNeed: { fixNeedId },
+    });
+
+    console.log('Sp', sponsorshipOfFixNeed);
+
+    if (sponsorshipOfFixNeed !== null) {
+      sponsorshipOfFixNeed.status = SponsorshipStatus.DENIED;
+      await this.sponsorshipDAO.saveSponsorshipEntity(sponsorshipOfFixNeed);
+    }
 
     return disabledFixNeed;
   }

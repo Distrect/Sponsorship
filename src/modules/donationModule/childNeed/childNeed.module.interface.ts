@@ -18,8 +18,8 @@ class Need implements Partial<ChildNeed> {
   @IsNotEmpty()
   amount: number;
 
-  @IsNotEmpty()
-  urgency: NeedUrgency;
+  // @IsNotEmpty()
+  // urgency: NeedUrgency;
 }
 
 export class CreateNeedDTO {

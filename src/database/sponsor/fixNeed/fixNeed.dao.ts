@@ -74,7 +74,8 @@ export default class FixNeedDAO {
       .leftJoinAndSelect('sponsorship.messages', 'message')
       .leftJoinAndSelect('sponsorship.payment', 'payments')
       .leftJoin('fix_need.child', 'child')
-      .where('child.userId = :userId', {
+      .where('child.userId = :userId AND fix_need.isDeleted = :isDeleted', {
+        isDeleted: false,
         userId: child.userId,
       });
 
@@ -106,7 +107,9 @@ export default class FixNeedDAO {
     if (result.length === 0)
       throw new EmptyData('The Child Fix Needs is Empty');
 
-    return result;
+    child.fixNeeds = result;
+
+    return child;
   }
 
   public async getDen(childId: number) {
@@ -185,6 +188,7 @@ export default class FixNeedDAO {
 
     fixNeed.status = status;
 
+    fixNeed.isDeleted = true;
     return await this.saveFixNeedEntity(fixNeed);
   }
 

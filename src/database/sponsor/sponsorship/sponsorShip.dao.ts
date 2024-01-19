@@ -125,7 +125,7 @@ export default class SponsorshipDAO {
       },
     });
 
-    this.checkEntity(sponsorship);
+    //this.checkEntity(sponsorship);
 
     return sponsorship;
   }

@@ -301,7 +301,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return this.dataSource.manager.create(Message, {
       from,
       to,
-      message: faker.music.songName(),
+      message: faker.animal.bird(),
       sponsorship,
     });
   }
