@@ -51,7 +51,12 @@ function cryptor(
   return jwt.verify(value, secretKey, { ignoreExpiration: true }) as string;
 }
 
-console.log(cryptor('Xyzt.12345', 'encrypt'));
+console.log(
+  cryptor(
+    'eyJhbGciOiJIUzI1NiJ9.a2lkMTIz.b7A8kSRXiilZWuXRFCd6c-czLkM3hWLE7BG8BH7JpDg',
+    'decrypt',
+  ),
+);
 
 export default class MockDataGenerator implements IMockDataGenerator {
   EntityObject: EntitiyMapType<keyof TypeofEntityMap>;

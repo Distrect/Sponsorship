@@ -2,6 +2,7 @@ import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 import { CityEnum } from 'src/database/user';
 import Child from 'src/database/user/child/child.entity';
 import {
+  ICreateChild,
   IFilterChilds,
   ISortChilds,
 } from 'src/modules/userModule/childModule/child.module.interface';
@@ -10,7 +11,7 @@ export interface IListChildsQuery {
   page: number;
 }
 
-export class CreateChildDTO {
+export class CreateChildDTO implements ICreateChild {
   @IsNotEmpty()
   name: string;
 

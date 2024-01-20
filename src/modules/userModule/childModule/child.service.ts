@@ -15,6 +15,7 @@ import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import { SponsorshipStatus } from 'src/database/sponsor';
 import { ChildNeedGroupStatus, NeedStatus } from 'src/database/donation';
 import ChildNeedDAO from 'src/database/donation/childNeed/childNeed.DAO';
+import { cryptor } from 'src/utils/util';
 
 @Injectable()
 export default class ChildService {
@@ -36,11 +37,14 @@ export default class ChildService {
 
     const childSafe = await this.safeDAO.createChildSafe({ totalMoney: 0 });
 
+    const password = cryptor(createParams.password, 'encrypt');
+
     const child = await this.childDAO.createChild({
       safe: childSafe,
       status: [childStatus],
       city,
       ...createParams,
+      password,
     });
 
     return child;
