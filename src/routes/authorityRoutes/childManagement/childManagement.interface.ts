@@ -32,12 +32,19 @@ export class CreateChildDTO implements ICreateChild {
   story: string;
 }
 
-export class EditChildDTO implements Partial<Child> {
+export class EditChildDTO implements Partial<ICreateChild> {
+  @IsOptional()
   name?: string;
+  @IsOptional()
   lastname?: string;
+  @IsOptional()
   dateOfBirth?: Date;
+  @IsOptional()
   story?: string;
-  //   idNumber?: string;
+  @IsOptional()
+  email?: string;
+  @IsOptional()
+  password?: string;
 }
 
 export class ListChildDTO {

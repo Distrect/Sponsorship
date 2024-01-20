@@ -127,7 +127,7 @@ export default class ChildService {
       activeNeedsOfChild.needGroupId,
       activeNeedsOfChild,
     );
-
+    /*
     const needGroupTotal = activeNeedsOfChild.needs.reduce(
       (acc, val) => acc + val.totals,
       0,
@@ -138,7 +138,7 @@ export default class ChildService {
       needGroupTotal,
     );
 
-    return { safe: updatedChildSafe, needGroup: activeNeedsOfChild };
+    return { safe: updatedChildSafe, needGroup: activeNeedsOfChild };*/
   }
 
   public async cancelChildSponsorships(childId: number) {
@@ -168,6 +168,7 @@ export default class ChildService {
     child.isDeleted = true;
     const updatedChild = await this.childDAO.saveChildEntity(child);
 
-    return { child, cancelChildNeedsResult, cancelChildSponosrships };
+    return updatedChild;
+    //return { child, cancelChildNeedsResult, cancelChildSponosrships };
   }
 }

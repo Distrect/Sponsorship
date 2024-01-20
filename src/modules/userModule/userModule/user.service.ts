@@ -23,6 +23,7 @@ import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
 import jwt from 'jsonwebtoken';
 import SponsorshipDAO from 'src/database/sponsor/sponsorship/sponsorship.dao';
 import { SponsorshipStatus } from 'src/database/sponsor';
+import { ListUserDTO } from 'src/routes/authorityRoutes/userManagement/userManagement.interfaces';
 
 @Injectable()
 export default class UserService {
@@ -248,5 +249,9 @@ export default class UserService {
     const canceledSponsorships = await Promise.all(updateSponsorshipPromises);
 
     return user;
+  }
+
+  public async listUser(requestBody: ListUserDTO, page: number) {
+    return await this.userDAO.listUser(requestBody.filters, page);
   }
 }

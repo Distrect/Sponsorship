@@ -6,6 +6,8 @@ import { UserNotFoundError } from 'src/utils/error';
 import { IUserRequestFilters } from 'src/database/user/user/user.DAO.types';
 import User from 'src/database/user/user/user.entity';
 import UserRequestDAO from 'src/database/user/userRequest/userRequest.DAO';
+import { IFilterUser } from 'src/routes/authorityRoutes/userManagement/userManagement.interfaces';
+import { IPaginationData } from 'shared/types';
 
 @Injectable()
 export default class UserDAO {
@@ -74,6 +76,35 @@ export default class UserDAO {
       role: Role.User,
     });
     return await this.saveUserEntity(freshUser);
+  }
+
+  public async listUser(
+    { name, lastname, idNumber }: IFilterUser,
+    page: number,
+  ): Promise<IPaginationData<User>> {
+    const querry = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.identifications', 'identification')
+      .offset(page * 10)
+      .limit(10);
+
+    console.log('ID', idNumber);
+
+    if (name) querry.andWhere('user.name like :name', { name: `%${name}%` });
+    if (lastname)
+      querry.andWhere('user.lastname like :lastname', {
+        lastname: `${lastname}%`,
+      });
+    if (idNumber)
+      querry.andWhere('identification.idNumber like :idNumber', {
+        idNumber: `${idNumber}%`,
+      });
+
+    console.log('WQuerw', querry.getQuery());
+
+    const [users, count] = await querry.getManyAndCount();
+
+    return { count, result: users };
   }
 
   public async registerUser() {}

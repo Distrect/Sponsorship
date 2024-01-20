@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Injector } from 'src/database/utils/repositoryProvider';
 import { Repository, DeepPartial } from 'typeorm';
 import { NotFound, UserNotFoundError } from 'src/utils/error';
@@ -13,6 +13,7 @@ import {
 } from 'src/modules/userModule/childModule/child.module.interface';
 import { IPaginationData } from 'shared/types';
 import Child from 'src/database/user/child/child.entity';
+import NeedGroupDAO from 'src/database/donation/needGroup/needGroup.DAO';
 
 interface IChildSafe {
   totalNeedsDonation: number;
@@ -22,7 +23,10 @@ interface IChildSafe {
 
 @Injectable()
 export default class ChildDAO {
-  constructor(@Injector(Child) public childRepository: Repository<Child>) {}
+  constructor(
+    @Injector(Child) public childRepository: Repository<Child>,
+    @Inject(forwardRef(() => NeedGroupDAO)) private needGroupDAO: NeedGroupDAO,
+  ) {}
 
   public async updateChildEntity(
     entity: Child,
@@ -30,14 +34,11 @@ export default class ChildDAO {
   ) {
     if (!entity.userId) throw Error('Entity id is not provided');
 
-    return (await this.childRepository.save(
-      {
-        ...entity,
-        ...updatedChildData,
-        userId: entity.userId,
-      },
-      { reload: true },
-    )) as Child;
+    return (await this.childRepository.save({
+      ...entity,
+      ...updatedChildData,
+      userId: entity.userId,
+    })) as Child;
   }
 
   public async saveChildEntity(entity: Child) {
@@ -112,9 +113,9 @@ export default class ChildDAO {
       });
     }
 
-    if (age) {
-      querry = querry.andWhere('age = :age', { age });
-    }
+    // if (age) {
+    //   querry = querry.andWhere('age = :age', { age });
+    // }
 
     if (idNumber) {
       querry = querry = querry.andWhere('idNumber like :idNumber', {
@@ -136,6 +137,14 @@ export default class ChildDAO {
 
   public async getChildCard(childId: number) {
     const child = await this.getChild({ userId: childId });
+
+    const activeGroup = await this.needGroupDAO
+      .getActiveNeedGroupWithNeeds(child.userId)
+      .catch((error) => error.status === 405 && null);
+
+    if (activeGroup) {
+      child.needGroups = [activeGroup];
+    }
 
     return child;
   }

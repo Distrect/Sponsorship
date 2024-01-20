@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
+  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import { Role } from 'src/database/user';
@@ -11,6 +13,7 @@ import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
 import UserManagementRouteService from 'src/routes/authorityRoutes/userManagement/userManagement.route.service';
 import { IUserCookie } from 'shared/types';
+import { ListUserDTO } from 'src/routes/authorityRoutes/userManagement/userManagement.interfaces';
 
 @UseInterceptors(new CookieInterceptor(Role.Authority))
 @Controller('authority/userManagement')
@@ -49,5 +52,23 @@ export default class UserManagementRouteController {
     const blockedUser = await this.userManagementRouteService.blockUser(userId);
 
     return { ok: true, message: 'User Blocked', data: blockedUser };
+  }
+
+  @Post('listUsers/:page')
+  public async ListChilds(
+    @Param('page', ParseIntPipe) page: number,
+    @User(Role.Authority) authority: IUserCookie,
+    @Body() requestBody: ListUserDTO,
+  ) {
+    const result = await this.userManagementRouteService.listUsers(
+      requestBody,
+      page,
+      authority,
+    );
+    return {
+      ok: true,
+      message: 'Childs Are Retrieved',
+      data: result,
+    };
   }
 }
