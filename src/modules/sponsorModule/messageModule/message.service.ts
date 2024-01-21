@@ -31,7 +31,7 @@ export default class MessageService {
 
     const actorMessages = await this.sponsorshipDAO.getActorMessages(user);
 
-    return actorMessages;
+    return { actorMessages, user };
   }
 
   public async message(

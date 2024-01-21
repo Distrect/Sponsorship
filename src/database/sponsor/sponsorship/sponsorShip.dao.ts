@@ -205,6 +205,10 @@ export default class SponsorshipDAO {
       .orderBy('message.date', 'ASC')
       .where(whereAlias, { userId: user.userId });
 
+    // den.andWhere('sponsorship.status = :status', {
+    //   status: SponsorshipStatus.APPROVED,
+    // });
+
     const result = await den.getMany();
 
     console.log('Messages:', result[0].messages);

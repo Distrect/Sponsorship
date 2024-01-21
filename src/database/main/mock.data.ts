@@ -277,7 +277,7 @@ export default class MockDataGenerator implements IMockDataGenerator {
     return this.dataSource.manager.create(Sponsorship, {
       fixNeed: fixNeedInstance,
       user: userInstance,
-      status: faker.helpers.enumValue(SponsorshipStatus),
+      status: SponsorshipStatus.APPROVED,
     });
   }
 
