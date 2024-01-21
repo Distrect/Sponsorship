@@ -9,4 +9,8 @@ export default class UserSponsorshipManagementRouteService {
   public async getUserActiveSponsorships(user: IUserCookie) {
     return await this.sponsorshipService.getUserActiveSponsorships(user);
   }
+
+  public async deleteSponsorship(sponsorshipId: number) {
+    return await this.sponsorshipService.deleteSponsorship(sponsorshipId);
+  }
 }

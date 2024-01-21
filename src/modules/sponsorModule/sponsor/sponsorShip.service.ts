@@ -82,4 +82,8 @@ export default class SponsorshipService {
     const user = await this.userDAO.getUser({ userId });
     return await this.sponsorshipDAO.getUserActiveSponsorships(user.userId);
   }
+
+  public async deleteSponsorship(sponsorshipId: number) {
+    return await this.sponsorshipDAO.deleteSponsorship(sponsorshipId);
+  }
 }

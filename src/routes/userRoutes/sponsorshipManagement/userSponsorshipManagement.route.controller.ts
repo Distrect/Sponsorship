@@ -1,4 +1,11 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Role } from 'src/database/user';
 import { User } from 'src/middlewares/cookie/cookie.decorator';
 import { CookieInterceptor } from 'src/middlewares/cookie/cookie.middleware';
@@ -23,6 +30,23 @@ export default class UserSponsorshipManagementController {
       ok: true,
       message: 'Sponsorships Retrieved',
       data: userActiveSponsorships,
+    };
+  }
+
+  @Delete('deleteSponsorship/:sponsorshipId')
+  public async DeleteSponsorship(
+    @User(Role.User) user: IUserCookie,
+    @Param('sponsorshipId', ParseIntPipe) sponsorshipId: number,
+  ) {
+    const deletedSponsorship =
+      await this.sponsorshipManagementRouteService.deleteSponsorship(
+        sponsorshipId,
+      );
+
+    return {
+      ok: true,
+      message: 'Sponsorships Retrieved',
+      data: deletedSponsorship,
     };
   }
 }

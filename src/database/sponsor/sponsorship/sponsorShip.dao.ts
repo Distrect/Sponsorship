@@ -15,6 +15,11 @@ import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
 @Injectable()
 export default class SponsorshipDAO {
+  public async deleteSponsorship(sponsorshipId: number) {
+    const sponsorship = await this.getSponsorship({ sponsorshipId });
+
+    return await this.sponsorshipRepository.delete(sponsorship.sponsorshipId);
+  }
   constructor(
     @Injector(Sponsorship)
     private sponsorshipRepository: Repository<Sponsorship>,
@@ -193,7 +198,7 @@ export default class SponsorshipDAO {
 
     const den = this.sponsorshipRepository
       .createQueryBuilder('sponsorship')
-      .innerJoinAndSelect('sponsorship.messages', 'message')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
       .innerJoinAndSelect('sponsorship.fixNeed', 'fix_need')
       .innerJoinAndSelect('sponsorship.user', 'user')
       .innerJoinAndSelect('fix_need.child', 'child')
