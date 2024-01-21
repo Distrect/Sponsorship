@@ -29,7 +29,15 @@ export default class MessageService {
 
     if (!user) throw new Error('haya');
 
+    console.log('User', user);
+
     const actorMessages = await this.sponsorshipDAO.getActorMessages(user);
+
+    console.log(
+      'CHILD MESSAGES',
+      user.role === Role.Child &&
+        (await this.sponsorshipDAO.getChildMessages(user.userId)),
+    );
 
     return { actorMessages, user };
   }

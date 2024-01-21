@@ -15,6 +15,9 @@ import Sponsorship from 'src/database/sponsor/sponsorship/sponsorship.entity';
 
 @Injectable()
 export default class SponsorshipDAO {
+  checkIfUserSponsorToChild2(userId: number, userId1: number) {
+    throw new Error('Method not implemented.');
+  }
   public async deleteSponsorship(sponsorshipId: number) {
     const sponsorship = await this.getSponsorship({ sponsorshipId });
 
@@ -196,12 +199,14 @@ export default class SponsorshipDAO {
 
     if (!whereAlias) throw new Error('User Role is Not accepted');
 
+    console.log('WHRE', whereAlias);
+
     const den = this.sponsorshipRepository
       .createQueryBuilder('sponsorship')
-      .leftJoinAndSelect('sponsorship.messages', 'message')
       .innerJoinAndSelect('sponsorship.fixNeed', 'fix_need')
-      .innerJoinAndSelect('sponsorship.user', 'user')
       .innerJoinAndSelect('fix_need.child', 'child')
+      .innerJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
       .orderBy('message.date', 'ASC')
       .where(whereAlias, { userId: user.userId });
 
@@ -211,7 +216,7 @@ export default class SponsorshipDAO {
 
     const result = await den.getMany();
 
-    console.log('Messages:', result[0].messages);
+    console.log('Messages:', result);
 
     return result;
   }
@@ -284,5 +289,18 @@ export default class SponsorshipDAO {
         },
       },
     });
+  }
+
+  public async getChildMessages(userId: number) {
+    const query = this.sponsorshipRepository
+      .createQueryBuilder('sponsorship')
+      .leftJoinAndSelect('sponsorship.fixNeed', 'fix_need')
+      .leftJoinAndSelect('fix_need.child', 'child')
+      .leftJoinAndSelect('sponsorship.user', 'user')
+      .leftJoinAndSelect('sponsorship.messages', 'message')
+      .orderBy('message.date', 'ASC')
+      .where('child.userId = :userId', { userId });
+
+    return await query.getMany();
   }
 }

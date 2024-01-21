@@ -20,7 +20,7 @@ export default class ChildProfileRouteService {
   }
   s;
 
-  public async getChildProfile(childId: number) {
+  public async getChildProfile(childId: number, user: IUserCookie) {
     const child = await this.childService.getChild({ userId: childId });
     const needGroup = await this.childNeedService.getChildNeedsData(
       {} as IUserCookie,
@@ -31,10 +31,17 @@ export default class ChildProfileRouteService {
     child.fixNeeds = fixNeeds;
     child.needGroups = [needGroup];
 
-    return { child, needGroup };
+    const isSponsored = await this.sponsorshipService.isUserSponsoredToChild(
+      user.userId,
+      child.userId,
+    );
+
+    console.log('İs SP', isSponsored);
+
+    return { child, needGroup, isSponsored };
   }
 
-  public async getFixNeeds(childId: number) {
+  public async getFixNeeds(childId: number, user: IUserCookie) {
     return await this.fixNeedService.getFixNeedsOfChild(childId);
   }
 }

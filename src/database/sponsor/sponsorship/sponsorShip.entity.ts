@@ -24,7 +24,7 @@ export default class Sponsorship {
   sponsorshipId: number;
 
   @Column('enum', {
-    default: SponsorshipStatus.WAITING_FOR_AUTHORIZATION,
+    default: SponsorshipStatus.APPROVED,
     enum: SponsorshipStatus,
   })
   status: SponsorshipStatus;

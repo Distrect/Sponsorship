@@ -21,8 +21,10 @@ export default class ChildProfileRouteController {
     @Param('childId', ParseIntPipe) childId: number,
     @User(Role.User) user: IUserCookie,
   ) {
-    const profile =
-      await this.childProfileRouteService.getChildProfile(childId);
+    const profile = await this.childProfileRouteService.getChildProfile(
+      childId,
+      user,
+    );
 
     return { ok: true, message: 'Child profile', data: profile };
   }
@@ -32,7 +34,10 @@ export default class ChildProfileRouteController {
     @Param('childId', ParseIntPipe) childId: number,
     @User(Role.User) user: IUserCookie,
   ) {
-    const fixNeeds = await this.childProfileRouteService.getFixNeeds(childId);
+    const fixNeeds = await this.childProfileRouteService.getFixNeeds(
+      childId,
+      user,
+    );
 
     return { ok: true, message: 'f', data: fixNeeds };
   }

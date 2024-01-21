@@ -104,8 +104,8 @@ export default class FixNeedDAO {
 
     console.log('Result', result);
 
-    if (result.length === 0)
-      throw new EmptyData('The Child Fix Needs is Empty');
+    // if (result.length === 0)
+    //   throw new EmptyData('The Child Fix Needs is Empty');
 
     child.fixNeeds = result;
 

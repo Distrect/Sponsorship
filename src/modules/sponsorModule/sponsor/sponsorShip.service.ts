@@ -9,6 +9,9 @@ import { SponsorshipHistoryDTO } from 'src/routes/authorityRoutes/historyManagme
 
 @Injectable()
 export default class SponsorshipService {
+  public async isUserSponsoredToChild(userId: number, userId1: number) {
+    return await this.sponsorshipDAO.checkIfUserSponsorToChild(userId, userId1);
+  }
   constructor(
     private sponsorshipDAO: SponsorshipDAO,
     private fixNeedDAO: FixNeedDAO,

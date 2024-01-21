@@ -56,7 +56,14 @@ export const databaseProviders = [
       const devOps = async () => {
         const [, childs, users] = await Promise.all([
           managerSave(mockDataGenerator.generateMockAuthority()),
-          managerSave(mockDataGenerator.generator(20, 'Child')),
+          managerSave([
+            mockDataGenerator.generateMockChild({
+              name: 'new child',
+              lastname: 'child',
+              email: 'child@gmail.com',
+            }),
+            ...mockDataGenerator.generator(20, 'Child'),
+          ]),
           managerSave([
             mockDataGenerator.generateMockUser(mainUser),
             ...mockDataGenerator.generator(19, 'User'),
@@ -176,16 +183,20 @@ export const databaseProviders = [
         let need = await childNeedRepository.findOne({ where: { needId: 1 } });
         console.log('Need:', need);*/
 
-        const sChild = await managerSave(
-          mockDataGenerator.generateMockChild({
-            name: 'YOUUUUUUUUUUUUUUUUUUUUUUUUUUUUU',
-          }),
-        );
+        // const sChild = await managerSave(
+        //   mockDataGenerator.generateMockChild({
+        //     name: 'new child',
+        //     lastname: 'child',
+        //     email: 'child@gmail.com',
+        //   }),
+        // );
 
-        const sChildSafe = await managerSave(
+        const sChild = childs[0];
+
+        /*const sChildSafe = await managerSave(
           mockDataGenerator.generateMockSafe(sChild),
         );
-
+*/
         const sChildNeedGroup = await managerSave(
           mockDataGenerator.generateNeedGroup({ child: sChild }),
         );
