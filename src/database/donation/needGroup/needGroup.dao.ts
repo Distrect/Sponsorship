@@ -102,6 +102,8 @@ export default class NeedGroupDAO {
     if (activeGroups.length > 1 || !activeGroups.every((group) => !!group))
       throw new ServerError('Active needs should not be more than one.');
 
+    activeGroups[0].child = child;
+
     return activeGroups[0];
   }
 
