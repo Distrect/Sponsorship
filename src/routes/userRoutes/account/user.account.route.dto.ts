@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsDateString,
   IsEmail,
   IsNotEmpty,
@@ -23,13 +24,13 @@ export class UserRegisterDTO {
   @IsNotEmpty({ message: 'Lastname cannot be empty' })
   lastname: string;
 
-  @IsStrongPassword({
+  /* @IsStrongPassword({
     minLength: 6,
     minLowercase: 1,
     minUppercase: 1,
     minNumbers: 1,
     minSymbols: 1,
-  })
+  })*/
   @IsNotEmpty({
     message:
       'Password should has at least 1 lowercase,1 number,1 symbol and at least 6 character long',
@@ -41,7 +42,6 @@ export class UserRegisterDTO {
   email: string;
 
   @IsNotEmpty({ message: 'date' })
-  @IsDateString()
   dateOfBirth: Date;
 
   @IsNotEmpty({ message: 'Should be selected' })

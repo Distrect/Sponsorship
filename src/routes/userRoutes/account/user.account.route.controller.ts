@@ -39,6 +39,7 @@ export default class UserAccountRouteController {
     @UploadedFiles() idImages: UserIDImages,
     @Body() requestBody: UserRegisterDTO,
   ) {
+    console.log('Date', requestBody.dateOfBirth);
     requestBody.dateOfBirth = new Date(requestBody.dateOfBirth);
 
     console.log('REQUEST BODY', requestBody);
