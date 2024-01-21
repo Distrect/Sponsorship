@@ -53,7 +53,7 @@ function cryptor(
 
 console.log(
   cryptor(
-    'eyJhbGciOiJIUzI1NiJ9.a2lkMTIz.b7A8kSRXiilZWuXRFCd6c-czLkM3hWLE7BG8BH7JpDg',
+    'eyJhbGciOiJIUzI1NiJ9.WHl6eXQuMTIzNDU.hiz8Vj_fFsaj3oYU_AYEKMQfT24HEAmnmd7l5JeB9i0',
     'decrypt',
   ),
 );

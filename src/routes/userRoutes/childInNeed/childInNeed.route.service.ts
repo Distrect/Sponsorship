@@ -18,9 +18,7 @@ export default class ChildInNeedRouteService extends UserRouteService {
     body: ListChildwithNeedsDTO,
     page: number,
   ) {
-    return await this.needGroupService
-      .listChildwtihNeeds(body.filters, page)
-      .catch((err) => console.error(err));
+    return await this.needGroupService.listChildwtihNeeds(body.filters, page);
   }
 
   public async donateToNeeds(user: IUserCookie, requestBody: DonateToNeedsDTO) {

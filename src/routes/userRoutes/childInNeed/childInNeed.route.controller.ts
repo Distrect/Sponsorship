@@ -45,6 +45,6 @@ export default class ChildInNeedRouteController {
       requestBody,
     );
 
-    return { ok: true, message: 'Donation has made', result };
+    return { ok: true, message: 'Donation has made', data: result };
   }
 }

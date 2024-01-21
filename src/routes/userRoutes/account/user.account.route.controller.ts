@@ -68,11 +68,11 @@ export default class UserAccountRouteController {
 
     response.cookie(this.tokenName, token, {
       httpOnly: false,
-      maxAge: this.cookieAge,
+      expires: new Date(2030, 1, 1),
     });
     response.cookie(this.refreshTokenName, refreshToken, {
       httpOnly: false,
-      maxAge: this.cookieAge * 2,
+      expires: new Date(2030, 1, 1),
     });
 
     return { ok: true, message: 'Login Succed', user };
