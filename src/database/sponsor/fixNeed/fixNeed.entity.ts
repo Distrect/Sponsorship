@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToOne,
   Index,
+  JoinColumn,
 } from 'typeorm';
 import { FixNeedStatus } from 'src/database/sponsor';
 import Child from 'src/database/user/child/child.entity';

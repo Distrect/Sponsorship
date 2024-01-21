@@ -26,6 +26,10 @@ export default class ChildProfileRouteService {
       {} as IUserCookie,
       child.userId,
     );
+    const fixNeeds = await this.fixNeedService.getFixNeedsOfChild(child.userId);
+
+    child.fixNeeds = fixNeeds;
+    child.needGroups = [needGroup];
 
     return { child, needGroup };
   }

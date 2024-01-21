@@ -135,6 +135,8 @@ export default class SponsorshipDAO {
       where: { fixNeed: { fixNeedId }, status: SponsorshipStatus.APPROVED },
     });
 
+    console.log('Sp', sponsorship);
+
     return !!sponsorship;
   }
 
@@ -256,5 +258,22 @@ export default class SponsorshipDAO {
     const result = await query.getMany();
 
     return result;
+  }
+
+  public async getChildAllSponsorships(userId: number) {
+    return await this.sponsorshipRepository.find({
+      where: {
+        fixNeed: {
+          child: {
+            userId,
+          },
+        },
+      },
+      relations: {
+        fixNeed: {
+          child: true,
+        },
+      },
+    });
   }
 }

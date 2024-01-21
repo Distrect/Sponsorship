@@ -47,6 +47,8 @@ export default class SponsorshipService {
     const isFixNeedSponsored =
       await this.sponsorshipDAO.isSponsorToNeed(fixNeedId);
 
+    console.log('isFixNeedSponsored', isFixNeedSponsored);
+
     if (isFixNeedSponsored)
       throw new AlreadyHave('This Fix Need Already Sponsored');
 

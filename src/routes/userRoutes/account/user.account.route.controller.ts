@@ -63,8 +63,10 @@ export default class UserAccountRouteController {
 
     const token = JwtService.tokenizeData(user);
     const refreshToken = JwtService.tokenizeData(user, {
-      expiresIn: '2d',
+      expiresIn: '10d',
     });
+
+    console.log(JwtService.deTokenizData(token));
 
     response.cookie(this.tokenName, token, {
       httpOnly: false,

@@ -52,11 +52,11 @@ export default class ChildService {
 
   public async getChild(childSearchParams: ChildWhere) {
     const child = await this.childDAO.getChild(childSearchParams);
-
+    /*
     const childSafe = await this.safeDAO.getChildSafe({ child });
 
     child.safe = childSafe;
-
+*/
     return child;
   }
 

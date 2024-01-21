@@ -57,8 +57,8 @@ export default class FixNeedDAO {
   public async getFreeFixNeedofChild(childId: number) {
     const query = this.fixNeedRepository
       .createQueryBuilder('fix_need')
-      .leftJoin('dix_need.sponsorship', 'sponsorship')
-      .where('fix_need.sponosrship IS NULL')
+      // .leftJoin('fix_need.sponsorship', 'sponsorship')
+      .where('fix_need.child = :childId', { childId })
       .getMany();
 
     return query;

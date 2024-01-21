@@ -25,8 +25,21 @@ export default class FixNeedService {
   public async getFixNeedsOfChild(childId: number) {
     const child = await this.childDAO.getChild({ userId: childId });
     const fixNeeds = await this.fixNeedDAO.getFreeFixNeedofChild(child.userId);
+    const sponsorships = await this.sponsorshipDAO.getChildAllSponsorships(
+      child.userId,
+    );
 
-    return fixNeeds;
+    const notSponsoredFixNeeds: FixNeed[] = fixNeeds.filter(({ fixNeedId }) => {
+      const isThereSponsor = sponsorships.find(
+        (sp) => sp.fixNeed.fixNeedId === fixNeedId,
+      );
+
+      if (isThereSponsor) return false;
+      else return true;
+    });
+    console.log('Spsss', sponsorships);
+
+    return notSponsoredFixNeeds;
   }
 
   public async createFixNeed(body: CreateFixNeedDTO, childId: number) {
