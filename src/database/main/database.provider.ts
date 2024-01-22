@@ -22,8 +22,8 @@ const backIdBuffer = readFileSync(
 // InitializedDatabase.entityMetadatas.map((metada) => metada.tableName);
 
 const mainUser = {
-  name: 'XXXXXXXXXX',
-  lastname: 'YYYYYYY',
+  name: 'Bruce',
+  lastname: 'Wayne',
   email: 'Xyz@gmail.com',
 };
 
